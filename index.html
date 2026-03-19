@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>République — Politique Française en Direct</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#0D2B6E;--red:#C1121F;--bg:#F6F3EE;--card:#fff;--border:#E0D9CF;--light:#EDE8DF;--gray:#888;--text:#1A1A1A}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text)}
+
+nav{background:var(--blue);height:58px;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300;box-shadow:0 2px 20px rgba(0,0,0,.35)}
+.logo{font-family:'Playfair Display',serif;font-weight:900;font-size:1.35rem;color:#fff;display:flex;align-items:center;gap:8px}
+.logo em{color:var(--red);font-style:normal}
+.flag{width:5px;height:26px;display:flex;flex-direction:column;border-radius:2px;overflow:hidden}
+.flag s{flex:1;text-decoration:none}
+.flag s:nth-child(1){background:#002395}.flag s:nth-child(2){background:#fff}.flag s:nth-child(3){background:#ED2939}
+.nav-tabs{display:flex;height:100%}
+.tab{padding:0 .9rem;height:100%;display:flex;align-items:center;color:rgba(255,255,255,.6);font-size:.76rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;border-bottom:3px solid transparent;cursor:pointer;transition:all .2s;user-select:none}
+.tab:hover{color:#fff}.tab.on{color:#fff;border-bottom-color:var(--red)}
+
+.hero{background:linear-gradient(135deg,#0A2260,#1A3F8F 60%,#0D2B6E);padding:2.2rem 1.5rem 2rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;opacity:.04;background:repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 1px,transparent 12px)}
+.hero h1{font-family:'Playfair Display',serif;font-size:2.3rem;font-weight:900;color:#fff;position:relative}
+.hero p{color:rgba(255,255,255,.55);font-size:.88rem;margin-top:.25rem;position:relative}
+.live-pill{margin-top:.7rem;display:inline-flex;align-items:center;gap:.45rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.8);padding:.28rem .85rem;border-radius:50px;font-size:.72rem;position:relative}
+.pulse{width:7px;height:7px;background:#4ade80;border-radius:50%;animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.5)}}
+
+.search-wrap{display:flex;align-items:center;gap:.5rem;padding:.38rem .5rem .38rem 1.1rem;margin:.9rem auto 0;max-width:600px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:50px}
+.search-wrap input{flex:1;background:none;border:none;outline:none;color:#fff;font-family:'DM Sans',sans-serif;font-size:.92rem}
+.search-wrap input::placeholder{color:rgba(255,255,255,.5)}
+.search-btn{background:var(--red);border:none;border-radius:50px;color:#fff;padding:.42rem 1.1rem;font-size:.8rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:background .15s}
+.search-btn:hover{background:#a50f18}.search-btn:disabled{background:#888;cursor:not-allowed}
+
+.search-panel{max-width:1280px;margin:1.2rem auto 0;padding:0 1.4rem;display:none}
+.search-panel.on{display:block;animation:up .3s ease}
+.search-panel-head{display:flex;align-items:center;gap:.7rem;margin-bottom:1rem}
+.search-panel-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--blue)}
+.search-close{margin-left:auto;font-size:.78rem;font-weight:600;color:var(--red);cursor:pointer;background:none;border:1px solid var(--red);border-radius:50px;padding:.2rem .7rem;font-family:'DM Sans',sans-serif;transition:all .15s}
+.search-close:hover{background:var(--red);color:#fff}
+
+.ai-answer{background:var(--blue);color:#fff;border-radius:12px;padding:1.2rem 1.4rem;margin-bottom:1.2rem;line-height:1.75;font-size:.9rem}
+.ai-answer-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.55);margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem}
+.ai-answer-label::before{content:'✦';color:var(--red)}
+.ai-thinking-bar{background:var(--blue);border-radius:12px;padding:1rem 1.4rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:.7rem;color:rgba(255,255,255,.7);font-size:.88rem}
+
+.sec{display:none;max-width:1280px;margin:0 auto;padding:1.6rem 1.4rem}
+.sec.on{display:block;animation:up .3s ease}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.stitle{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--blue);margin-bottom:1.1rem;display:flex;align-items:center;gap:.7rem}
+.stitle::after{content:'';flex:1;height:1.5px;background:linear-gradient(90deg,var(--border),transparent)}
+
+.fbar{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.1rem;align-items:center}
+.flbl{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gray);margin-right:.2rem}
+.chip{padding:.24rem .7rem;border-radius:50px;border:1.5px solid var(--border);font-size:.71rem;font-weight:600;cursor:pointer;background:var(--card);color:#666;transition:all .15s;user-select:none}
+.chip:hover{border-color:#aaa;color:#222}.chip.on{color:#fff;border-color:transparent}
+.c-all.on{background:#1A1A1A}.c-gauche.on{background:#CC0000}.c-centre.on{background:#0066CC}
+.c-droite.on{background:#1E3A6E}.c-eco.on{background:#1A7A3A}.c-public.on{background:#0891B2}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:.95rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s;cursor:pointer}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(0,0,0,.1)}
+.card-top{height:4px}
+.card-body{padding:.9rem;flex:1;display:flex;flex-direction:column}
+.card-head{display:flex;align-items:center;gap:.35rem;margin-bottom:.38rem;flex-wrap:wrap}
+.card-src{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+.card-bord{font-size:.59rem;font-weight:700;text-transform:uppercase;padding:.08rem .42rem;border-radius:50px}
+.card-age{font-size:.66rem;color:var(--gray);margin-left:auto;white-space:nowrap}
+.card-title{font-family:'Playfair Display',serif;font-size:.91rem;font-weight:700;line-height:1.4;flex:1;margin-bottom:.32rem}
+.card-desc{font-size:.77rem;color:var(--gray);line-height:1.55}
+.card-link{font-size:.71rem;font-weight:700;margin-top:.6rem;display:inline-block}
+.card-hot{font-size:.65rem;background:#FEF9C3;color:#92400E;padding:.1rem .4rem;border-radius:50px;margin-left:.3rem;font-weight:600}
+
+.center-box{display:flex;flex-direction:column;align-items:center;gap:.9rem;padding:3rem 1rem;color:var(--gray);text-align:center}
+.spinner{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:sp .8s linear infinite}
+.mini-sp{width:13px;height:13px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+.pol-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.95rem}
+.pol-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.pol-card-top{height:4px}
+.pol-card-body{padding:.95rem}
+.pol-card-head{display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem}
+.pol-av{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;color:#fff;flex-shrink:0}
+.pol-name{font-family:'Playfair Display',serif;font-size:.97rem;font-weight:700;line-height:1.2}
+.pol-role-txt{font-size:.7rem;color:var(--gray);margin-top:.08rem}
+.pol-tag{display:inline-block;padding:.12rem .45rem;border-radius:50px;font-size:.6rem;font-weight:700;text-transform:uppercase;margin-top:.25rem}
+.pol-news{border-top:1px solid var(--border);padding-top:.7rem;margin-top:.7rem}
+.pol-news-lbl{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin-bottom:.45rem}
+.pol-art{font-size:.77rem;color:#444;line-height:1.4;padding:.35rem 0;border-bottom:1px solid var(--border);display:flex;gap:.45rem}
+.pol-art:last-child{border-bottom:none}
+.pol-dot{width:4px;height:4px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:5px}
+.pol-art a{color:var(--blue);text-decoration:none;font-weight:500}
+.pol-art a:hover{text-decoration:underline}
+.pol-art-src{font-size:.62rem;color:var(--gray);margin-left:.25rem}
+.pol-none{font-size:.77rem;color:var(--gray);font-style:italic}
+
+.polls-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:1.1rem}
+.poll{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem}
+.poll-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;margin-bottom:.2rem}
+.poll-title{font-family:'Playfair Display',serif;font-size:.98rem;font-weight:700;flex:1}
+.poll-badge{font-size:.61rem;font-weight:700;text-transform:uppercase;padding:.18rem .48rem;border-radius:50px;white-space:nowrap}
+.poll-src{font-size:.7rem;color:var(--gray);margin-bottom:.95rem}
+.brow{margin-bottom:.54rem}
+.blbl{display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.22rem;font-weight:500}
+.btrack{height:8px;background:var(--light);border-radius:4px;overflow:hidden}
+.bfill{height:100%;border-radius:4px;transition:width 1.4s cubic-bezier(.4,0,.2,1)}
+.poll-note{font-size:.67rem;color:var(--gray);font-style:italic;margin-top:.7rem;padding-top:.7rem;border-top:1px solid var(--border)}
+.poll-arts{margin-top:.85rem;border-top:1px solid var(--border);padding-top:.85rem}
+.poll-arts-lbl{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin-bottom:.45rem}
+.poll-art-item{font-size:.76rem;color:#444;padding:.32rem 0;border-bottom:1px solid var(--border);display:flex;gap:.4rem;align-items:flex-start}
+.poll-art-item:last-child{border-bottom:none}
+.poll-art-item a{color:var(--blue);text-decoration:none;font-weight:500;flex:1}
+.poll-art-item a:hover{text-decoration:underline}
+
+.calist{display:flex;flex-direction:column;gap:.75rem}
+.caev{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.9rem 1.15rem;display:flex;gap:.9rem;align-items:center;transition:box-shadow .18s}
+.caev:hover{box-shadow:0 6px 16px rgba(0,0,0,.07)}
+.cadt{min-width:50px;text-align:center;background:var(--blue);color:#fff;border-radius:8px;padding:.45rem}
+.caday{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;line-height:1}
+.camon{font-size:.59rem;text-transform:uppercase;letter-spacing:.7px;opacity:.8}
+.cat{font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700;margin-bottom:.1rem}
+.cad{font-size:.74rem;color:var(--gray)}
+.cabadge{margin-left:auto;padding:.18rem .6rem;border-radius:50px;font-size:.63rem;font-weight:700;text-transform:uppercase;white-space:nowrap}
+.b-r{background:#FEE2E2;color:#B91C1C}.b-b{background:#EEF2FF;color:#4338CA}.b-g{background:#F0FDF4;color:#166534}.b-p{background:#F5F3FF;color:#7C3AED}
+
+footer{background:var(--blue);color:rgba(255,255,255,.4);text-align:center;padding:1.3rem;font-size:.75rem;margin-top:2.5rem}
+footer strong{color:rgba(255,255,255,.85)}footer em{color:var(--red);font-style:normal}
+@media(max-width:700px){
+  .hero h1{font-size:1.75rem}.tab{padding:0 .45rem;font-size:.66rem}
+  .grid,.pol-grid,.polls-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><div class="flag"><s></s><s></s><s></s></div>Répu<em>blique</em></div>
+  <div class="nav-tabs">
+    <div class="tab on" onclick="showTab('actu',this)">Actualités</div>
+    <div class="tab"    onclick="showTab('pol',this)">Politiciens</div>
+    <div class="tab"    onclick="showTab('sond',this)">Sondages</div>
+    <div class="tab"    onclick="showTab('cal',this)">Calendrier</div>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>Politique Française</h1>
+  <p>Tous les journaux · Tous les bords · Information neutre &amp; objective</p>
+  <div class="search-wrap">
+    <input id="searchIn" placeholder="Recherchez un sujet, un nom, un parti…" onkeydown="if(event.key==='Enter')doSearch()">
+    <button class="search-btn" id="searchBtn" onclick="doSearch()">🔍 Rechercher</button>
+  </div>
+  <div class="live-pill" style="margin-top:.7rem"><div class="pulse"></div><span id="hdate">…</span></div>
+</div>
+
+<!-- RÉSULTATS RECHERCHE IA -->
+<div class="search-panel" id="searchPanel">
+  <div class="search-panel-head">
+    <div class="search-panel-title" id="searchTitle">Résultats</div>
+    <button class="search-close" onclick="clearSearch()">✕ Fermer</button>
+  </div>
+  <div id="aiThinking" class="ai-thinking-bar" style="display:none">
+    <div class="mini-sp" style="border-color:rgba(255,255,255,.3);border-top-color:#fff"></div>
+    <span>L'IA analyse votre question et sélectionne les articles pertinents…</span>
+  </div>
+  <div id="aiAnswerBox" style="display:none"></div>
+  <div id="searchGrid"></div>
+</div>
+
+<!-- ACTUALITÉS -->
+<div id="s-actu" class="sec on">
+  <div class="fbar">
+    <span class="flbl">Bord :</span>
+    <div class="chip c-all on" onclick="filt('all',this)">Tous</div>
+    <div class="chip c-gauche"  onclick="filt('gauche',this)">◀ Gauche</div>
+    <div class="chip c-centre"  onclick="filt('centre',this)">● Centre</div>
+    <div class="chip c-droite"  onclick="filt('droite',this)">▶ Droite</div>
+    <div class="chip c-eco"     onclick="filt('eco',this)">$ Économie</div>
+    <div class="chip c-public"  onclick="filt('public',this)">📺 Public</div>
+  </div>
+  <div class="stitle" id="ncount">Actualités en direct</div>
+  <div id="ngrid"><div class="center-box"><div class="spinner"></div><p>Chargement des articles…</p></div></div>
+</div>
+
+<!-- POLITICIENS -->
+<div id="s-pol" class="sec">
+  <div class="stitle">Figures politiques — Articles en direct</div>
+  <p style="font-size:.81rem;color:var(--gray);margin-bottom:1.1rem">Mis à jour automatiquement depuis les flux RSS · Mars 2026</p>
+  <div id="pgrid"><div class="center-box"><div class="spinner"></div><p>Chargement…</p></div></div>
+</div>
+
+<!-- SONDAGES -->
+<div id="s-sond" class="sec">
+  <div class="stitle">Sondages électoraux — 4 scrutins à venir</div>
+  <p style="font-size:.81rem;color:var(--gray);margin-bottom:1.1rem">Barres issues des derniers sondages publiés · Articles extraits en direct des RSS</p>
+  <div id="sgrid"><div class="center-box"><div class="spinner"></div><p>Recherche des sondages…</p></div></div>
+</div>
+
+<!-- CALENDRIER -->
+<div id="s-cal" class="sec">
+  <div class="stitle">Calendrier électoral 2026–2029</div>
+  <div class="calist">
+    <div class="caev"><div class="cadt"><div class="caday">22</div><div class="camon">Mar</div></div><div><div class="cat">Municipales — 2e tour</div><div class="cad">Second tour dans les communes sans majorité au 1er tour du 15 mars</div></div><span class="cabadge b-g">Municipales</span></div>
+    <div class="caev"><div class="cadt"><div class="caday">Sep</div><div class="camon">2026</div></div><div><div class="cat">Élections Sénatoriales</div><div class="cad">Renouvellement de la moitié du Sénat — scrutin indirect par les grands électeurs</div></div><span class="cabadge b-p">Sénatoriales</span></div>
+    <div class="caev"><div class="cadt"><div class="caday">Avr</div><div class="camon">2027</div></div><div><div class="cat">Élection Présidentielle</div><div class="cad">1er et 2e tour — élection du Président de la République</div></div><span class="cabadge b-r">Présidentielle</span></div>
+    <div class="caev"><div class="cadt"><div class="caday">Jun</div><div class="camon">2027</div></div><div><div class="cat">Élections Législatives</div><div class="cad">Renouvellement des 577 députés de l'Assemblée nationale</div></div><span class="cabadge b-r">Législatives</span></div>
+    <div class="caev"><div class="cadt"><div class="caday">Jun</div><div class="camon">2029</div></div><div><div class="cat">Élections Européennes</div><div class="cad">Renouvellement du Parlement européen</div></div><span class="cabadge b-b">Européennes</span></div>
+  </div>
+  <div class="stitle" style="margin-top:1.8rem">Actualités électorales en direct</div>
+  <div id="calgrid"><div class="center-box"><div class="spinner"></div><p>Recherche d'articles…</p></div></div>
+</div>
+
+<footer><strong>République</strong> — Information politique française neutre &amp; objective<br>21 flux RSS en direct · Recherche IA <em>Claude</em> · Actualisation toutes les 10 min</footer>
+
+<script>
+document.getElementById('hdate').textContent =
+  new Date().toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+// ══ SOURCES RSS ═══════════════════════════════════════════════════════
+const FEEDS=[
+  {name:'Le Monde',         color:'#1A1A2E',bord:'centre',url:'https://www.lemonde.fr/politique/rss_full.xml'},
+  {name:'Libération',       color:'#E63946',bord:'gauche', url:'https://www.liberation.fr/arc/outboundfeeds/rss-all/'},
+  {name:"L'Humanité",       color:'#AA0000',bord:'gauche', url:'https://www.humanite.fr/rss.xml'},
+  {name:'Mediapart',        color:'#00936A',bord:'gauche', url:'https://www.mediapart.fr/articles/feed'},
+  {name:"L'Express",        color:'#EA580C',bord:'centre', url:'https://www.lexpress.fr/arc/outboundfeeds/rss/politique/'},
+  {name:'Le Point',         color:'#B45309',bord:'centre', url:'https://www.lepoint.fr/politique/rss.xml'},
+  {name:'Marianne',         color:'#9B1C1C',bord:'centre', url:'https://www.marianne.net/rss.xml'},
+  {name:'Le Figaro',        color:'#1E40AF',bord:'droite', url:'https://www.lefigaro.fr/rss/figaro_politique.xml'},
+  {name:'Valeurs Actuelles',color:'#1E3A6E',bord:'droite', url:'https://www.valeursactuelles.com/feed/'},
+  {name:'CNews',            color:'#374151',bord:'droite', url:'https://www.cnews.fr/rss/categorie/france'},
+  {name:'Causeur',          color:'#2C3E50',bord:'droite', url:'https://www.causeur.fr/feed'},
+  {name:'France Info',      color:'#0891B2',bord:'public', url:'https://www.francetvinfo.fr/politique.rss'},
+  {name:'France 24',        color:'#B91C1C',bord:'public', url:'https://www.france24.com/fr/france/rss'},
+  {name:'RFI',              color:'#059669',bord:'public', url:'https://www.rfi.fr/fr/france/rss'},
+  {name:'Public Sénat',     color:'#7C3AED',bord:'public', url:'https://www.publicsenat.fr/rss/politique.xml'},
+  {name:'BFM TV',           color:'#DC2626',bord:'public', url:'https://www.bfmtv.com/rss/news-24-7/'},
+  {name:'Les Échos',        color:'#1D4ED8',bord:'eco',    url:'https://www.lesechos.fr/rss/rss_politique.xml'},
+  {name:'BFM Business',     color:'#991B1B',bord:'eco',    url:'https://bfmbusiness.bfmtv.com/rss/info/flux-rss/flux-toutes-les-actualites/'},
+  {name:'Challenges',       color:'#1E40AF',bord:'eco',    url:'https://www.challenges.fr/rss.xml'},
+  {name:'Sud Ouest',        color:'#EA580C',bord:'public', url:'https://www.sudouest.fr/politique/rss.xml'},
+  {name:'La Dépêche',       color:'#C0392B',bord:'public', url:'https://www.ladepeche.fr/rss.xml'},
+];
+const BORD_LABEL={gauche:'Gauche',centre:'Centre',droite:'Droite',eco:'Économie',public:'Médias publics'};
+const BORD_COLOR={gauche:'#CC0000',centre:'#0066CC',droite:'#1E3A6E',eco:'#1A7A3A',public:'#0891B2'};
+let allArticles=[], activeBord='all';
+
+// ══ FETCH RSS ══════════════════════════════════════════════════════════
+async function fetchFeed(f){
+  try{
+    const r=await fetch(`/rss?url=${encodeURIComponent(f.url)}`);
+    if(!r.ok)return[];
+    const txt=await r.text();
+    const xml=new DOMParser().parseFromString(txt,'application/xml');
+    if(xml.querySelector('parsererror'))return[];
+    return[...xml.querySelectorAll('item')].slice(0,10).map(it=>({
+      title:(it.querySelector('title')?.textContent||'').trim(),
+      desc: (it.querySelector('description')?.textContent||'').replace(/<[^>]+>/g,'').trim().slice(0,200),
+      link: (it.querySelector('link')?.textContent||'').trim(),
+      date: new Date(it.querySelector('pubDate')?.textContent||0),
+      name:f.name, color:f.color, bord:f.bord
+    })).filter(a=>a.title.length>6);
+  }catch{return[];}
+}
+
+async function loadAll(){
+  const batches=await Promise.all(FEEDS.map(fetchFeed));
+  const seen=new Set();
+  allArticles=batches.flat()
+    .filter(a=>{const k=a.title.slice(0,35).toLowerCase();if(seen.has(k))return false;seen.add(k);return true;})
+    .sort((a,b)=>b.date-a.date);
+  renderNews(); renderPoliticians(); renderPolls(); renderCalendar();
+}
+
+// ══ RECHERCHE IA ═══════════════════════════════════════════════════════
+async function doSearch(){
+  const q=document.getElementById('searchIn').value.trim();
+  if(!q)return;
+  const panel=document.getElementById('searchPanel');
+  panel.classList.add('on');
+  document.getElementById('searchTitle').textContent=`Recherche : « ${q} »`;
+  document.getElementById('aiThinking').style.display='flex';
+  document.getElementById('aiAnswerBox').style.display='none';
+  document.getElementById('searchGrid').innerHTML='';
+  document.getElementById('searchBtn').disabled=true;
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
+
+  const ctx=allArticles.slice(0,120).map((a,i)=>`[${i}] ${a.title} (${a.name})`).join('\n');
+  try{
+    const resp=await fetch('/ai',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        max_tokens:600,
+        system:`Tu es un assistant de recherche d'articles de presse politique française.
+Réponds UNIQUEMENT avec un JSON valide : {"indices":[3,7,12...],"answer":"Réponse neutre 2-3 phrases."}
+- indices : numéros des articles les plus pertinents pour la requête (max 12)
+- answer : réponse factuelle et neutre à la question en français
+Ne mets RIEN d'autre que le JSON.`,
+        messages:[{role:'user',content:`Requête : "${q}"\n\nArticles :\n${ctx}`}]
+      })
+    });
+    const d=await resp.json();
+    const raw=d.content?.[0]?.text||'{}';
+    let indices=[], answer='';
+    try{const p=JSON.parse(raw.trim());indices=p.indices||[];answer=p.answer||'';}catch{}
+
+    document.getElementById('aiThinking').style.display='none';
+    if(answer){
+      document.getElementById('aiAnswerBox').style.display='block';
+      document.getElementById('aiAnswerBox').innerHTML=`
+        <div class="ai-answer">
+          <div class="ai-answer-label">Analyse IA — Réponse neutre &amp; objective</div>
+          <div>${esc(answer).replace(/\n/g,'<br>')}</div>
+        </div>`;
+    }
+    const selected=indices.length>0?indices.map(i=>allArticles[i]).filter(Boolean):simpleFallback(q);
+    document.getElementById('searchTitle').textContent=`${selected.length} résultat${selected.length>1?'s':''} pour « ${q} »`;
+    document.getElementById('searchGrid').className=selected.length?'grid':'';
+    document.getElementById('searchGrid').innerHTML=selected.length
+      ?selected.map((a,i)=>cardHTML(a,i<3)).join('')
+      :`<div class="center-box"><p>Aucun article trouvé.</p></div>`;
+  }catch{
+    document.getElementById('aiThinking').style.display='none';
+    const fb=simpleFallback(q);
+    document.getElementById('searchGrid').className='grid';
+    document.getElementById('searchGrid').innerHTML=fb.map(a=>cardHTML(a,false)).join('');
+  }
+  document.getElementById('searchBtn').disabled=false;
+}
+
+function simpleFallback(q){
+  const words=q.toLowerCase().split(/\s+/).filter(w=>w.length>2);
+  return allArticles.filter(a=>words.some(w=>(a.title+' '+a.desc).toLowerCase().includes(w))).slice(0,20);
+}
+function clearSearch(){
+  document.getElementById('searchPanel').classList.remove('on');
+  document.getElementById('searchIn').value='';
+  document.getElementById('searchGrid').innerHTML='';
+  document.getElementById('aiAnswerBox').style.display='none';
+  document.getElementById('aiThinking').style.display='none';
+}
+
+// ══ ACTUALITÉS ═════════════════════════════════════════════════════════
+function renderNews(){
+  const list=activeBord==='all'?allArticles:allArticles.filter(a=>a.bord===activeBord);
+  const now=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('ncount').innerHTML=
+    `<span>${list.length} articles — ${activeBord==='all'?'Tous les journaux':BORD_LABEL[activeBord]}</span>
+     <span style="font-size:.69rem;font-weight:400;color:var(--gray);margin-left:.5rem">Mis à jour ${now}</span>`;
+  const g=document.getElementById('ngrid');
+  if(!list.length){g.innerHTML=`<div class="center-box"><p>Aucun article chargé.</p></div>`;return;}
+  g.className='grid';
+  g.innerHTML=list.slice(0,72).map(a=>cardHTML(a,false)).join('');
+}
+
+function cardHTML(a,hot=false){
+  const bc=BORD_COLOR[a.bord]||'#888',bl=BORD_LABEL[a.bord]||a.bord;
+  return`<div class="card" onclick="window.open('${esc(a.link)}','_blank')"
+    style="${hot?'border-color:var(--blue);box-shadow:0 0 0 2px #0D2B6E22':''}">
+    <div class="card-top" style="background:${a.color}"></div>
+    <div class="card-body">
+      <div class="card-head">
+        <span class="card-src" style="color:${a.color}">${esc(a.name)}</span>
+        <span class="card-bord" style="background:${bc}22;color:${bc}">${bl}</span>
+        ${hot?'<span class="card-hot">✦ Pertinent</span>':''}
+        <span class="card-age">${age(a.date)}</span>
+      </div>
+      <div class="card-title">${esc(a.title)}</div>
+      ${a.desc?`<div class="card-desc">${esc(a.desc)}…</div>`:''}
+      <a class="card-link" style="color:${a.color}" href="${esc(a.link)}" target="_blank" onclick="event.stopPropagation()">Lire l'article →</a>
+    </div></div>`;
+}
+
+// ══ POLITICIENS — mis à jour automatiquement depuis RSS ════════════════
+// Liste mise à jour mars 2026
+const POLITICIANS=[
+  {name:'Emmanuel Macron',    init:'EM',color:'#002395',party:'Renaissance',pb:'#EEF2FF',pc:'#4338CA',
+   role:'Président de la République',kw:['macron','président de la république','élysée']},
+  {name:'Sébastien Lecornu',  init:'SL',color:'#16A34A',party:'Renaissance',pb:'#F0FDF4',pc:'#166534',
+   role:'Premier ministre',kw:['lecornu','sébastien lecornu','premier ministre','matignon']},
+  {name:'Marine Le Pen',      init:'ML',color:'#003189',party:'RN',pb:'#FFF0F0',pc:'#B91C1C',
+   role:'Présidente du groupe RN',kw:['marine le pen','rassemblement national',' rn ']},
+  {name:'Jordan Bardella',    init:'JB',color:'#00308F',party:'RN',pb:'#FFF0F0',pc:'#B91C1C',
+   role:'Président du RN',kw:['bardella','jordan bardella']},
+  {name:'Jean-Luc Mélenchon', init:'JM',color:'#CC0000',party:'LFI',pb:'#FFF0F0',pc:'#CC0000',
+   role:'Leader de La France Insoumise',kw:['mélenchon','melenchon','france insoumise','lfi']},
+  {name:'Édouard Philippe',   init:'EP',color:'#1E3A6E',party:'Horizons',pb:'#EEF2FF',pc:'#1E3A6E',
+   role:'Maire du Havre / Horizons',kw:['édouard philippe','edouard philippe','horizons']},
+  {name:'Laurent Wauquiez',   init:'LW',color:'#0072C6',party:'LR',pb:'#EEF2FF',pc:'#0072C6',
+   role:'Président du groupe LR',kw:['wauquiez','les républicains',' lr ']},
+  {name:'Olivier Faure',      init:'OF',color:'#BE185D',party:'PS',pb:'#FDF2F8',pc:'#9D174D',
+   role:'Premier Secrétaire du PS',kw:['olivier faure','parti socialiste',' ps ']},
+  {name:'Marine Tondelier',   init:'MT',color:'#15803D',party:'EELV',pb:'#F0FDF4',pc:'#166534',
+   role:'Secrétaire nationale EELV',kw:['tondelier','eelv','les verts','écologiste']},
+  {name:'Gabriel Attal',      init:'GA',color:'#3B82F6',party:'Renaissance',pb:'#EEF2FF',pc:'#4338CA',
+   role:'Ancien Premier ministre',kw:['gabriel attal','attal']},
+  {name:'Éric Ciotti',        init:'EC',color:'#1E40AF',party:'UDR',pb:'#EEF2FF',pc:'#1E40AF',
+   role:'Président de l\'UDR',kw:['ciotti','udr']},
+  {name:'Gérald Darmanin',    init:'GD',color:'#7C3AED',party:'Renaissance',pb:'#F5F3FF',pc:'#7C3AED',
+   role:'Garde des Sceaux, ministre de la Justice',kw:['darmanin','gérald darmanin','garde des sceaux']},
+];
+
+function renderPoliticians(){
+  const g=document.getElementById('pgrid');
+  g.className='pol-grid';
+  g.innerHTML=POLITICIANS.map(pol=>{
+    const arts=allArticles.filter(a=>pol.kw.some(k=>(a.title+' '+a.desc).toLowerCase().includes(k))).slice(0,4);
+    const artsHTML=arts.length
+      ?arts.map(a=>`<div class="pol-art"><div class="pol-dot"></div>
+          <div><a href="${esc(a.link)}" target="_blank">${esc(a.title)}</a>
+          <span class="pol-art-src">— ${esc(a.name)} · ${age(a.date)}</span></div></div>`).join('')
+      :`<div class="pol-none">Aucun article récent.</div>`;
+    return`<div class="pol-card">
+      <div class="pol-card-top" style="background:${pol.color}"></div>
+      <div class="pol-card-body">
+        <div class="pol-card-head">
+          <div class="pol-av" style="background:${pol.color}">${pol.init}</div>
+          <div><div class="pol-name">${pol.name}</div>
+            <div class="pol-role-txt">${pol.role}</div>
+            <span class="pol-tag" style="background:${pol.pb};color:${pol.pc}">${pol.party}</span></div>
+        </div>
+        <div class="pol-news">
+          <div class="pol-news-lbl">📰 ${arts.length} article${arts.length>1?'s':''} récent${arts.length>1?'s':''}</div>
+          ${artsHTML}
+        </div>
+      </div></div>`;
+  }).join('');
+}
+
+// ══ SONDAGES — 4 scrutins avec articles RSS en direct ══════════════════
+const ELECTIONS=[
+  {id:'pres',label:'Présidentielle 2027',badge:'Présidentielle',
+   badgeBg:'#FEE2E2',badgeColor:'#B91C1C',
+   src:'Sondages agrégés IFOP / OpinionWay / BVA — mars 2026',
+   kw:['présidentielle 2027','intentions de vote 2027','candidat 2027','sondage présidentiel','présidentielle'],
+   bars:[
+     {name:'Marine Le Pen / RN',         color:'#003189',pct:33},
+     {name:'Édouard Philippe / Horizons',color:'#1E3A6E',pct:22},
+     {name:'NFP / Gauche unie',          color:'#CC0000',pct:19},
+     {name:'Centre (Renaissance)',       color:'#002395',pct:14},
+     {name:'LR / Droite',                color:'#0072C6',pct:8},
+     {name:'Autres',                      color:'#888',   pct:4},
+   ]},
+  {id:'legi',label:'Législatives 2027',badge:'Législatives',
+   badgeBg:'#EEF2FF',badgeColor:'#1E40AF',
+   src:'Sondages agrégés — intentions de vote par bloc (mars 2026)',
+   kw:['législatives 2027','élections législatives','sondage législatif','vote législatif'],
+   bars:[
+     {name:'Rassemblement National',        color:'#003189',pct:34},
+     {name:'NFP / Gauche unie',             color:'#CC0000',pct:27},
+     {name:'Centre (Renaissance/Horizons)', color:'#002395',pct:20},
+     {name:'Droite (LR/UDR)',               color:'#0072C6',pct:12},
+     {name:'Autres',                         color:'#888',   pct:7},
+   ]},
+  {id:'senat',label:'Sénatoriales 2026',badge:'Sénatoriales',
+   badgeBg:'#F5F3FF',badgeColor:'#7C3AED',
+   src:'Projections — scrutin indirect série 2 (sept. 2026)',
+   kw:['sénatoriales','sénat 2026','élections sénatoriales','renouvellement sénat'],
+   bars:[
+     {name:'Droite + Centre', color:'#1E3A6E',pct:46},
+     {name:'Gauche',          color:'#CC0000',pct:27},
+     {name:'RN',              color:'#003189',pct:18},
+     {name:'Autres',           color:'#888',   pct:9},
+   ]},
+  {id:'munic',label:'Municipales 2026',badge:'Municipales',
+   badgeBg:'#ECFDF5',badgeColor:'#059669',
+   src:'Résultats 1er tour — 15 mars 2026 (données agrégées)',
+   kw:['municipales','élections municipales','premier tour','second tour','maires 2026','scrutin municipal'],
+   bars:[
+     {name:'Droite et Centre', color:'#1E3A6E',pct:37},
+     {name:'Gauche',           color:'#CC0000',pct:29},
+     {name:'RN',               color:'#003189',pct:24},
+     {name:'Divers',            color:'#888',   pct:10},
+   ]},
+];
+
+function renderPolls(){
+  const g=document.getElementById('sgrid');
+  g.className='polls-grid';
+  g.innerHTML=ELECTIONS.map(el=>{
+    const arts=allArticles.filter(a=>el.kw.some(k=>(a.title+' '+a.desc).toLowerCase().includes(k))).slice(0,5);
+    const barsHTML=el.bars.map(b=>
+      `<div class="brow"><div class="blbl"><span>${esc(b.name)}</span><span>${b.pct}%</span></div>
+       <div class="btrack"><div class="bfill" style="width:${b.pct}%;background:${b.color}"></div></div></div>`
+    ).join('');
+    const artsHTML=arts.length
+      ?arts.map(a=>`<div class="poll-art-item">
+          <div class="pol-dot" style="background:${a.color};margin-top:5px;flex-shrink:0"></div>
+          <a href="${esc(a.link)}" target="_blank">${esc(a.title)}</a>
+          <span style="font-size:.62rem;color:var(--gray);white-space:nowrap;margin-left:.3rem">${esc(a.name)}</span>
+        </div>`).join('')
+      :`<div style="font-size:.77rem;color:var(--gray);font-style:italic">Aucun article trouvé pour cette élection.</div>`;
+    return`<div class="poll">
+      <div class="poll-hd"><div class="poll-title">${el.label}</div>
+        <span class="poll-badge" style="background:${el.badgeBg};color:${el.badgeColor}">${el.badge}</span></div>
+      <div class="poll-src">${el.src}</div>
+      ${barsHTML}
+      <div class="poll-note">⚠️ Chiffres indicatifs issus des derniers sondages publiés. Consultez les articles pour les données précises.</div>
+      <div class="poll-arts"><div class="poll-arts-lbl">📰 Articles trouvés en direct (${arts.length})</div>${artsHTML}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══ CALENDRIER — articles électoraux en direct ══════════════════════════
+function renderCalendar(){
+  const kw=['élection','sénatorial','législatif','municipal','présidentiel','scrutin','candidat','campagne','second tour','premier tour','municipales','vote'];
+  const arts=allArticles.filter(a=>kw.some(k=>(a.title+a.desc).toLowerCase().includes(k))).slice(0,24);
+  const g=document.getElementById('calgrid');
+  if(!arts.length){g.innerHTML=`<div class="center-box"><p>Aucun article électoral trouvé.</p></div>`;return;}
+  g.className='grid';
+  g.innerHTML=arts.map(a=>cardHTML(a,false)).join('');
+}
+
+// ══ UTILS ═══════════════════════════════════════════════════════════════
+function age(d){
+  const s=(Date.now()-d)/1000;
+  if(s<120)return"À l'instant";
+  if(s<3600)return`Il y a ${Math.round(s/60)} min`;
+  if(s<86400)return`Il y a ${Math.round(s/3600)} h`;
+  return d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'});
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function filt(b,el){activeBord=b;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');renderNews();}
+function showTab(id,el){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('s-'+id).classList.add('on');el.classList.add('on');
+  clearSearch();
+}
+
+// ══ INIT — chargement + actualisation automatique toutes les 10 min ════
+loadAll();
+setInterval(loadAll, 600000);
+</script>
+</body>
+</html>
