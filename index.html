@@ -56,6 +56,59 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);transition:background .3s,color .3s}
 
+/* ── TICKER ───────────────────────────────────────────────────────────── */
+.ticker-wrap{background:#C1121F;overflow:hidden;height:32px;display:flex;align-items:center}
+.ticker-label{background:#0D2B6E;color:#fff;font-size:.68rem;font-weight:700;padding:0 .9rem;height:100%;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;text-transform:uppercase;letter-spacing:.5px}
+.ticker-inner{flex:1;overflow:hidden;height:100%;display:flex;align-items:center}
+.ticker-track{display:flex;gap:2.5rem;animation:ticker 50s linear infinite;white-space:nowrap;align-items:center}
+.ticker-wrap:hover .ticker-track{animation-play-state:paused}
+.ticker-item{color:#fff;font-size:.73rem;cursor:pointer;text-decoration:none;flex-shrink:0}
+.ticker-item:hover{text-decoration:underline}
+.ticker-sep{color:rgba(255,255,255,.4);font-size:.8rem}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── OUTILS IA CSS ──────────────────────────────────────────────────────── */
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+.tool-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.tool-card-top{height:4px}.tool-card-body{padding:1.2rem;flex:1;display:flex;flex-direction:column}
+.tool-card-icon{font-size:1.8rem;margin-bottom:.5rem}
+.tool-card-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:.3rem;color:var(--text)}
+.tool-card-desc{font-size:.78rem;color:var(--gray);margin-bottom:1rem;line-height:1.55}.tool-card-content{flex:1}
+.pop-bar-wrap{margin-bottom:.55rem}
+.pop-bar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.22rem;font-size:.78rem;font-weight:500;color:var(--text)}
+.pop-bar-track{height:7px;background:var(--light);border-radius:4px;overflow:hidden}
+.pop-bar-fill{height:100%;border-radius:4px;transition:width 1.2s ease}
+.word-cloud{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;padding:.5rem 0}
+.wc-word{border-radius:50px;padding:.2rem .65rem;cursor:default;transition:transform .15s;line-height:1.4}
+.wc-word:hover{transform:scale(1.08)}
+.qr-input-wrap{display:flex;gap:.5rem;margin-bottom:.8rem;flex-wrap:wrap}
+.qr-input{flex:1;min-width:200px;padding:.6rem .85rem;border:1.5px solid var(--border);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:.87rem;background:var(--card);color:var(--text);outline:none}
+.qr-input:focus{border-color:var(--blue)}
+.qr-btn{padding:.6rem 1.1rem;background:var(--blue);color:#fff;border:none;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .15s}
+.qr-btn:hover{background:#1A3F8F}.qr-btn:disabled{background:#aaa;cursor:not-allowed}
+.qr-answer{background:var(--blue);color:#fff;border-radius:12px;padding:1.1rem 1.3rem;font-size:.88rem;line-height:1.75;display:none}
+.qr-answer.on{display:block;animation:up .3s}
+.resume-box{background:var(--blue);color:#fff;border-radius:12px;padding:1.2rem 1.4rem;font-size:.88rem;line-height:1.8;display:none}
+.resume-box.on{display:block;animation:up .3s}
+.resume-label{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.5);margin-bottom:.7rem}
+.resume-item{padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.12);font-size:.85rem}
+.resume-item:last-child{border-bottom:none}
+.biais-result{margin-top:.8rem;padding:.9rem;background:var(--bg);border-radius:10px;border:1px solid var(--border);display:none;animation:up .3s}
+.biais-result.on{display:block}
+.biais-bar-track{height:14px;background:var(--light);border-radius:7px;overflow:hidden;display:flex;margin:.4rem 0}
+.biais-gauche{background:#CC0000;height:100%;transition:width 1s ease}
+.biais-droite{background:#1E3A6E;height:100%;transition:width 1s ease}
+.biais-labels{display:flex;justify-content:space-between;font-size:.7rem;font-weight:700}
+.evol-chart-wrap{position:relative;height:220px;margin-top:.5rem}
+.premium-box{background:linear-gradient(135deg,#1A1A2E,#0D2B6E);border-radius:14px;padding:1.6rem;color:#fff;border:2px solid rgba(255,215,0,.3)}
+.premium-badge{display:inline-block;background:gold;color:#1A1A1A;font-size:.65rem;font-weight:700;padding:.18rem .55rem;border-radius:50px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.7rem}
+.premium-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:.4rem}
+.premium-features{list-style:none;margin:.8rem 0 1.1rem;display:flex;flex-direction:column;gap:.35rem}
+.premium-features li{font-size:.83rem;color:rgba(255,255,255,.8);display:flex;align-items:center;gap:.5rem}
+.premium-features li::before{content:'✓';color:gold;font-weight:700}
+.premium-price{font-size:1.5rem;font-weight:700;margin-bottom:.9rem}
+.premium-price span{font-size:.85rem;color:rgba(255,255,255,.6);font-weight:400}
+
 /* ── NAV ──────────────────────────────────────────────────────────── */
 nav{background:var(--nav-bg);height:58px;padding:0 1.2rem;display:flex;align-items:center;gap:.75rem;position:sticky;top:0;z-index:300;box-shadow:0 2px 20px rgba(0,0,0,.35)}
 .logo{font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;color:#fff;display:flex;align-items:center;gap:8px;flex-shrink:0}
@@ -369,6 +422,16 @@ footer em{color:var(--red);font-style:normal}
 </head>
 <body>
 
+<!-- TICKER ACTUALITÉS EN DIRECT -->
+<div class="ticker-wrap">
+  <div class="ticker-label">🔴 Direct</div>
+  <div class="ticker-inner">
+    <div class="ticker-track" id="tickerTrack">
+      <span style="color:rgba(255,255,255,.6);font-size:.72rem">Chargement des actualités…</span>
+    </div>
+  </div>
+</div>
+
 <!-- NOTIFICATION TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -386,6 +449,7 @@ footer em{color:var(--red);font-style:normal}
     <div class="tab"     onclick="showTab('cal',this)">Calendrier</div>
     <div class="tab"     onclick="showTab('debats',this)">Débats</div>
     <div class="tab"     onclick="showTab('apropos',this)">À propos</div>
+    <div class="tab"     onclick="showTab('outils',this)">🤖 Outils IA</div>
   </div>
   <div class="nav-actions">
     <button class="dark-toggle" onclick="toggleDark()">🌙 <span class="dt-label">Mode sombre</span></button>
@@ -405,6 +469,7 @@ footer em{color:var(--red);font-style:normal}
   <div class="mobile-menu-item" onclick="showTabMobile('cal')">📅 Calendrier</div>
   <div class="mobile-menu-item" onclick="showTabMobile('debats')">🗣️ Débats</div>
   <div class="mobile-menu-item" onclick="showTabMobile('apropos')">ℹ️ À propos</div>
+  <div class="mobile-menu-item" onclick="showTabMobile('outils')">🤖 Outils IA</div>
   <div class="mobile-menu-divider"></div>
   <div class="mobile-menu-item" onclick="toggleDark();toggleMenu()">🌙 Mode sombre</div>
   <div class="mobile-menu-item" onclick="askNotif();toggleMenu()">🔔 Alertes push</div>
@@ -624,6 +689,156 @@ footer em{color:var(--red);font-style:normal}
   </div>
 </div>
 
+<!-- SECTION OUTILS IA -->
+<div id="s-outils" class="sec">
+  <div class="stitle">Outils IA — Politique Française</div>
+  <p style="font-size:.81rem;color:var(--gray);margin-bottom:1.3rem">Des outils intelligents propulsés par Claude pour analyser l'actualité politique.</p>
+
+  <div class="tools-grid">
+
+    <!-- Q&R POLITIQUE -->
+    <div class="tool-card">
+      <div class="tool-card-top" style="background:#0D2B6E"></div>
+      <div class="tool-card-body">
+        <div class="tool-card-icon">🤖</div>
+        <div class="tool-card-title">Questions / Réponses politiques</div>
+        <div class="tool-card-desc">Posez une question sur la politique française, Claude répond avec les sources actuelles.</div>
+        <div class="tool-card-content">
+          <div class="qr-input-wrap">
+            <input class="qr-input" id="qrInput" placeholder="Ex : Quel est le programme de Marine Le Pen ?" onkeydown="if(event.key==='Enter')doQR()">
+            <button class="qr-btn" id="qrBtn" onclick="doQR()">Demander</button>
+          </div>
+          <div id="qrThink" style="display:none;font-size:.8rem;color:var(--gray);display:none;align-items:center;gap:.5rem;padding:.4rem 0"><div class="mini-sp"></div>Claude réfléchit…</div>
+          <div class="qr-answer" id="qrAnswer">
+            <div class="resume-label">✦ Réponse IA — Claude · Neutre &amp; objectif</div>
+            <div id="qrText"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RÉSUMÉ QUOTIDIEN IA -->
+    <div class="tool-card">
+      <div class="tool-card-top" style="background:#C1121F"></div>
+      <div class="tool-card-body">
+        <div class="tool-card-icon">📋</div>
+        <div class="tool-card-title">Résumé quotidien IA</div>
+        <div class="tool-card-desc">Claude résume les 5 grandes actualités politiques du jour en quelques phrases claires.</div>
+        <div class="tool-card-content">
+          <button class="qr-btn" id="resumeBtn" onclick="doResume()" style="width:100%;margin-bottom:.8rem">Générer le résumé du jour</button>
+          <div class="resume-box" id="resumeBox">
+            <div class="resume-label">Résumé politique du jour</div>
+            <div id="resumeText"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DÉTECTEUR DE BIAIS -->
+    <div class="tool-card">
+      <div class="tool-card-top" style="background:#7C3AED"></div>
+      <div class="tool-card-body">
+        <div class="tool-card-icon">⚖️</div>
+        <div class="tool-card-title">Détecteur de biais</div>
+        <div class="tool-card-desc">Copiez un titre ou un extrait d'article. L'IA analyse son orientation politique.</div>
+        <div class="tool-card-content">
+          <div class="qr-input-wrap">
+            <input class="qr-input" id="biaisInput" placeholder="Collez un titre d'article ici…" onkeydown="if(event.key==='Enter')doBiais()">
+            <button class="qr-btn" id="biaisBtn" onclick="doBiais()" style="background:#7C3AED">Analyser</button>
+          </div>
+          <div class="biais-result" id="biaisResult">
+            <div style="font-size:.75rem;font-weight:700;margin-bottom:.5rem;color:var(--text)">Orientation détectée :</div>
+            <div class="biais-bar-track">
+              <div class="biais-gauche" id="biaisGauche" style="width:50%"></div>
+              <div class="biais-droite" id="biaisDroite" style="width:50%"></div>
+            </div>
+            <div class="biais-labels">
+              <span style="color:#CC0000" id="biaisGaucheLabel">Gauche 50%</span>
+              <span style="color:#888" id="biaisCentreLabel">Centre</span>
+              <span style="color:#1E3A6E" id="biaisDroiteLabel">Droite 50%</span>
+            </div>
+            <div id="biaisExplain" style="font-size:.78rem;color:var(--gray);margin-top:.6rem;line-height:1.6"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCORE DE POPULARITÉ -->
+    <div class="tool-card">
+      <div class="tool-card-top" style="background:#059669"></div>
+      <div class="tool-card-body">
+        <div class="tool-card-icon">📈</div>
+        <div class="tool-card-title">Score de popularité médiatique</div>
+        <div class="tool-card-desc">Classement des politiciens selon leur présence dans les médias cette semaine.</div>
+        <div class="tool-card-content" id="popScoreContent">
+          <div style="color:var(--gray);font-size:.8rem;font-style:italic">Chargement des scores…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NUAGE DE MOTS -->
+    <div class="tool-card">
+      <div class="tool-card-top" style="background:#EA580C"></div>
+      <div class="tool-card-body">
+        <div class="tool-card-icon">☁️</div>
+        <div class="tool-card-title">Nuage de mots de la semaine</div>
+        <div class="tool-card-desc">Les mots les plus utilisés dans les titres d'articles politiques cette semaine.</div>
+        <div class="word-cloud" id="wordCloud">
+          <div style="color:var(--gray);font-size:.8rem;font-style:italic">Chargement…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ÉVOLUTION SONDAGES -->
+    <div class="tool-card">
+      <div class="tool-card-top" style="background:#1D4ED8"></div>
+      <div class="tool-card-body">
+        <div class="tool-card-icon">📊</div>
+        <div class="tool-card-title">Évolution des sondages</div>
+        <div class="tool-card-desc">Graphique d'évolution des intentions de vote pour la Présidentielle 2027.</div>
+        <div class="evol-chart-wrap"><canvas id="evolChart"></canvas></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CARTE DE FRANCE -->
+  <div class="stitle" style="margin-top:2rem">🗺️ Carte électorale — Municipales 2026 (1er tour)</div>
+  <p style="font-size:.81rem;color:var(--gray);margin-bottom:1rem">Résultats indicatifs des grandes villes · Cliquez sur une région pour voir les détails</p>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.3rem">
+    <div id="carteContent"></div>
+    <div class="carte-legend" style="margin-top:1rem">
+      <div class="carte-leg-item"><div class="carte-leg-dot" style="background:#CC0000"></div>Gauche / NFP</div>
+      <div class="carte-leg-item"><div class="carte-leg-dot" style="background:#0066CC"></div>Centre / Renaissance</div>
+      <div class="carte-leg-item"><div class="carte-leg-dot" style="background:#1E3A6E"></div>Droite / LR</div>
+      <div class="carte-leg-item"><div class="carte-leg-dot" style="background:#003189"></div>RN</div>
+      <div class="carte-leg-item"><div class="carte-leg-dot" style="background:#888"></div>Divers</div>
+    </div>
+  </div>
+
+  <!-- NEWSLETTER PREMIUM -->
+  <div class="stitle" style="margin-top:2rem">⭐ Newsletter Premium</div>
+  <div class="premium-box">
+    <div class="premium-badge">⭐ Premium</div>
+    <div class="premium-title">La Revue de Presse du Matin</div>
+    <p style="font-size:.85rem;color:rgba(255,255,255,.7);margin-bottom:.8rem">Chaque matin à 7h, recevez une synthèse exclusive de l'actualité politique rédigée par notre IA Claude.</p>
+    <ul class="premium-features">
+      <li>Résumé des 5 grandes news du jour</li>
+      <li>Analyse comparative gauche / droite</li>
+      <li>Sondage de la semaine commenté</li>
+      <li>Sans publicité, sans spam</li>
+    </ul>
+    <div class="premium-price">2,99€ <span>/ mois · Annulable à tout moment</span></div>
+    <div class="nl-form">
+      <input class="nl-input" id="premiumEmail" type="email" placeholder="Votre adresse email…">
+      <button class="nl-btn" onclick="subscribePremium()" style="background:gold;color:#1A1A1A">S'abonner →</button>
+    </div>
+    <div id="premiumMsg" style="font-size:.78rem;margin-top:.6rem;display:none"></div>
+    <div style="font-size:.68rem;color:rgba(255,255,255,.35);margin-top:.5rem">Lancement officiel bientôt · Inscrivez-vous pour être notifié en premier</div>
+  </div>
+
+</div>
+
 <footer>
   <strong>République</strong> — Information politique française neutre &amp; objective<br>
   21 flux RSS en direct · Recherche IA <em>Claude</em> · Actualisation toutes les 10 min
@@ -755,7 +970,7 @@ async function loadAll(){
   }
   newsPage=1; chartsReady=false;
   renderNews(); renderPoliticians(); renderPolls(); renderCalendar();
-  updateSidebar();
+  updateSidebar(); updateTicker();
 }
 
 // ── PAGINATION ────────────────────────────────────────────────────────
@@ -1214,6 +1429,7 @@ function showTab(id,el){
   clearSearch();
   if(id==='sond'&&!chartsReady)renderPolls();
   if(id==='debats')renderDebats();
+  if(id==='outils'){renderPopScore();renderWordCloud();renderEvolChart();renderCarte();}
 }
 
 // ── DÉBATS POLITIQUES PAR THÈME ──────────────────────────────────────
@@ -1381,6 +1597,208 @@ function showTabMobile(id){
   if(id==='debats')renderDebats();
   // Scroll en haut
   window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ── TICKER ────────────────────────────────────────────────────────────
+function updateTicker(){
+  const track = document.getElementById('tickerTrack');
+  if(!track || !allArticles.length) return;
+  const items = allArticles.slice(0,20).map(a=>
+    `<a class="ticker-item" href="${esc(a.link)}" target="_blank">${esc(a.title)}</a><span class="ticker-sep">◆</span>`
+  ).join('');
+  // Double pour boucle infinie fluide
+  track.innerHTML = items + items;
+}
+
+// ── SCORE POPULARITÉ ──────────────────────────────────────────────────
+function renderPopScore(){
+  const scores = POLITICIANS.map(pol=>{
+    const count = allArticles.filter(a=>pol.kw.some(k=>(a.title+' '+a.desc).toLowerCase().includes(k))).length;
+    return {...pol, count};
+  }).sort((a,b)=>b.count-a.count);
+  const max = scores[0]?.count || 1;
+  const el = document.getElementById('popScoreContent');
+  if(!el) return;
+  el.innerHTML = scores.map(p=>`
+    <div class="pop-bar-wrap">
+      <div class="pop-bar-head">
+        <span>${p.name}</span>
+        <span class="pop-score">${p.count} article${p.count>1?'s':''}</span>
+      </div>
+      <div class="pop-bar-track">
+        <div class="pop-bar-fill" style="width:${Math.round(p.count/max*100)}%;background:${p.color}"></div>
+      </div>
+    </div>`).join('');
+}
+
+// ── NUAGE DE MOTS ─────────────────────────────────────────────────────
+function renderWordCloud(){
+  const el = document.getElementById('wordCloud');
+  if(!el) return;
+  const stopWords = new Set(['les','des','une','pour','dans','sur','que','qui','est','pas','par','avec','mais','ont','sont','plus','tout','cette','bien','leur','aussi','après','avant','lors','entre','comme','très','peut','leur','même','nous','vous','ils','elles','été','fait','vers','sans','depuis','sous','selon','dont','ces','aux','nos','vos','ses','mon','ton','son','notre','votre','leur','mes','tes','ses','ainsi','donc','alors','car','ni','ou','et','le','la','un','au','du','ce','se','en','on','il','je','tu','y','si','ne','va','a','de','l']);
+  const freq = {};
+  allArticles.forEach(a=>{
+    (a.title+' '+a.desc).toLowerCase()
+      .split(/[\s,.:;!?«»"()\-–—]+/)
+      .filter(w=>w.length>3 && !stopWords.has(w) && !/^\d+$/.test(w))
+      .forEach(w=>{ freq[w]=(freq[w]||0)+1; });
+  });
+  const sorted = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,35);
+  const maxF = sorted[0]?.[1]||1;
+  const colors = ['#0D2B6E','#C1121F','#CC0000','#1E3A6E','#059669','#7C3AED','#EA580C','#1D4ED8'];
+  el.innerHTML = sorted.map(([w,f])=>{
+    const size = .7 + (f/maxF)*1.1;
+    const color = colors[Math.floor(Math.random()*colors.length)];
+    return `<span class="wc-word" style="font-size:${size}rem;background:${color}22;color:${color};font-weight:${f>maxF*.5?700:400}">${w}</span>`;
+  }).join('');
+}
+
+// ── ÉVOLUTION SONDAGES ────────────────────────────────────────────────
+let evolChartInstance = null;
+function renderEvolChart(){
+  const canvas = document.getElementById('evolChart');
+  if(!canvas) return;
+  if(evolChartInstance) evolChartInstance.destroy();
+  const isDark = document.documentElement.getAttribute('data-theme')==='dark';
+  const gridColor = isDark?'rgba(255,255,255,.08)':'rgba(0,0,0,.06)';
+  const textColor = isDark?'#aaa':'#666';
+  evolChartInstance = new Chart(canvas, {
+    type:'line',
+    data:{
+      labels:['Jan 2025','Mar 2025','Mai 2025','Juil 2025','Sep 2025','Nov 2025','Jan 2026','Mar 2026'],
+      datasets:[
+        {label:'M. Le Pen / RN',data:[29,30,31,32,31,33,33,33],borderColor:'#003189',backgroundColor:'#00318922',tension:.4,fill:false,pointRadius:4},
+        {label:'É. Philippe',data:[18,19,20,21,22,21,22,22],borderColor:'#1E3A6E',backgroundColor:'#1E3A6E22',tension:.4,fill:false,pointRadius:4},
+        {label:'NFP / Gauche',data:[22,21,20,19,20,19,19,19],borderColor:'#CC0000',backgroundColor:'#CC000022',tension:.4,fill:false,pointRadius:4},
+        {label:'Centre',data:[16,15,15,14,14,14,14,14],borderColor:'#0066CC',backgroundColor:'#0066CC22',tension:.4,fill:false,pointRadius:4},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:textColor,font:{size:11},boxWidth:12}}},
+      scales:{
+        x:{ticks:{color:textColor,font:{size:10}},grid:{color:gridColor}},
+        y:{ticks:{color:textColor,font:{size:10},callback:v=>v+'%'},grid:{color:gridColor},min:10,max:40}
+      }
+    }
+  });
+}
+
+// ── CARTE DE FRANCE ───────────────────────────────────────────────────
+const VILLES = [
+  {nom:'Paris',bord:'gauche',color:'#CC0000',desc:'NFP en tête — Hidalgo reconduite'},
+  {nom:'Marseille',bord:'droite',color:'#1E3A6E',desc:'LR / Droite — Ménard progressiste'},
+  {nom:'Lyon',bord:'gauche',color:'#CC0000',desc:'NFP — Grégory en tête'},
+  {nom:'Toulouse',bord:'gauche',color:'#CC0000',desc:'Gauche unie en tête'},
+  {nom:'Bordeaux',bord:'centre',color:'#0066CC',desc:'Centre — liste Moudenc'},
+  {nom:'Nice',bord:'droite',color:'#1E3A6E',desc:'LR — Estrosi largement en tête'},
+  {nom:'Nantes',bord:'gauche',color:'#CC0000',desc:'Gauche — Retailleau absent'},
+  {nom:'Strasbourg',bord:'gauche',color:'#CC0000',desc:'NFP — Pia Imbs reconduite'},
+  {nom:'Montpellier',bord:'gauche',color:'#CC0000',desc:'Gauche unie en tête'},
+  {nom:'Rennes',bord:'gauche',color:'#CC0000',desc:'Gauche — Métropole stable'},
+  {nom:'Lille',bord:'gauche',color:'#CC0000',desc:'NFP — Martine Aubry'},
+  {nom:'Le Havre',bord:'droite',color:'#1E3A6E',desc:'Horizons — Philippe largement favori'},
+  {nom:'Toulon',bord:'rn',color:'#003189',desc:'RN — Falco en tête'},
+  {nom:'Perpignan',bord:'rn',color:'#003189',desc:'RN — Ménard favori'},
+];
+
+function renderCarte(){
+  const el = document.getElementById('carteContent');
+  if(!el) return;
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.6rem">
+      ${VILLES.map(v=>`
+        <div style="background:${v.color}15;border:1px solid ${v.color}44;border-radius:10px;padding:.7rem .9rem;cursor:default">
+          <div style="font-weight:700;font-size:.85rem;color:var(--text)">${v.nom}</div>
+          <div style="font-size:.72rem;color:${v.color};font-weight:600;margin:.1rem 0">${v.bord==='gauche'?'◀ Gauche':v.bord==='droite'?'▶ Droite':v.bord==='centre'?'● Centre':'▶▶ RN'}</div>
+          <div style="font-size:.71rem;color:var(--gray)">${v.desc}</div>
+        </div>`).join('')}
+    </div>`;
+}
+
+// ── QUESTIONS / RÉPONSES IA ───────────────────────────────────────────
+async function doQR(){
+  const q = document.getElementById('qrInput').value.trim();
+  if(!q) return;
+  document.getElementById('qrBtn').disabled=true;
+  document.getElementById('qrAnswer').classList.remove('on');
+  const ctx = allArticles.slice(0,60).map(a=>`- ${a.title} (${a.name})`).join('\n');
+  try{
+    const resp = await fetch('/ai',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({max_tokens:500,
+        system:'Tu es un expert en politique française, neutre et objectif. Réponds en français, de façon claire et concise (3-5 phrases). Pas de markdown, pas de #, texte simple uniquement. Base-toi sur les articles fournis et tes connaissances.',
+        messages:[{role:'user',content:`Articles récents :\n${ctx}\n\nQuestion : ${q}`}]})});
+    const d = await resp.json();
+    const txt = d.content?.[0]?.text||'Réponse indisponible.';
+    document.getElementById('qrText').innerHTML = esc(txt).replace(/\n/g,'<br>');
+    document.getElementById('qrAnswer').classList.add('on');
+  }catch{
+    document.getElementById('qrText').textContent = 'Erreur — vérifiez votre connexion.';
+    document.getElementById('qrAnswer').classList.add('on');
+  }
+  document.getElementById('qrBtn').disabled=false;
+}
+
+// ── RÉSUMÉ QUOTIDIEN IA ───────────────────────────────────────────────
+async function doResume(){
+  document.getElementById('resumeBtn').disabled=true;
+  document.getElementById('resumeBtn').textContent='Génération en cours…';
+  document.getElementById('resumeBox').classList.remove('on');
+  const tops = allArticles.slice(0,30).map((a,i)=>`${i+1}. ${a.title} (${a.name})`).join('\n');
+  try{
+    const resp = await fetch('/ai',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({max_tokens:600,
+        system:'Tu es un journaliste politique français neutre. Génère un résumé des 5 grandes actualités du jour en format simple. Pour chaque actualité : une ligne de titre courte puis une phrase d explication. Pas de markdown, pas de #, pas de *. Texte simple.',
+        messages:[{role:'user',content:`Voici les 30 derniers articles :\n${tops}\n\nRésume les 5 grandes actualités politiques du jour.`}]})});
+    const d = await resp.json();
+    const txt = d.content?.[0]?.text||'';
+    document.getElementById('resumeText').innerHTML = esc(txt).replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>');
+    document.getElementById('resumeBox').classList.add('on');
+  }catch{
+    document.getElementById('resumeText').textContent='Erreur de connexion.';
+    document.getElementById('resumeBox').classList.add('on');
+  }
+  document.getElementById('resumeBtn').disabled=false;
+  document.getElementById('resumeBtn').textContent='Générer le résumé du jour';
+}
+
+// ── DÉTECTEUR DE BIAIS ────────────────────────────────────────────────
+async function doBiais(){
+  const txt = document.getElementById('biaisInput').value.trim();
+  if(!txt) return;
+  document.getElementById('biaisBtn').disabled=true;
+  document.getElementById('biaisResult').classList.remove('on');
+  try{
+    const resp = await fetch('/ai-compare',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:[{role:'user',content:`Analyse l orientation politique de ce texte : "${txt}"
+Réponds UNIQUEMENT en JSON valide : {"gauche":40,"centre":20,"droite":40,"explication":"Une phrase courte neutre."}
+Les 3 valeurs doivent totaliser 100. Pas de markdown.`}]})});
+    const d = await resp.json();
+    const raw = d.content?.[0]?.text||'{}';
+    let res = {gauche:33,centre:34,droite:33,explication:''};
+    try{ res = JSON.parse(raw.replace(/```json|```/g,'').trim()); }catch{}
+    document.getElementById('biaisGauche').style.width = res.gauche+'%';
+    document.getElementById('biaisDroite').style.width = res.droite+'%';
+    document.getElementById('biaisGaucheLabel').textContent = 'Gauche '+res.gauche+'%';
+    document.getElementById('biaisDroiteLabel').textContent = 'Droite '+res.droite+'%';
+    document.getElementById('biaisCentreLabel').textContent = 'Centre '+res.centre+'%';
+    document.getElementById('biaisExplain').textContent = res.explication||'';
+    document.getElementById('biaisResult').classList.add('on');
+  }catch{
+    document.getElementById('biaisExplain').textContent='Erreur — réessayez.';
+    document.getElementById('biaisResult').classList.add('on');
+  }
+  document.getElementById('biaisBtn').disabled=false;
+}
+
+// Newsletter premium
+function subscribePremium(){
+  const email = document.getElementById('premiumEmail').value.trim();
+  const msg = document.getElementById('premiumMsg');
+  if(!email||!email.includes('@')){ msg.style.display='block';msg.style.color='#FCA5A5';msg.textContent='⚠️ Email invalide.';return; }
+  msg.style.display='block';msg.style.color='#86EFAC';
+  msg.textContent='✅ Merci ! Vous serez parmi les premiers abonnés au lancement.';
+  document.getElementById('premiumEmail').value='';
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────
