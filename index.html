@@ -12,7 +12,7 @@
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 <meta name="language" content="fr">
 <meta name="revisit-after" content="1 day">
-<link rel="canonical" href="https://republique-site.onrender.com/">
+<link rel="canonical" href="https://republique-politique.fr/">
 <meta name="google-site-verification" content="wiIvr-_VFhEUYk2jZylnEK8zRK9uzFj376BaMurvvaw" />
 
 <!-- Open Graph -->
@@ -21,13 +21,13 @@
 <meta property="og:site_name" content="République — Politique Française">
 <meta property="og:title" content="République — Actualité Politique Française en Direct">
 <meta property="og:description" content="Tous les journaux, tous les bords politiques. Actualités en direct, sondages et calendrier électoral 2026-2027.">
-<meta property="og:url" content="https://republique-site.onrender.com/">
+<meta property="og:url" content="https://republique-politique.fr/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="République — Actualité Politique Française en Direct">
 <meta name="twitter:description" content="Tous les journaux, tous les bords. Actualités politiques françaises en direct.">
 
 <!-- Données structurées -->
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"République — Politique Française","url":"https://republique-site.onrender.com/","inLanguage":"fr-FR","potentialAction":{"@type":"SearchAction","target":"https://republique-site.onrender.com/?q={search_term_string}","query-input":"required name=search_term_string"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"République — Politique Française","url":"https://republique-politique.fr/","inLanguage":"fr-FR","potentialAction":{"@type":"SearchAction","target":"https://republique-politique.fr/?q={search_term_string}","query-input":"required name=search_term_string"}}</script>
 
 <!-- FAVICON SVG -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%230D2B6E'/><rect x='0' y='0' width='33' height='100' rx='8' fill='%23002395'/><rect x='33' y='0' width='34' height='100' fill='%23fff'/><rect x='67' y='0' width='33' height='100' rx='8' fill='%23ED2939'/><text x='50' y='68' font-size='42' text-anchor='middle' font-family='serif' font-weight='900' fill='%23fff'>R</text></svg>">
@@ -154,46 +154,27 @@ nav{background:var(--nav-bg);height:58px;padding:0 1.2rem;display:flex;align-ite
 .ad-slot-wide{margin:0;border-radius:0;border-left:none;border-right:none;min-height:90px;padding:.6rem 1rem}
 
 /* ── POLITICIANS ──────────────────────────────────────────────────── */
-.pol-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:.9rem}
-.pol-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.pol-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+.pol-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:transform .18s,box-shadow .18s}
+.pol-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px var(--shadow)}
 .pol-card-top{height:4px}
-.pol-card-body{padding:.9rem}
-.pol-card-head{display:flex;align-items:center;gap:.65rem;margin-bottom:.65rem}
-.pol-av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700;color:#fff;flex-shrink:0}
-.pol-name{font-family:'Playfair Display',serif;font-size:.93rem;font-weight:700;line-height:1.2}
-.pol-role-txt{font-size:.68rem;color:var(--gray);margin-top:.07rem}
-.pol-tag{display:inline-block;padding:.11rem .43rem;border-radius:50px;font-size:.59rem;font-weight:700;text-transform:uppercase;margin-top:.22rem}
-.pol-news{border-top:1px solid var(--border);padding-top:.65rem;margin-top:.65rem}
-.pol-news-lbl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin-bottom:.42rem}
-.pol-art{font-size:.76rem;color:var(--text);line-height:1.4;padding:.32rem 0;border-bottom:1px solid var(--border);display:flex;gap:.42rem}
+.pol-card-body{padding:1rem}
+.pol-card-head{display:flex;align-items:center;gap:.85rem;margin-bottom:.85rem}
+.pol-av{width:58px;height:58px;border-radius:50%;flex-shrink:0;object-fit:cover;border:2px solid var(--border);background:var(--light)}
+.pol-av-init{width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;color:#fff;flex-shrink:0}
+.pol-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;line-height:1.25;color:var(--text)}
+.pol-role-txt{font-size:.69rem;color:var(--gray);margin-top:.1rem;line-height:1.3}
+.pol-tag{display:inline-block;padding:.13rem .48rem;border-radius:50px;font-size:.61rem;font-weight:700;text-transform:uppercase;margin-top:.28rem}
+.pol-news{border-top:1px solid var(--border);padding-top:.75rem;margin-top:.75rem}
+.pol-news-lbl{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin-bottom:.45rem}
+.pol-art{font-size:.77rem;color:var(--text);line-height:1.4;padding:.35rem 0;border-bottom:1px solid var(--border);display:flex;gap:.45rem}
 .pol-art:last-child{border-bottom:none}
 .pol-dot{width:4px;height:4px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:5px}
 .pol-art a{color:var(--blue);text-decoration:none;font-weight:500}
 [data-theme="dark"] .pol-art a{color:#7B9FFF}
 .pol-art a:hover{text-decoration:underline}
-.pol-art-src{font-size:.61rem;color:var(--gray);margin-left:.22rem}
-.pol-none{font-size:.76rem;color:var(--gray);font-style:italic}
-
-/* ── COMPARAISON GAUCHE/DROITE ────────────────────────────────────── */
-.compare-search{display:flex;gap:.6rem;margin-bottom:1.2rem;flex-wrap:wrap}
-.compare-input{flex:1;min-width:200px;padding:.62rem .85rem;border:1.5px solid var(--border);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:.87rem;background:var(--card);color:var(--text);outline:none;transition:border-color .2s}
-.compare-input:focus{border-color:var(--blue)}
-.compare-btn{padding:.62rem 1.2rem;background:var(--blue);color:#fff;border:none;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:600;cursor:pointer;transition:background .2s;white-space:nowrap}
-.compare-btn:hover{background:#1A3F8F}.compare-btn:disabled{background:#aaa;cursor:not-allowed}
-.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.compare-col{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.compare-col-head{padding:.75rem 1rem;display:flex;align-items:center;gap:.5rem;font-weight:700;font-size:.85rem;color:#fff}
-.compare-col-body{padding:.9rem}
-.compare-article{padding:.45rem 0;border-bottom:1px solid var(--border);font-size:.78rem;line-height:1.45;color:var(--text)}
-.compare-article:last-child{border-bottom:none}
-.compare-article a{color:var(--blue);text-decoration:none;font-weight:600;display:block;margin-bottom:.15rem}
-[data-theme="dark"] .compare-article a{color:#7B9FFF}
-.compare-article a:hover{text-decoration:underline}
-.compare-src{font-size:.65rem;color:var(--gray)}
-.compare-empty{font-size:.78rem;color:var(--gray);font-style:italic;padding:.5rem 0}
-.compare-thinking{display:none;align-items:center;gap:.5rem;padding:1rem;color:var(--gray);font-size:.82rem}
-.compare-thinking.on{display:flex}
-.mini-sp-dark{width:13px;height:13px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:sp .7s linear infinite}
+.pol-art-src{font-size:.62rem;color:var(--gray);margin-left:.25rem}
+.pol-none{font-size:.77rem;color:var(--gray);font-style:italic}
 
 /* ── POLLS / CHARTS ───────────────────────────────────────────────── */
 .polls-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:1.1rem}
@@ -559,7 +540,12 @@ footer em{color:var(--red);font-style:normal}
 <!-- SONDAGES avec graphiques -->
 <div id="s-sond" class="sec">
   <div class="stitle">Sondages électoraux — 4 scrutins</div>
-  <p style="font-size:.8rem;color:var(--gray);margin-bottom:1.1rem">Graphiques interactifs · Articles de sondages extraits en direct des RSS</p>
+  <p style="font-size:.8rem;color:var(--gray);margin-bottom:1.1rem">Graphiques interactifs · Articles extraits en direct des RSS</p>
+  <!-- Articles de sondages en direct -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.1rem;margin-bottom:1.3rem">
+    <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--blue);margin-bottom:.7rem">📡 Derniers articles de sondages en direct</div>
+    <div id="pollLiveArticles"><div style="display:flex;align-items:center;gap:.5rem;color:var(--gray);font-size:.78rem"><div class="mini-sp"></div>Chargement…</div></div>
+  </div>
   <div id="sgrid"><div class="center-box"><div class="spinner"></div><p>Chargement…</p></div></div>
 </div>
 
@@ -941,29 +927,53 @@ function cardHTML(a, hot=false){
 // ── POLITICIENS ────────────────────────────────────────────────────────
 const POLITICIANS=[
   {name:'Emmanuel Macron',    init:'EM',color:'#002395',party:'Renaissance',pb:'#EEF2FF',pc:'#4338CA',
-   role:'Président de la République',kw:['macron','président de la république','élysée']},
+   role:'Président de la République',
+   photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Emmanuel_Macron_in_2019.jpg/220px-Emmanuel_Macron_in_2019.jpg',
+   kw:['macron','président de la république','élysée']},
   {name:'Sébastien Lecornu',  init:'SL',color:'#16A34A',party:'Renaissance',pb:'#F0FDF4',pc:'#166534',
-   role:'Premier ministre',kw:['lecornu','sébastien lecornu','premier ministre','matignon']},
+   role:'Premier ministre',
+   photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/S%C3%A9bastien_Lecornu_in_2022.jpg/220px-S%C3%A9bastien_Lecornu_in_2022.jpg',
+   kw:['lecornu','sébastien lecornu','premier ministre','matignon']},
   {name:'Marine Le Pen',      init:'ML',color:'#003189',party:'RN',pb:'#FFF0F0',pc:'#B91C1C',
-   role:'Présidente du groupe RN',kw:['marine le pen','rassemblement national',' rn ']},
+   role:'Présidente du groupe RN',
+   photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Marine_le_pen_2015.jpg/220px-Marine_le_pen_2015.jpg',
+   kw:['marine le pen','rassemblement national',' rn ']},
   {name:'Jordan Bardella',    init:'JB',color:'#00308F',party:'RN',pb:'#FFF0F0',pc:'#B91C1C',
-   role:'Président du RN',kw:['bardella','jordan bardella']},
+   role:'Président du RN',
+   photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Jordan_Bardella_2023.jpg/220px-Jordan_Bardella_2023.jpg',
+   kw:['bardella','jordan bardella']},
   {name:'Jean-Luc Mélenchon', init:'JM',color:'#CC0000',party:'LFI',pb:'#FFF0F0',pc:'#CC0000',
-   role:'Leader de La France Insoumise',kw:['mélenchon','melenchon','france insoumise','lfi']},
+   role:'Leader de La France Insoumise',
+   photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Jean-Luc_M%C3%A9lenchon_2017.jpg/220px-Jean-Luc_M%C3%A9lenchon_2017.jpg',
+   kw:['mélenchon','melenchon','france insoumise','lfi']},
   {name:'Édouard Philippe',   init:'EP',color:'#1E3A6E',party:'Horizons',pb:'#EEF2FF',pc:'#1E3A6E',
-   role:'Maire du Havre / Horizons',kw:['édouard philippe','edouard philippe','horizons']},
+   role:'Maire du Havre / Horizons',
+   photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/%C3%89douard_Philippe_2019.jpg/220px-%C3%89douard_Philippe_2019.jpg',
+   kw:['édouard philippe','edouard philippe','horizons']},
   {name:'Laurent Wauquiez',   init:'LW',color:'#0072C6',party:'LR',pb:'#EEF2FF',pc:'#0072C6',
-   role:'Président du groupe LR',kw:['wauquiez','les républicains',' lr ']},
+   role:'Président du groupe LR',
+   photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Laurent_Wauquiez_2021.jpg/220px-Laurent_Wauquiez_2021.jpg',
+   kw:['wauquiez','les républicains',' lr ']},
   {name:'Olivier Faure',      init:'OF',color:'#BE185D',party:'PS',pb:'#FDF2F8',pc:'#9D174D',
-   role:'Premier Secrétaire du PS',kw:['olivier faure','parti socialiste',' ps ']},
+   role:'Premier Secrétaire du PS',
+   photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Olivier_Faure_2022.jpg/220px-Olivier_Faure_2022.jpg',
+   kw:['olivier faure','parti socialiste',' ps ']},
   {name:'Marine Tondelier',   init:'MT',color:'#15803D',party:'EELV',pb:'#F0FDF4',pc:'#166534',
-   role:'Secrétaire nationale EELV',kw:['tondelier','eelv','les verts','écologiste']},
+   role:'Secrétaire nationale EELV',
+   photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Marine_Tondelier_2023.jpg/220px-Marine_Tondelier_2023.jpg',
+   kw:['tondelier','eelv','les verts','écologiste']},
   {name:'Gabriel Attal',      init:'GA',color:'#3B82F6',party:'Renaissance',pb:'#EEF2FF',pc:'#4338CA',
-   role:'Ancien Premier ministre',kw:['gabriel attal','attal']},
+   role:'Ancien Premier ministre',
+   photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Gabriel_Attal_2023.jpg/220px-Gabriel_Attal_2023.jpg',
+   kw:['gabriel attal','attal']},
   {name:'Éric Ciotti',        init:'EC',color:'#1E40AF',party:'UDR',pb:'#EEF2FF',pc:'#1E40AF',
-   role:"Président de l'UDR",kw:['ciotti','udr']},
+   role:"Président de l'UDR",
+   photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/%C3%89ric_Ciotti_2022.jpg/220px-%C3%89ric_Ciotti_2022.jpg',
+   kw:['ciotti','udr']},
   {name:'Gérald Darmanin',    init:'GD',color:'#7C3AED',party:'Renaissance',pb:'#F5F3FF',pc:'#7C3AED',
-   role:'Garde des Sceaux',kw:['darmanin','gérald darmanin','garde des sceaux']},
+   role:'Garde des Sceaux',
+   photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/G%C3%A9rald_Darmanin_2020.jpg/220px-G%C3%A9rald_Darmanin_2020.jpg',
+   kw:['darmanin','gérald darmanin','garde des sceaux']},
 ];
 
 function renderPoliticians(){
@@ -974,12 +984,29 @@ function renderPoliticians(){
     const artsHTML=arts.length
       ?arts.map(a=>`<div class="pol-art"><div class="pol-dot"></div><div><a href="${esc(a.link)}" target="_blank">${esc(a.title)}</a><span class="pol-art-src">— ${esc(a.name)} · ${age(a.date)}</span></div></div>`).join('')
       :`<div class="pol-none">Aucun article récent.</div>`;
-    return`<div class="pol-card"><div class="pol-card-top" style="background:${pol.color}"></div><div class="pol-card-body">
-      <div class="pol-card-head"><div class="pol-av" style="background:${pol.color}">${pol.init}</div>
-        <div><div class="pol-name">${pol.name}</div><div class="pol-role-txt">${pol.role}</div>
-        <span class="pol-tag" style="background:${pol.pb};color:${pol.pc}">${pol.party}</span></div></div>
-      <div class="pol-news"><div class="pol-news-lbl">📰 ${arts.length} article${arts.length>1?'s':''} récent${arts.length>1?'s':''}</div>${artsHTML}</div>
-    </div></div>`;
+    // Photo avec fallback sur initiales
+    const photoHTML = pol.photo
+      ? `<img class="pol-av" src="${pol.photo}" alt="${pol.name}"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+           loading="lazy">
+         <div class="pol-av-init" style="background:${pol.color};display:none">${pol.init}</div>`
+      : `<div class="pol-av-init" style="background:${pol.color}">${pol.init}</div>`;
+    return`<div class="pol-card">
+      <div class="pol-card-top" style="background:${pol.color}"></div>
+      <div class="pol-card-body">
+        <div class="pol-card-head">
+          <div style="position:relative;flex-shrink:0">${photoHTML}</div>
+          <div>
+            <div class="pol-name">${pol.name}</div>
+            <div class="pol-role-txt">${pol.role}</div>
+            <span class="pol-tag" style="background:${pol.pb};color:${pol.pc}">${pol.party}</span>
+          </div>
+        </div>
+        <div class="pol-news">
+          <div class="pol-news-lbl">📰 ${arts.length} article${arts.length>1?'s':''} récent${arts.length>1?'s':''}</div>
+          ${artsHTML}
+        </div>
+      </div></div>`;
   }).join('');
 }
 
@@ -1103,6 +1130,7 @@ function renderPolls(){
     });
     chartsReady=true;
   },100);
+  extractPollData();
 }
 
 // ── CALENDRIER ────────────────────────────────────────────────────────
