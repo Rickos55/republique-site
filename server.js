@@ -686,6 +686,228 @@ app.get('/premium-success', (req, res) => {
 </html>`);
 });
 
+// ── PAGE ADMIN ───────────────────────────────────────────────────────
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'republique-admin-2026';
+
+// Middleware auth admin
+function adminAuth(req, res, next) {
+  const token = req.query.token || req.headers['x-admin-token'];
+  if (token !== ADMIN_PASSWORD) {
+    return res.status(401).send('Accès refusé. Ajoutez ?token=VOTRE_MOT_DE_PASSE');
+  }
+  next();
+}
+
+// Page admin HTML
+app.get('/admin', adminAuth, async (req, res) => {
+  const token = req.query.token;
+
+  // Stats Mailchimp
+  let mcStats = { total: 0, premium: 0, gratuit: 0 };
+  let stripeStats = { mrr: 0, subscribers: 0 };
+
+  try {
+    if (MC_API_KEY && MC_LIST_ID) {
+      const r = await fetch(`https://${MC_SERVER}.api.mailchimp.com/3.0/lists/${MC_LIST_ID}`, {
+        headers: { 'Authorization': `Basic ${Buffer.from(`anystring:${MC_API_KEY}`).toString('base64')}` }
+      });
+      const d = await r.json();
+      mcStats.total = d.stats?.member_count || 0;
+
+      // Tag premium
+      const tagR = await fetch(`https://${MC_SERVER}.api.mailchimp.com/3.0/lists/${MC_LIST_ID}/tag-search?name=premium`, {
+        headers: { 'Authorization': `Basic ${Buffer.from(`anystring:${MC_API_KEY}`).toString('base64')}` }
+      });
+      const tagD = await tagR.json();
+      mcStats.premium = tagD.tags?.[0]?.member_count || 0;
+      mcStats.gratuit = mcStats.total - mcStats.premium;
+    }
+  } catch(e) { console.error('MC stats error:', e.message); }
+
+  try {
+    if (STRIPE_SECRET) {
+      const r = await fetch('https://api.stripe.com/v1/subscriptions?status=active&limit=100', {
+        headers: { 'Authorization': `Bearer ${STRIPE_SECRET}` }
+      });
+      const d = await r.json();
+      stripeStats.subscribers = d.data?.length || 0;
+      stripeStats.mrr = stripeStats.subscribers * 2.99;
+    }
+  } catch(e) { console.error('Stripe stats error:', e.message); }
+
+  res.send(`<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin — République</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0D1117;color:#E6EDF3;min-height:100vh}
+.header{background:#161B22;border-bottom:1px solid #30363D;padding:1rem 2rem;display:flex;align-items:center;gap:1rem}
+.header h1{font-size:1.2rem;font-weight:700;color:#fff}
+.header span{background:#238636;color:#fff;font-size:.65rem;padding:.2rem .6rem;border-radius:50px;font-weight:700}
+.main{padding:2rem;max-width:1200px;margin:0 auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-bottom:2rem}
+.stat{background:#161B22;border:1px solid #30363D;border-radius:12px;padding:1.2rem}
+.stat-label{font-size:.72rem;color:#8B949E;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem}
+.stat-value{font-size:2rem;font-weight:700;color:#fff}
+.stat-sub{font-size:.75rem;color:#8B949E;margin-top:.2rem}
+.stat.green .stat-value{color:#3FB950}
+.stat.blue .stat-value{color:#58A6FF}
+.stat.gold .stat-value{color:gold}
+.card{background:#161B22;border:1px solid #30363D;border-radius:12px;padding:1.4rem;margin-bottom:1.2rem}
+.card h2{font-size:1rem;font-weight:600;margin-bottom:1rem;color:#fff;display:flex;align-items:center;gap:.5rem}
+.btn{padding:.6rem 1.2rem;border-radius:8px;border:none;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit}
+.btn-primary{background:#238636;color:#fff}.btn-primary:hover{background:#2EA043}
+.btn-danger{background:#DA3633;color:#fff}.btn-danger:hover{background:#F85149}
+.btn-blue{background:#1F6FEB;color:#fff}.btn-blue:hover{background:#388BFD}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.rss-item{display:flex;align-items:center;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid #21262D;font-size:.83rem}
+.rss-item:last-child{border-bottom:none}
+.rss-name{font-weight:500}
+.rss-bord{font-size:.65rem;padding:.15rem .45rem;border-radius:50px;font-weight:700}
+.toggle{width:36px;height:20px;background:#30363D;border-radius:50px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggle.on{background:#238636}
+.toggle::after{content:'';position:absolute;width:14px;height:14px;background:#fff;border-radius:50%;top:3px;left:3px;transition:left .2s}
+.toggle.on::after{left:19px}
+.response{margin-top:.7rem;padding:.6rem .9rem;border-radius:8px;font-size:.82rem;display:none}
+.response.ok{background:#0D1117;border:1px solid #238636;color:#3FB950}
+.response.err{background:#0D1117;border:1px solid #DA3633;color:#F85149}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{text-align:left;color:#8B949E;font-weight:500;font-size:.72rem;text-transform:uppercase;letter-spacing:.4px;padding:.5rem 0;border-bottom:1px solid #21262D}
+td{padding:.55rem 0;border-bottom:1px solid #21262D;color:#C9D1D9}
+</style>
+</head>
+<body>
+<div class="header">
+  <div>🇫🇷</div>
+  <h1>République — Admin</h1>
+  <span>PRIVÉ</span>
+</div>
+
+<div class="main">
+
+  <!-- STATS -->
+  <div class="grid">
+    <div class="stat green">
+      <div class="stat-label">Abonnés total</div>
+      <div class="stat-value">${mcStats.total}</div>
+      <div class="stat-sub">Mailchimp</div>
+    </div>
+    <div class="stat gold">
+      <div class="stat-label">Abonnés Premium</div>
+      <div class="stat-value">${mcStats.premium}</div>
+      <div class="stat-sub">${(mcStats.premium * 2.99).toFixed(2)}€/mois</div>
+    </div>
+    <div class="stat blue">
+      <div class="stat-label">Abonnés Gratuits</div>
+      <div class="stat-value">${mcStats.gratuit}</div>
+      <div class="stat-sub">Newsletter quotidienne</div>
+    </div>
+    <div class="stat gold">
+      <div class="stat-label">Revenus Stripe</div>
+      <div class="stat-value">${stripeStats.mrr.toFixed(2)}€</div>
+      <div class="stat-sub">${stripeStats.subscribers} abonnements actifs</div>
+    </div>
+  </div>
+
+  <!-- NEWSLETTER -->
+  <div class="card">
+    <h2>📧 Newsletter</h2>
+    <div style="display:flex;gap:.8rem;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="sendNL('gratuit')">Envoyer newsletter gratuite maintenant</button>
+      <button class="btn btn-blue" onclick="sendNL('premium')">Envoyer newsletter premium maintenant</button>
+    </div>
+    <div id="nl-response" class="response"></div>
+  </div>
+
+  <!-- SOURCES RSS -->
+  <div class="card">
+    <h2>📡 Sources RSS (${44} sources)</h2>
+    <div id="rss-list">
+      ${[
+        {name:'Le Monde', bord:'centre', color:'#0066CC'},
+        {name:'Le Figaro', bord:'droite', color:'#1E3A6E'},
+        {name:'Libération', bord:'gauche', color:'#CC0000'},
+        {name:'France Info', bord:'public', color:'#0891B2'},
+        {name:'BFM TV', bord:'public', color:'#DC2626'},
+        {name:'Mediapart', bord:'gauche', color:'#009966'},
+        {name:'Les Échos', bord:'eco', color:'#1D4ED8'},
+        {name:'Le Parisien', bord:'régional', color:'#003399'},
+        {name:'Ouest France', bord:'régional', color:'#005A9C'},
+        {name:'Reporterre', bord:'gauche', color:'#2D6A4F'},
+        {name:'Blast', bord:'gauche', color:'#E63946'},
+        {name:'Guyane 1ère', bord:'outre-mer', color:'#009900'},
+        {name:'Outre-mer 1ère', bord:'outre-mer', color:'#0066CC'},
+        {name:'TV5 Monde', bord:'public', color:'#003366'},
+      ].map(s => `
+        <div class="rss-item">
+          <span class="rss-name">${s.name}</span>
+          <span class="rss-bord" style="background:${s.color}22;color:${s.color}">${s.bord}</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')" title="Activer/désactiver"></div>
+        </div>`).join('')}
+      <div style="color:#8B949E;font-size:.75rem;margin-top:.7rem;font-style:italic">+ 30 autres sources actives · Gestion avancée bientôt disponible</div>
+    </div>
+  </div>
+
+  <!-- DERNIERS ARTICLES -->
+  <div class="card">
+    <h2>📰 Derniers articles (chargés en direct)</h2>
+    <div id="articles-list">
+      <div style="color:#8B949E;font-size:.83rem">Chargement...</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+async function sendNL(type) {
+  const btn = event.target;
+  const resp = document.getElementById('nl-response');
+  btn.disabled = true;
+  btn.textContent = 'Envoi en cours...';
+  resp.style.display = 'none';
+  try {
+    const r = await fetch('/newsletter/send?token=${ADMIN_PASSWORD}', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({token:'${ADMIN_PASSWORD}'})});
+    const d = await r.json();
+    resp.className = 'response ok';
+    resp.textContent = '✅ ' + (d.message || 'Newsletter envoyée !');
+    resp.style.display = 'block';
+  } catch(e) {
+    resp.className = 'response err';
+    resp.textContent = '❌ Erreur : ' + e.message;
+    resp.style.display = 'block';
+  }
+  btn.disabled = false;
+  btn.textContent = type === 'premium' ? 'Envoyer newsletter premium maintenant' : 'Envoyer newsletter gratuite maintenant';
+}
+
+// Charger les derniers articles
+async function loadArticles() {
+  const el = document.getElementById('articles-list');
+  try {
+    const r = await fetch('/rss?url=https://www.lemonde.fr/politique/rss_full.xml');
+    const txt = await r.text();
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(txt, 'application/xml');
+    const items = [...xml.querySelectorAll('item')].slice(0, 8);
+    el.innerHTML = '<table><thead><tr><th>Titre</th><th>Source</th><th>Date</th></tr></thead><tbody>' +
+      items.map(i => {
+        const title = i.querySelector('title')?.textContent || '';
+        const date = new Date(i.querySelector('pubDate')?.textContent || '').toLocaleDateString('fr-FR', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+        return '<tr><td><a href="' + (i.querySelector('link')?.textContent||'#') + '" target="_blank" style="color:#58A6FF;text-decoration:none">' + title.substring(0,80) + '...</a></td><td style="color:#8B949E">Le Monde</td><td style="color:#8B949E;white-space:nowrap">' + date + '</td></tr>';
+      }).join('') + '</tbody></table>';
+  } catch(e) {
+    el.innerHTML = '<div style="color:#8B949E;font-size:.83rem">Erreur de chargement</div>';
+  }
+}
+loadArticles();
+</script>
+</body>
+</html>`);
+});
+
 app.listen(PORT, () => {
   console.log(`\n✅ Serveur lancé sur le port ${PORT}`);
   console.log(`🤖 IA Recherche : Claude Sonnet (~0.01$/requête)`);
