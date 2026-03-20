@@ -1594,38 +1594,39 @@ function openDebat(idx) {
 // Remplace YOUR_MAILCHIMP_URL par ton URL Mailchimp après inscription
 const MAILCHIMP_URL = 'https://onrender.us10.list-manage.com/subscribe/post?u=ebf7592539faf30f0fd07d166&id=ce980cf052&f_id=0097a4e3f0';
 
-function subscribeNewsletter() {
+async function subscribeNewsletter() {
   const email = document.getElementById('nlEmail').value.trim();
   const msg = document.getElementById('nlMsg');
+  const btn = document.querySelector('.nl-btn');
   if (!email || !email.includes('@')) {
     msg.style.display = 'block';
     msg.style.color = '#FCA5A5';
     msg.textContent = '⚠️ Entrez une adresse email valide.';
     return;
   }
-  if (MAILCHIMP_URL.includes('YOUR_MAILCHIMP')) {
-    // Mode démo — affiche un message de succès pour tester
+  if(btn) btn.disabled = true;
+  try {
+    const resp = await fetch('/newsletter/subscribe', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({email})
+    });
+    const data = await resp.json();
     msg.style.display = 'block';
-    msg.style.color = '#86EFAC';
-    msg.textContent = '✅ Merci ! Vous serez bientôt abonné à la newsletter.';
-    document.getElementById('nlEmail').value = '';
-    return;
-  }
-  // Vrai envoi Mailchimp
-  fetch(MAILCHIMP_URL, {
-    method: 'POST',
-    body: new URLSearchParams({EMAIL: email}),
-    mode: 'no-cors'
-  }).then(() => {
-    msg.style.display = 'block';
-    msg.style.color = '#86EFAC';
-    msg.textContent = '✅ Merci ! Vérifiez votre boîte email pour confirmer.';
-    document.getElementById('nlEmail').value = '';
-  }).catch(() => {
+    if(data.success) {
+      msg.style.color = '#86EFAC';
+      msg.textContent = '✅ ' + data.message;
+      document.getElementById('nlEmail').value = '';
+    } else {
+      msg.style.color = '#FCA5A5';
+      msg.textContent = '⚠️ ' + (data.error || 'Erreur. Réessayez.');
+    }
+  } catch {
     msg.style.display = 'block';
     msg.style.color = '#FCA5A5';
-    msg.textContent = '⚠️ Erreur. Réessayez.';
-  });
+    msg.textContent = '⚠️ Erreur de connexion.';
+  }
+  if(btn) btn.disabled = false;
 }
 
 // ── MENU MOBILE ──────────────────────────────────────────────────────

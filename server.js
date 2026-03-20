@@ -339,6 +339,37 @@ app.get('/newsletter/status', (req, res) => {
   });
 });
 
+// ── Route inscription newsletter gratuite ────────────────────────────
+app.post('/newsletter/subscribe', async (req, res) => {
+  const { email } = req.body;
+  if (!email || !email.includes('@')) return res.status(400).json({ error: 'Email invalide' });
+  if (!MC_API_KEY || !MC_LIST_ID) return res.status(503).json({ error: 'Mailchimp non configuré' });
+  try {
+    const r = await fetch(`https://${MC_SERVER}.api.mailchimp.com/3.0/lists/${MC_LIST_ID}/members`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${Buffer.from(`anystring:${MC_API_KEY}`).toString('base64')}`
+      },
+      body: JSON.stringify({
+        email_address: email,
+        status: 'subscribed',
+        tags: ['gratuit']
+      })
+    });
+    const data = await r.json();
+    if (r.status === 200 || r.status === 201) {
+      res.json({ success: true, message: 'Inscrit avec succès !' });
+    } else if (data.title === 'Member Exists') {
+      res.json({ success: true, message: 'Vous êtes déjà inscrit !' });
+    } else {
+      res.status(400).json({ error: data.detail || 'Erreur inscription' });
+    }
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // ── STRIPE PAIEMENT ──────────────────────────────────────────────────
 const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY || '';
 const STRIPE_PRICE  = process.env.STRIPE_PRICE_ID   || ''; // ID du prix créé sur Stripe
