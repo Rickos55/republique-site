@@ -718,8 +718,7 @@ app.post('/newsletter/preview', async (req, res) => {
         });
       } catch {}
     }
-    const tops = articles.slice(0, 20).map((t, i) => `${i+1}. ${t}`).join('
-');
+    const tops = articles.slice(0, 20).map((t, i) => `${i+1}. ${t}`).join('\n');
 
     // Générer avec Claude
     const model = type === 'premium' ? 'claude-sonnet-4-20250514' : 'claude-haiku-4-5-20251001';
