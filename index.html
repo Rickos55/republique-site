@@ -1325,6 +1325,26 @@ async function doCompare(){
   document.getElementById('compBtn').disabled=false;
 }
 
+// ── ARTICLES SONDAGES EN DIRECT ──────────────────────────────────────
+function extractPollData(){
+  const pollArticles = allArticles.filter(a =>
+    ['sondage','intentions de vote','popularité','baromètre','opinion'].some(k =>
+      (a.title+' '+a.desc).toLowerCase().includes(k)
+    )
+  );
+  const liveBox = document.getElementById('pollLiveArticles');
+  if(!liveBox) return;
+  if(!pollArticles.length){
+    liveBox.innerHTML='<div style="font-size:.78rem;color:var(--gray);font-style:italic">Aucun article de sondage trouvé.</div>';
+    return;
+  }
+  liveBox.innerHTML = pollArticles.slice(0,8).map(a=>`
+    <div style="padding:.42rem 0;border-bottom:1px solid var(--border);font-size:.8rem">
+      <a href="${esc(a.link)}" target="_blank" style="color:var(--blue);font-weight:600;text-decoration:none">${esc(a.title)}</a>
+      <div style="font-size:.68rem;color:var(--gray);margin-top:.1rem">${esc(a.name)} · ${age(a.date)}</div>
+    </div>`).join('');
+}
+
 // ── SONDAGES AVEC GRAPHIQUES Chart.js ─────────────────────────────────
 const ELECTIONS=[
   {label:'Présidentielle 2027',badge:'Présidentielle',badgeBg:'#FEE2E2',badgeColor:'#B91C1C',
@@ -1854,10 +1874,18 @@ async function startStripeCheckout(){
     });
     const data = await resp.json();
     if(data.url){
-      window.location.href = data.url; // Redirection vers Stripe Checkout
+      window.location.href = data.url;
+    } else if(data.error && data.error.includes('non configuré')){
+      // Stripe pas encore configuré — mode liste d'attente
+      localStorage.setItem('premiumEmail', email);
+      localStorage.setItem('premiumUser', '1');
+      hidePubsForPremium();
+      msg.style.display='block';msg.style.color='#86EFAC';
+      msg.textContent='✅ Inscrit sur la liste d'attente ! Paiement disponible bientôt.';
+      btn.disabled=false;btn.textContent="S'abonner 2,99€/mois →";
     } else {
       msg.style.display='block';msg.style.color='#FCA5A5';
-      msg.textContent = data.error || 'Erreur — réessayez.';
+      msg.textContent = data.error || 'Erreur — réessayez dans un instant.';
       btn.disabled=false;btn.textContent="S'abonner 2,99€/mois →";
     }
   }catch{
