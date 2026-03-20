@@ -703,6 +703,10 @@ footer em{color:var(--red);font-style:normal}
         <span class="asrc public">France Info</span><span class="asrc public">France 24</span><span class="asrc public">RFI</span><span class="asrc public">Public Sénat</span><span class="asrc public">BFM TV</span>
         <span class="asrc eco">Les Échos</span><span class="asrc eco">BFM Business</span><span class="asrc eco">Challenges</span>
         <span class="asrc regional">Sud Ouest</span><span class="asrc regional">La Dépêche</span>
+        <span class="asrc regional">Le Parisien</span><span class="asrc regional">Ouest France</span><span class="asrc regional">Nice Matin</span><span class="asrc regional">La Provence</span>
+        <span class="asrc gauche">Reporterre</span><span class="asrc gauche">Blast</span><span class="asrc gauche">Le Media</span><span class="asrc gauche">Politis</span>
+        <span class="asrc public">Outre-mer 1ere</span><span class="asrc public">Guyane 1ere</span><span class="asrc public">Martinique 1ere</span><span class="asrc public">TV5 Monde</span>
+        <span class="asrc centre">Le Courrier Int</span><span class="asrc centre">L Express</span>
       </div>
     </div>
     <!-- NEWSLETTER MAILCHIMP -->
@@ -868,7 +872,7 @@ footer em{color:var(--red);font-style:normal}
 
 <footer>
   <strong>République</strong> — Information politique française neutre &amp; objective<br>
-  21 flux RSS en direct · Recherche IA <em>Claude</em> · Actualisation toutes les 10 min
+  44 flux RSS en direct · Recherche IA <em>Claude</em> · Actualisation toutes les 10 min
   <div class="creator">© 2026 — Créé par <strong style="color:rgba(255,255,255,.55)">A.D</strong></div>
 </footer>
 
@@ -959,6 +963,33 @@ const FEEDS=[
   {name:'La Croix',          color:'#003399',bord:'centre', url:'https://www.la-croix.com/RSS/RELIGION_CATHOLICISME'},
   {name:'Slate France',      color:'#1A1A1A',bord:'centre', url:'http://www.slate.fr/rss.xml'},
   {name:'LOpinion',         color:'#0066CC',bord:'centre', url:'https://www.lopinion.fr/feed'},
+  // ── Hebdomadaires ──────────────────────────────────────────────────
+  {name:'Le Nouvel Obs',    color:'#E67E22',bord:'gauche', url:'https://www.nouvelobs.com/rss.xml'},
+  {name:'L Express',        color:'#EA580C',bord:'centre', url:'https://www.lexpress.fr/arc/outboundfeeds/rss/politique/'},
+  {name:'Politis',          color:'#8B0000',bord:'gauche', url:'https://www.politis.fr/feed/'},
+  {name:'L Incorrect',      color:'#2C3E50',bord:'droite', url:'https://lincorrect.org/feed/'},
+  // ── Médias alternatifs ─────────────────────────────────────────────
+  {name:'Reporterre',       color:'#2D6A4F',bord:'gauche', url:'https://reporterre.net/spip.php?page=backend'},
+  {name:'Blast',            color:'#E63946',bord:'gauche', url:'https://www.blast-info.fr/feed'},
+  {name:'Le Media',         color:'#CC0000',bord:'gauche', url:'https://www.lemediatv.fr/feed'},
+  {name:'Acrimed',          color:'#AA0000',bord:'gauche', url:'https://www.acrimed.org/spip.php?page=backend'},
+  // ── Presse régionale ───────────────────────────────────────────────
+  {name:'Le Parisien',      color:'#003399',bord:'centre', url:'https://feeds.leparisien.fr/leparisien/rss'},
+  {name:'Ouest France',     color:'#005A9C',bord:'centre', url:'https://www.ouest-france.fr/rss-en-continu.xml'},
+  {name:'Le Monde FR',      color:'#1A1A2E',bord:'centre', url:'https://www.lemonde.fr/politique/rss_full.xml'},
+  {name:'Nice Matin',       color:'#0066CC',bord:'centre', url:'https://www.nicematin.com/rss'},
+  {name:'La Provence',      color:'#CC3300',bord:'centre', url:'https://www.laprovence.com/rss.xml'},
+  // ── Outre-mer ──────────────────────────────────────────────────────
+  {name:'Outre-mer 1ere',   color:'#0066CC',bord:'public', url:'https://la1ere.francetvinfo.fr/rss'},
+  {name:'France-Antilles',  color:'#003399',bord:'public', url:'https://www.france-antilles.fr/feed'},
+  {name:'Martinique 1ere',  color:'#0066CC',bord:'public', url:'https://la1ere.francetvinfo.fr/martinique/rss'},
+  {name:'Guadeloupe 1ere',  color:'#0066CC',bord:'public', url:'https://la1ere.francetvinfo.fr/guadeloupe/rss'},
+  {name:'Guyane 1ere',      color:'#009900',bord:'public', url:'https://la1ere.francetvinfo.fr/guyane/rss'},
+  {name:'Reunion 1ere',     color:'#FF6600',bord:'public', url:'https://la1ere.francetvinfo.fr/reunion/rss'},
+  // ── International francophone ──────────────────────────────────────
+  {name:'TV5 Monde',        color:'#003366',bord:'public', url:'https://information.tv5monde.com/rss-france.xml'},
+  {name:'Le Courrier Int',  color:'#336699',bord:'centre', url:'https://www.courrierinternational.com/rss.xml'},
+  {name:'AFP Politique',    color:'#1A1A1A',bord:'public', url:'https://www.afp.com/fr/rss-feeds'},
 ];
 const BORD_LABEL={gauche:'Gauche',centre:'Centre',droite:'Droite',eco:'Économie',public:'Médias publics'};
 const BORD_COLOR={gauche:'#CC0000',centre:'#0066CC',droite:'#1E3A6E',eco:'#1A7A3A',public:'#0891B2'};

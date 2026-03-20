@@ -116,16 +116,219 @@ app.post('/ai-compare', async (req, res) => {
 
 // ── NEWSLETTER AUTOMATIQUE ────────────────────────────────────────────
 // Fonction principale : génère et envoie la newsletter via Mailchimp
+// ── NEWSLETTER PREMIUM ───────────────────────────────────────────────
+async function sendPremiumNewsletter(articles, tops) {
+  if (!MC_API_KEY || !MC_LIST_ID) return;
+  try {
+    // Générer contenu premium avec Claude Sonnet (plus intelligent)
+    const aiResp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1500,
+        system: `Tu es un analyste politique français expert, neutre et rigoureux. Génère une newsletter premium détaillée.
+Format exact (sans markdown, sans #, sans *) :
+TITRE: [titre accrocheur]
+INTRO: [2 phrases d'accroche percutantes]
+NEWS1: [titre] | [2-3 phrases d'analyse approfondie]
+NEWS2: [titre] | [2-3 phrases d'analyse approfondie]
+NEWS3: [titre] | [2-3 phrases d'analyse approfondie]
+NEWS4: [titre] | [2-3 phrases d'analyse approfondie]
+NEWS5: [titre] | [2-3 phrases d'analyse approfondie]
+NEWS6: [titre] | [2-3 phrases d'analyse approfondie]
+NEWS7: [titre] | [2-3 phrases d'analyse approfondie]
+ANALYSE_GAUCHE: [Comment la presse de gauche traite l'actu du jour - 3 phrases]
+ANALYSE_DROITE: [Comment la presse de droite traite l'actu du jour - 3 phrases]
+EXCLUSIF: [Un angle ou fait que les médias mainstream n'ont pas mis en avant - 2 phrases]
+CONCLUSION: [1 phrase de clôture]`,
+        messages: [{ role: 'user', content: `Articles du jour :
+${tops}
+
+Génère la newsletter premium.` }]
+      })
+    });
+    const aiData = await aiResp.json();
+    const aiText = aiData.content?.[0]?.text || '';
+
+    const getField = (key) => {
+      const match = aiText.match(new RegExp(`${key}:\s*(.+)`));
+      return match ? match[1].trim() : '';
+    };
+    const titre = getField('TITRE') || 'Analyse politique du jour';
+    const intro = getField('INTRO') || '';
+    const news = [1,2,3,4,5,6,7].map(i => {
+      const line = getField(`NEWS${i}`);
+      if (!line) return null;
+      const [t, desc] = line.split('|').map(s => s.trim());
+      return { titre: t, desc: desc || '' };
+    }).filter(Boolean);
+    const analyseGauche = getField('ANALYSE_GAUCHE') || '';
+    const analyseDroite = getField('ANALYSE_DROITE') || '';
+    const exclusif = getField('EXCLUSIF') || '';
+    const conclusion = getField('CONCLUSION') || '';
+
+    const today = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+    const newsHTML = news.map((n, i) => `
+      <tr><td style="padding:14px 0;border-bottom:1px solid #E0D9CF">
+        <div style="display:flex;align-items:flex-start;gap:10px">
+          <span style="background:#0D2B6E;color:#fff;font-weight:700;font-size:11px;padding:2px 8px;border-radius:50px;white-space:nowrap;margin-top:2px">${i+1}</span>
+          <div>
+            <div style="font-weight:700;font-size:15px;color:#1A1A1A;margin-bottom:5px">${n.titre}</div>
+            <div style="font-size:13px;color:#444;line-height:1.6">${n.desc}</div>
+          </div>
+        </div>
+      </td></tr>`).join('');
+
+    const htmlContent = `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#F6F3EE;font-family:Arial,sans-serif">
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr><td align="center" style="padding:20px 10px">
+<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%">
+
+  <!-- EN-TÊTE PREMIUM -->
+  <tr><td style="background:linear-gradient(135deg,#0D2B6E,#1A3F8F);border-radius:12px 12px 0 0;padding:24px 32px;text-align:center">
+    <div style="color:gold;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px">⭐ Édition Premium</div>
+    <div style="color:#fff;font-size:22px;font-weight:900">🇫🇷 République</div>
+    <div style="color:rgba(255,255,255,0.55);font-size:11px;margin-top:4px;text-transform:uppercase;letter-spacing:1px">Analyse politique approfondie · ${today}</div>
+  </td></tr>
+
+  <!-- TITRE -->
+  <tr><td style="background:#C1121F;padding:16px 32px">
+    <div style="color:#fff;font-size:17px;font-weight:700">${titre}</div>
+    <div style="color:rgba(255,255,255,0.85);font-size:13px;margin-top:5px;line-height:1.5">${intro}</div>
+  </td></tr>
+
+  <!-- ACTUALITÉS -->
+  <tr><td style="background:#fff;padding:24px 32px">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#aaa;margin-bottom:10px">Analyse des ${news.length} actualités du jour</div>
+    <table width="100%" cellpadding="0" cellspacing="0">${newsHTML}</table>
+  </td></tr>
+
+  <!-- ANALYSE GAUCHE/DROITE -->
+  <tr><td style="padding:0 0 0 0">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="50%" style="background:#FFF0F0;padding:18px 20px;vertical-align:top">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#CC0000;margin-bottom:8px">◀ Analyse Gauche</div>
+          <div style="font-size:13px;color:#333;line-height:1.6">${analyseGauche}</div>
+        </td>
+        <td width="50%" style="background:#EEF2FF;padding:18px 20px;vertical-align:top">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#1E3A6E;margin-bottom:8px">▶ Analyse Droite</div>
+          <div style="font-size:13px;color:#333;line-height:1.6">${analyseDroite}</div>
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+
+  <!-- EXCLUSIF -->
+  <tr><td style="background:#1A1A2E;padding:20px 32px">
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:gold;margin-bottom:8px">⭐ Angle exclusif Premium</div>
+    <div style="font-size:14px;color:#fff;line-height:1.6">${exclusif}</div>
+  </td></tr>
+
+  <!-- CONCLUSION -->
+  <tr><td style="background:#F6F3EE;padding:16px 32px;border-top:1px solid #E0D9CF">
+    <div style="font-size:13px;color:#555;font-style:italic">${conclusion}</div>
+  </td></tr>
+
+  <!-- FOOTER -->
+  <tr><td style="background:#0D2B6E;border-radius:0 0 12px 12px;padding:16px 32px;text-align:center">
+    <div style="color:rgba(255,255,255,0.5);font-size:11px">
+      République Premium · <a href="https://republique-politique.fr" style="color:gold">republique-politique.fr</a><br>
+      <a href="*|UNSUB|*" style="color:rgba(255,255,255,0.4);font-size:10px">Se désabonner</a>
+    </div>
+  </td></tr>
+
+</table></td></tr></table>
+</body></html>`;
+
+    // Créer et envoyer la campagne premium (segmentée sur le tag "premium")
+    const campaignResp = await fetch(`https://${MC_SERVER}.api.mailchimp.com/3.0/campaigns`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Basic ${Buffer.from(`anystring:${MC_API_KEY}`).toString('base64')}` },
+      body: JSON.stringify({
+        type: 'regular',
+        recipients: {
+          list_id: MC_LIST_ID,
+          segment_opts: {
+            match: 'all',
+            conditions: [{ condition_type: 'StaticSegment', field: 'static_segment', op: 'static_is', value: 'premium' }]
+          }
+        },
+        settings: {
+          subject_line: `⭐ [Premium] ${titre} — ${new Date().toLocaleDateString('fr-FR', {day:'numeric',month:'long'})}`,
+          from_name: 'République Premium',
+          reply_to: 'duroaymerick973@gmail.com',
+          title: `Newsletter Premium ${new Date().toISOString().split('T')[0]}`
+        }
+      })
+    });
+    const campaign = await campaignResp.json();
+    if (!campaign.id) { console.error('❌ Erreur campagne premium:', campaign); return; }
+
+    await fetch(`https://${MC_SERVER}.api.mailchimp.com/3.0/campaigns/${campaign.id}/content`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Basic ${Buffer.from(`anystring:${MC_API_KEY}`).toString('base64')}` },
+      body: JSON.stringify({ html: htmlContent })
+    });
+
+    const sendResp = await fetch(`https://${MC_SERVER}.api.mailchimp.com/3.0/campaigns/${campaign.id}/actions/send`, {
+      method: 'POST',
+      headers: { 'Authorization': `Basic ${Buffer.from(`anystring:${MC_API_KEY}`).toString('base64')}` }
+    });
+
+    if (sendResp.status === 204) {
+      console.log('✅ Newsletter premium envoyée !');
+    } else {
+      const err = await sendResp.json();
+      console.error('❌ Erreur envoi premium:', err);
+    }
+  } catch(e) {
+    console.error('❌ Erreur newsletter premium:', e.message);
+  }
+}
+
 async function sendDailyNewsletter() {
   console.log('📧 Génération newsletter quotidienne...');
   try {
     // 1. Récupérer les derniers articles RSS
     const FEEDS = [
+      // Gauche
       'https://www.lemonde.fr/politique/rss_full.xml',
-      'https://www.lefigaro.fr/rss/figaro_politique.xml',
-      'https://www.francetvinfo.fr/politique.rss',
       'https://www.liberation.fr/arc/outboundfeeds/rss-all/',
+      'https://www.humanite.fr/rss.xml',
+      'https://www.mediapart.fr/articles/feed',
+      'https://www.nouvelobs.com/rss.xml',
+      'https://reporterre.net/spip.php?page=backend',
+      // Centre
+      'https://www.lexpress.fr/arc/outboundfeeds/rss/politique/',
+      'https://www.lepoint.fr/politique/rss.xml',
+      'https://www.marianne.net/rss.xml',
+      'https://www.lopinion.fr/feed',
+      // Droite
+      'https://www.lefigaro.fr/rss/figaro_politique.xml',
+      'https://www.valeursactuelles.com/feed/',
+      'https://www.causeur.fr/feed',
+      // Public / Agences
+      'https://www.francetvinfo.fr/politique.rss',
+      'https://www.france24.com/fr/france/rss',
+      'https://www.rfi.fr/fr/france/rss',
+      'https://www.publicsenat.fr/rss/politique.xml',
+      'https://www.bfmtv.com/rss/news-24-7/',
+      'https://information.tv5monde.com/rss-france.xml',
+      // Eco
       'https://www.lesechos.fr/rss/rss_politique.xml',
+      'https://www.challenges.fr/rss.xml',
+      // Régional
+      'https://feeds.leparisien.fr/leparisien/rss',
+      'https://www.ouest-france.fr/rss-en-continu.xml',
+      // Outre-mer
+      'https://la1ere.francetvinfo.fr/rss',
+      'https://la1ere.francetvinfo.fr/guyane/rss',
     ];
 
     const articles = [];
@@ -286,7 +489,9 @@ CONCLUSION: [1 phrase de clôture neutre]`,
     });
 
     if (sendResp.status === 204) {
-      console.log(`✅ Newsletter envoyée ! Sujet : ${titre}`);
+      console.log(`✅ Newsletter gratuite envoyée ! Sujet : ${titre}`);
+      // Envoyer aussi la version premium
+      await sendPremiumNewsletter(articles, tops);
     } else {
       const err = await sendResp.json();
       console.error('❌ Erreur envoi:', err);
