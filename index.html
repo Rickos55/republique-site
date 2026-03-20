@@ -938,6 +938,34 @@ function cardHTML(a, hot=false){
     </div></div>`;
 }
 
+// ── POLITICIENS ────────────────────────────────────────────────────────
+const POLITICIANS=[
+  {name:'Emmanuel Macron',    init:'EM',color:'#002395',party:'Renaissance',pb:'#EEF2FF',pc:'#4338CA',
+   role:'Président de la République',kw:['macron','président de la république','élysée']},
+  {name:'Sébastien Lecornu',  init:'SL',color:'#16A34A',party:'Renaissance',pb:'#F0FDF4',pc:'#166534',
+   role:'Premier ministre',kw:['lecornu','sébastien lecornu','premier ministre','matignon']},
+  {name:'Marine Le Pen',      init:'ML',color:'#003189',party:'RN',pb:'#FFF0F0',pc:'#B91C1C',
+   role:'Présidente du groupe RN',kw:['marine le pen','rassemblement national',' rn ']},
+  {name:'Jordan Bardella',    init:'JB',color:'#00308F',party:'RN',pb:'#FFF0F0',pc:'#B91C1C',
+   role:'Président du RN',kw:['bardella','jordan bardella']},
+  {name:'Jean-Luc Mélenchon', init:'JM',color:'#CC0000',party:'LFI',pb:'#FFF0F0',pc:'#CC0000',
+   role:'Leader de La France Insoumise',kw:['mélenchon','melenchon','france insoumise','lfi']},
+  {name:'Édouard Philippe',   init:'EP',color:'#1E3A6E',party:'Horizons',pb:'#EEF2FF',pc:'#1E3A6E',
+   role:'Maire du Havre / Horizons',kw:['édouard philippe','edouard philippe','horizons']},
+  {name:'Laurent Wauquiez',   init:'LW',color:'#0072C6',party:'LR',pb:'#EEF2FF',pc:'#0072C6',
+   role:'Président du groupe LR',kw:['wauquiez','les républicains',' lr ']},
+  {name:'Olivier Faure',      init:'OF',color:'#BE185D',party:'PS',pb:'#FDF2F8',pc:'#9D174D',
+   role:'Premier Secrétaire du PS',kw:['olivier faure','parti socialiste',' ps ']},
+  {name:'Marine Tondelier',   init:'MT',color:'#15803D',party:'EELV',pb:'#F0FDF4',pc:'#166534',
+   role:'Secrétaire nationale EELV',kw:['tondelier','eelv','les verts','écologiste']},
+  {name:'Gabriel Attal',      init:'GA',color:'#3B82F6',party:'Renaissance',pb:'#EEF2FF',pc:'#4338CA',
+   role:'Ancien Premier ministre',kw:['gabriel attal','attal']},
+  {name:'Éric Ciotti',        init:'EC',color:'#1E40AF',party:'UDR',pb:'#EEF2FF',pc:'#1E40AF',
+   role:"Président de l'UDR",kw:['ciotti','udr']},
+  {name:'Gérald Darmanin',    init:'GD',color:'#7C3AED',party:'Renaissance',pb:'#F5F3FF',pc:'#7C3AED',
+   role:'Garde des Sceaux',kw:['darmanin','gérald darmanin','garde des sceaux']},
+];
+
 function renderPoliticians(){
   const g=document.getElementById('pgrid');
   g.className='pol-grid';
