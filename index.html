@@ -336,6 +336,8 @@ footer em{color:var(--red);font-style:normal}
     <button class="compare-btn" id="compBtn" onclick="doCompare()">Comparer</button>
   </div>
   <div class="compare-thinking" id="compThink"><div class="mini-sp-dark"></div>Recherche des articles de chaque bord…</div>
+  <!-- Synthèse IA -->
+  <div id="compSynth" style="display:none;margin-bottom:1rem"></div>
   <div class="compare-grid" id="compGrid" style="display:none">
     <div class="compare-col">
       <div class="compare-col-head" style="background:#CC0000">◀ Presse de Gauche</div>
@@ -666,31 +668,54 @@ function renderPoliticians(){
   }).join('');
 }
 
-// ── COMPARAISON GAUCHE vs DROITE ──────────────────────────────────────
-function doCompare(){
+// ── COMPARAISON GAUCHE vs DROITE — avec synthèse IA Haiku ────────────
+async function doCompare(){
   const q=document.getElementById('compInput').value.trim();
   if(!q)return;
   document.getElementById('compBtn').disabled=true;
   document.getElementById('compThink').classList.add('on');
   document.getElementById('compGrid').style.display='none';
 
-  const gauche=allArticles.filter(a=>a.bord==='gauche'&&(a.title+' '+a.desc).toLowerCase().includes(q.toLowerCase())).slice(0,6);
-  const droite=allArticles.filter(a=>a.bord==='droite'&&(a.title+' '+a.desc).toLowerCase().includes(q.toLowerCase())).slice(0,6);
-
-  // Si pas assez, chercher par mots
+  // 1. Filtrer les articles localement (gratuit)
   const words=q.toLowerCase().split(/\s+/).filter(w=>w.length>2);
-  const gaucheEx=gauche.length<3?allArticles.filter(a=>a.bord==='gauche'&&words.some(w=>(a.title+a.desc).toLowerCase().includes(w))).slice(0,6):gauche;
-  const droiteEx=droite.length<3?allArticles.filter(a=>a.bord==='droite'&&words.some(w=>(a.title+a.desc).toLowerCase().includes(w))).slice(0,6):droite;
+  const match=(a)=>words.some(w=>(a.title+' '+a.desc).toLowerCase().includes(w))||(a.title+' '+a.desc).toLowerCase().includes(q.toLowerCase());
 
-  document.getElementById('compLeft').innerHTML=gaucheEx.length
-    ?gaucheEx.map(a=>`<div class="compare-article"><a href="${esc(a.link)}" target="_blank">${esc(a.title)}</a><span class="compare-src">${esc(a.name)} · ${age(a.date)}</span></div>`).join('')
-    :`<div class="compare-empty">Aucun article de gauche trouvé sur ce sujet.</div>`;
-  document.getElementById('compRight').innerHTML=droiteEx.length
-    ?droiteEx.map(a=>`<div class="compare-article"><a href="${esc(a.link)}" target="_blank">${esc(a.title)}</a><span class="compare-src">${esc(a.name)} · ${age(a.date)}</span></div>`).join('')
-    :`<div class="compare-empty">Aucun article de droite trouvé sur ce sujet.</div>`;
+  const gaucheArts=allArticles.filter(a=>a.bord==='gauche'&&match(a)).slice(0,6);
+  const droiteArts=allArticles.filter(a=>a.bord==='droite'&&match(a)).slice(0,6);
+  const centreArts=allArticles.filter(a=>a.bord==='centre'&&match(a)).slice(0,3);
+
+  // 2. Afficher les articles
+  document.getElementById('compLeft').innerHTML=gaucheArts.length
+    ?gaucheArts.map(a=>`<div class="compare-article"><a href="${esc(a.link)}" target="_blank">${esc(a.title)}</a><span class="compare-src">${esc(a.name)} · ${age(a.date)}</span></div>`).join('')
+    :`<div class="compare-empty">Aucun article de gauche trouvé sur "${q}".</div>`;
+  document.getElementById('compRight').innerHTML=droiteArts.length
+    ?droiteArts.map(a=>`<div class="compare-article"><a href="${esc(a.link)}" target="_blank">${esc(a.title)}</a><span class="compare-src">${esc(a.name)} · ${age(a.date)}</span></div>`).join('')
+    :`<div class="compare-empty">Aucun article de droite trouvé sur "${q}".</div>`;
 
   document.getElementById('compThink').classList.remove('on');
   document.getElementById('compGrid').style.display='grid';
+
+  // 3. Synthèse IA via Haiku (~0.001$ par appel)
+  if(gaucheArts.length>0||droiteArts.length>0){
+    const synthBox=document.getElementById('compSynth');
+    if(synthBox){
+      synthBox.style.display='block';
+      synthBox.innerHTML='<div style="display:flex;align-items:center;gap:.5rem;color:var(--gray);font-size:.82rem"><div class="mini-sp-dark"></div>Synthèse IA en cours…</div>';
+      try{
+        const gTitles=gaucheArts.map(a=>'• '+a.title).join('\n')||'Aucun article';
+        const dTitles=droiteArts.map(a=>'• '+a.title).join('\n')||'Aucun article';
+        const resp=await fetch('/ai-compare',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({messages:[{role:'user',content:`Sujet : "${q}"\n\nArticles de GAUCHE :\n${gTitles}\n\nArticles de DROITE :\n${dTitles}\n\nFais une synthèse neutre en 3-4 phrases maximum.`}]})});
+        const d=await resp.json();
+        const txt=d.content?.[0]?.text||'Synthèse indisponible.';
+        synthBox.innerHTML=`<div style="background:var(--blue);color:#fff;border-radius:10px;padding:.9rem 1.1rem;font-size:.84rem;line-height:1.7">
+          <div style="font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.5);margin-bottom:.5rem">✦ Synthèse IA — Claude Haiku · Neutre &amp; objectif</div>
+          ${esc(txt).replace(/\n/g,'<br>')}</div>`;
+      }catch{
+        synthBox.style.display='none';
+      }
+    }
+  }
   document.getElementById('compBtn').disabled=false;
 }
 
