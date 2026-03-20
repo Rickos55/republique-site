@@ -221,6 +221,72 @@ nav{background:var(--nav-bg);height:58px;padding:0 1.2rem;display:flex;align-ite
 .cabadge{margin-left:auto;padding:.17rem .58rem;border-radius:50px;font-size:.62rem;font-weight:700;text-transform:uppercase;white-space:nowrap}
 .b-r{background:#FEE2E2;color:#B91C1C}.b-b{background:#EEF2FF;color:#4338CA}.b-g{background:#F0FDF4;color:#166534}.b-p{background:#F5F3FF;color:#7C3AED}
 
+/* ── DÉBATS ─────────────────────────────────────────────────────────── */
+.debats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
+.debat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .18s,box-shadow .18s}
+.debat-card:hover{transform:translateY(-4px);box-shadow:0 14px 32px var(--shadow)}
+.debat-top{height:6px}
+.debat-body{padding:1.1rem}
+.debat-icon{font-size:1.8rem;margin-bottom:.5rem}
+.debat-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:.3rem;color:var(--text)}
+.debat-desc{font-size:.77rem;color:var(--gray);line-height:1.5;margin-bottom:.8rem}
+.debat-counts{display:flex;gap:.5rem;flex-wrap:wrap}
+.debat-count{font-size:.68rem;font-weight:600;padding:.18rem .5rem;border-radius:50px}
+.debat-panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.3rem;margin-top:1.2rem;display:none;animation:up .3s}
+.debat-panel.on{display:block}
+.debat-panel-head{display:flex;align-items:center;gap:.7rem;margin-bottom:1rem}
+.debat-panel-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--text)}
+.debat-close{margin-left:auto;font-size:.76rem;font-weight:600;color:var(--red);cursor:pointer;background:none;border:1px solid var(--red);border-radius:50px;padding:.18rem .65rem;font-family:'DM Sans',sans-serif;transition:all .15s}
+.debat-close:hover{background:var(--red);color:#fff}
+.debat-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem}
+.debat-col{background:var(--bg);border-radius:10px;overflow:hidden}
+.debat-col-head{padding:.5rem .8rem;font-size:.73rem;font-weight:700;color:#fff}
+.debat-col-body{padding:.7rem}
+.debat-art{font-size:.76rem;padding:.3rem 0;border-bottom:1px solid var(--border);color:var(--text)}
+.debat-art:last-child{border-bottom:none}
+.debat-art a{color:var(--blue);text-decoration:none;font-weight:500;display:block;line-height:1.4}
+[data-theme="dark"] .debat-art a{color:#7B9FFF}
+.debat-art a:hover{text-decoration:underline}
+.debat-art-src{font-size:.62rem;color:var(--gray)}
+
+/* ── À PROPOS ────────────────────────────────────────────────────────── */
+.apropos-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;display:flex;flex-direction:column;gap:1.8rem}
+.apropos-logo{display:flex;align-items:center;gap:1rem}
+.apropos-icon{width:56px;height:56px;border-radius:12px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-family:serif;font-weight:900;font-size:1.8rem;color:#fff;flex-shrink:0}
+.apropos-name{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--text)}
+.apropos-sub{font-size:.82rem;color:var(--gray);margin-top:.15rem}
+.apropos-desc{display:flex;flex-direction:column;gap:.7rem;font-size:.88rem;line-height:1.75;color:var(--text)}
+.apropos-features{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.8rem}
+.apropos-feature{display:flex;align-items:center;gap:.7rem;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:.7rem .9rem;font-size:.78rem;line-height:1.4;color:var(--text)}
+.af-icon{font-size:1.3rem;flex-shrink:0}
+.apropos-sources{border-top:1px solid var(--border);padding-top:1.5rem}
+.apropos-sources-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gray);margin-bottom:.7rem}
+.apropos-sources-list{display:flex;flex-wrap:wrap;gap:.4rem}
+.asrc{font-size:.72rem;font-weight:600;padding:.2rem .6rem;border-radius:50px}
+.asrc.gauche{background:#FFF0F0;color:#CC0000}
+.asrc.centre{background:#EEF2FF;color:#0066CC}
+.asrc.droite{background:#EEF2FF;color:#1E3A6E}
+.asrc.public{background:#E0F2FE;color:#0891B2}
+.asrc.eco{background:#ECFDF5;color:#1A7A3A}
+.asrc.regional{background:#F5F3FF;color:#7C3AED}
+
+/* ── NEWSLETTER ─────────────────────────────────────────────────────── */
+.newsletter-box{background:linear-gradient(135deg,var(--blue),#1A3F8F);border-radius:14px;padding:1.6rem;color:#fff}
+.nl-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:.4rem}
+.nl-desc{font-size:.83rem;color:rgba(255,255,255,.7);margin-bottom:1rem;line-height:1.6}
+.nl-form{display:flex;gap:.6rem;flex-wrap:wrap}
+.nl-input{flex:1;min-width:220px;padding:.65rem .9rem;border:1.5px solid rgba(255,255,255,.3);border-radius:9px;background:rgba(255,255,255,.1);color:#fff;font-family:'DM Sans',sans-serif;font-size:.87rem;outline:none;transition:border-color .2s}
+.nl-input::placeholder{color:rgba(255,255,255,.5)}
+.nl-input:focus{border-color:rgba(255,255,255,.6)}
+.nl-btn{padding:.65rem 1.3rem;background:#fff;color:var(--blue);border:none;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap}
+.nl-btn:hover{background:#f0f0f0}
+.nl-note{font-size:.68rem;color:rgba(255,255,255,.45);margin-top:.6rem}
+.apropos-creator{display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;background:var(--bg);border:1px solid var(--border);border-radius:12px}
+.ac-badge{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;background:var(--blue);color:#fff;padding:.18rem .55rem;border-radius:50px}
+.ac-initials{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--blue)}
+[data-theme="dark"] .ac-initials{color:#7B9FFF}
+.ac-text{font-size:.8rem;color:var(--gray);line-height:1.5}
+
 /* ── FOOTER ───────────────────────────────────────────────────────── */
 footer{background:var(--nav-bg);color:rgba(255,255,255,.4);text-align:center;padding:1.4rem 1rem;font-size:.74rem;margin-top:2.5rem;line-height:1.9}
 footer strong{color:rgba(255,255,255,.88)}
@@ -234,10 +300,11 @@ footer em{color:var(--red);font-style:normal}
 
 @media(max-width:700px){
   .hero h1{font-size:1.7rem}.tab{padding:0 .42rem;font-size:.64rem}
-  .grid,.pol-grid,.polls-grid{grid-template-columns:1fr}
-  .compare-grid{grid-template-columns:1fr}
+  .grid,.pol-grid,.polls-grid,.debats-grid,.apropos-features{grid-template-columns:1fr}
+  .compare-grid,.debat-cols{grid-template-columns:1fr}
   .search-wrap{margin:.65rem .8rem 0}
   .dark-toggle span{display:none}
+  .nl-form{flex-direction:column}
 }
 </style>
 </head>
@@ -257,6 +324,8 @@ footer em{color:var(--red);font-style:normal}
     <div class="tab"     onclick="showTab('comp',this)">Comparaison</div>
     <div class="tab"     onclick="showTab('sond',this)">Sondages</div>
     <div class="tab"     onclick="showTab('cal',this)">Calendrier</div>
+    <div class="tab"     onclick="showTab('debats',this)">Débats</div>
+    <div class="tab"     onclick="showTab('apropos',this)">À propos</div>
   </div>
   <div class="nav-actions">
     <button class="dark-toggle" onclick="toggleDark()">🌙 <span>Mode sombre</span></button>
@@ -375,6 +444,67 @@ footer em{color:var(--red);font-style:normal}
   <div id="calgrid"><div class="center-box"><div class="spinner"></div><p>Chargement…</p></div></div>
 </div>
 
+<!-- DÉBATS POLITIQUES -->
+<div id="s-debats" class="sec">
+  <div class="stitle">Débats politiques par thème</div>
+  <p style="font-size:.81rem;color:var(--gray);margin-bottom:1.3rem">Cliquez sur un thème pour voir tous les articles et comparer les positions de chaque bord.</p>
+  <div class="debats-grid" id="debatsGrid"></div>
+</div>
+
+<!-- À PROPOS -->
+<div id="s-apropos" class="sec">
+  <div class="stitle">À propos de République</div>
+  <div class="apropos-card">
+    <div class="apropos-logo">
+      <div class="apropos-icon">R</div>
+      <div>
+        <div class="apropos-name">République</div>
+        <div class="apropos-sub">Politique Française en Direct</div>
+      </div>
+    </div>
+    <div class="apropos-desc">
+      <p><strong>République</strong> est un site d'information politique française indépendant qui agrège en temps réel les articles de <strong>21 journaux</strong> couvrant tous les bords politiques.</p>
+      <p>Notre objectif : offrir une vision <strong>neutre et objective</strong> de l'actualité politique française, sans parti pris, en donnant accès à la fois aux médias de gauche, de centre et de droite.</p>
+      <p>La recherche intelligente est propulsée par l'IA <strong>Claude</strong> d'Anthropic, permettant de trouver des articles pertinents par le sens plutôt que par les seuls mots-clés.</p>
+    </div>
+    <div class="apropos-features">
+      <div class="apropos-feature"><span class="af-icon">📰</span><div><strong>21 sources RSS</strong><br>Tous les bords politiques</div></div>
+      <div class="apropos-feature"><span class="af-icon">🔍</span><div><strong>Recherche IA</strong><br>Analyse sémantique</div></div>
+      <div class="apropos-feature"><span class="af-icon">⚖️</span><div><strong>Comparaison</strong><br>Gauche vs Droite</div></div>
+      <div class="apropos-feature"><span class="af-icon">📊</span><div><strong>Sondages</strong><br>4 élections à venir</div></div>
+      <div class="apropos-feature"><span class="af-icon">🔔</span><div><strong>Alertes</strong><br>Notifications en direct</div></div>
+      <div class="apropos-feature"><span class="af-icon">🌙</span><div><strong>Mode sombre</strong><br>Confort de lecture</div></div>
+    </div>
+    <div class="apropos-sources">
+      <div class="apropos-sources-title">Journaux référencés</div>
+      <div class="apropos-sources-list">
+        <span class="asrc gauche">Libération</span><span class="asrc gauche">L'Humanité</span><span class="asrc gauche">Mediapart</span><span class="asrc gauche">Politis</span>
+        <span class="asrc centre">Le Monde</span><span class="asrc centre">L'Express</span><span class="asrc centre">Le Point</span><span class="asrc centre">Marianne</span>
+        <span class="asrc droite">Le Figaro</span><span class="asrc droite">Valeurs Actuelles</span><span class="asrc droite">CNews</span><span class="asrc droite">Causeur</span>
+        <span class="asrc public">France Info</span><span class="asrc public">France 24</span><span class="asrc public">RFI</span><span class="asrc public">Public Sénat</span><span class="asrc public">BFM TV</span>
+        <span class="asrc eco">Les Échos</span><span class="asrc eco">BFM Business</span><span class="asrc eco">Challenges</span>
+        <span class="asrc regional">Sud Ouest</span><span class="asrc regional">La Dépêche</span>
+      </div>
+    </div>
+    <!-- NEWSLETTER MAILCHIMP -->
+    <div class="newsletter-box">
+      <div class="nl-title">📧 Newsletter — Restez informé</div>
+      <div class="nl-desc">Recevez chaque matin une sélection des meilleures actualités politiques directement dans votre boîte mail. Gratuit, sans spam.</div>
+      <div class="nl-form">
+        <input class="nl-input" id="nlEmail" type="email" placeholder="Votre adresse email…">
+        <button class="nl-btn" onclick="subscribeNewsletter()">S'abonner</button>
+      </div>
+      <div id="nlMsg" style="font-size:.78rem;margin-top:.6rem;display:none"></div>
+      <div class="nl-note">En vous abonnant, vous acceptez de recevoir la newsletter de République. Désinscription en un clic.</div>
+    </div>
+    <div class="apropos-creator">
+      <div class="ac-badge">Créateur</div>
+      <div class="ac-initials">A.D</div>
+      <div class="ac-text">Site conçu et développé par <strong>A.D</strong> — © 2026 République. Tous droits réservés.</div>
+    </div>
+  </div>
+</div>
+
 <footer>
   <strong>République</strong> — Information politique française neutre &amp; objective<br>
   21 flux RSS en direct · Recherche IA <em>Claude</em> · Actualisation toutes les 10 min
@@ -462,6 +592,12 @@ const FEEDS=[
   {name:'Challenges',       color:'#1E40AF',bord:'eco',    url:'https://www.challenges.fr/rss.xml'},
   {name:'Sud Ouest',        color:'#EA580C',bord:'public', url:'https://www.sudouest.fr/politique/rss.xml'},
   {name:'La Dépêche',       color:'#C0392B',bord:'public', url:'https://www.ladepeche.fr/rss.xml'},
+  // Nouveaux journaux ajoutés
+  {name:'20 Minutes',        color:'#E91E63',bord:'centre', url:'https://www.20minutes.fr/feeds/rss-politique.xml'},
+  {name:'L'Obs',            color:'#E67E22',bord:'gauche', url:'https://www.nouvelobs.com/rss.xml'},
+  {name:'La Croix',          color:'#003399',bord:'centre', url:'https://www.la-croix.com/RSS/RELIGION_CATHOLICISME'},
+  {name:'Slate France',      color:'#1A1A1A',bord:'centre', url:'http://www.slate.fr/rss.xml'},
+  {name:'L'Opinion',        color:'#0066CC',bord:'centre', url:'https://www.lopinion.fr/feed'},
 ];
 const BORD_LABEL={gauche:'Gauche',centre:'Centre',droite:'Droite',eco:'Économie',public:'Médias publics'};
 const BORD_COLOR={gauche:'#CC0000',centre:'#0066CC',droite:'#1E3A6E',eco:'#1A7A3A',public:'#0891B2'};
@@ -816,6 +952,119 @@ function showTab(id,el){
   document.getElementById('s-'+id).classList.add('on');el.classList.add('on');
   clearSearch();
   if(id==='sond'&&!chartsReady)renderPolls();
+  if(id==='debats')renderDebats();
+}
+
+// ── DÉBATS POLITIQUES PAR THÈME ──────────────────────────────────────
+const DEBATS = [
+  {icon:'🏛️', title:'Institutions & Démocratie', desc:'Réforme des institutions, Ve République, démocratie participative', color:'#0D2B6E', kw:['assemblée','sénat','constitution','démocratie','institution','parlement','référendum']},
+  {icon:'💼', title:'Économie & Budget', desc:'Budget de l'État, déficit, croissance, pouvoir d'achat', color:'#1A7A3A', kw:['budget','économie','déficit','croissance','inflation','pouvoir d'achat','fiscal','impôt']},
+  {icon:'🌍', title:'Immigration', desc:'Politique migratoire, asile, intégration', color:'#CC0000', kw:['immigration','migrant','asile','frontière','intégration','étranger','clandestin']},
+  {icon:'👮', title:'Sécurité & Justice', desc:'Police, criminalité, réforme de la justice', color:'#374151', kw:['sécurité','police','justice','crime','délinquance','prison','gendarmerie']},
+  {icon:'🌿', title:'Écologie & Climat', desc:'Transition énergétique, climat, environnement', color:'#15803D', kw:['écologie','climat','environnement','énergie','nucléaire','transition','vert','carbone']},
+  {icon:'👨‍👩‍👧', title:'Social & Retraites', desc:'Réforme des retraites, protection sociale, syndicats', color:'#BE185D', kw:['retraite','social','syndicat','grève','pension','sécurité sociale','travail']},
+  {icon:'🏥', title:'Santé', desc:'Système de santé, hôpital, médecine', color:'#0891B2', kw:['santé','hôpital','médecin','soin','infirmier','maladie','assurance maladie']},
+  {icon:'🎓', title:'Éducation', desc:'École, université, réforme éducative', color:'#7C3AED', kw:['éducation','école','université','lycée','baccalauréat','enseignant','élève']},
+  {icon:'🇪🇺', title:'Europe & International', desc:'Union européenne, diplomatie, relations internationales', color:'#1E40AF', kw:['europe','européen','ue','otan','diplomatie','international','ukraine','moyen-orient']},
+  {icon:'🏘️', title:'Logement', desc:'Crise du logement, loyers, construction', color:'#B45309', kw:['logement','loyer','immobilier','habitation','locataire','construction','hlm']},
+];
+
+let activeDebat = null;
+
+function renderDebats() {
+  const g = document.getElementById('debatsGrid');
+  g.innerHTML = DEBATS.map((d, idx) => {
+    const gauche = allArticles.filter(a => a.bord==='gauche' && d.kw.some(k=>(a.title+a.desc).toLowerCase().includes(k))).length;
+    const centre = allArticles.filter(a => a.bord==='centre' && d.kw.some(k=>(a.title+a.desc).toLowerCase().includes(k))).length;
+    const droite = allArticles.filter(a => a.bord==='droite' && d.kw.some(k=>(a.title+a.desc).toLowerCase().includes(k))).length;
+    const total = gauche + centre + droite;
+    return `<div class="debat-card" onclick="openDebat(${idx})">
+      <div class="debat-top" style="background:${d.color}"></div>
+      <div class="debat-body">
+        <div class="debat-icon">${d.icon}</div>
+        <div class="debat-title">${d.title}</div>
+        <div class="debat-desc">${d.desc}</div>
+        <div class="debat-counts">
+          <span class="debat-count" style="background:#FFF0F0;color:#CC0000">${gauche} Gauche</span>
+          <span class="debat-count" style="background:#EEF2FF;color:#0066CC">${centre} Centre</span>
+          <span class="debat-count" style="background:#EEF2FF;color:#1E3A6E">${droite} Droite</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('') + '<div id="debatPanel" class="debat-panel"></div>';
+}
+
+function openDebat(idx) {
+  const d = DEBATS[idx];
+  const gauche = allArticles.filter(a => a.bord==='gauche' && d.kw.some(k=>(a.title+a.desc).toLowerCase().includes(k))).slice(0,5);
+  const centre = allArticles.filter(a => a.bord==='centre' && d.kw.some(k=>(a.title+a.desc).toLowerCase().includes(k))).slice(0,5);
+  const droite = allArticles.filter(a => a.bord==='droite' && d.kw.some(k=>(a.title+a.desc).toLowerCase().includes(k))).slice(0,5);
+
+  const artHTML = (arts, bord, color) => arts.length
+    ? arts.map(a=>`<div class="debat-art"><a href="${esc(a.link)}" target="_blank">${esc(a.title)}</a><span class="debat-art-src">${esc(a.name)} · ${age(a.date)}</span></div>`).join('')
+    : `<div style="font-size:.76rem;color:var(--gray);font-style:italic">Aucun article ${bord} trouvé.</div>`;
+
+  const panel = document.getElementById('debatPanel');
+  panel.classList.add('on');
+  panel.innerHTML = `
+    <div class="debat-panel-head">
+      <div style="font-size:1.6rem">${d.icon}</div>
+      <div class="debat-panel-title">${d.title}</div>
+      <button class="debat-close" onclick="document.getElementById('debatPanel').classList.remove('on')">✕ Fermer</button>
+    </div>
+    <div class="debat-cols">
+      <div class="debat-col">
+        <div class="debat-col-head" style="background:#CC0000">◀ Gauche (${gauche.length})</div>
+        <div class="debat-col-body">${artHTML(gauche,'de gauche','#CC0000')}</div>
+      </div>
+      <div class="debat-col">
+        <div class="debat-col-head" style="background:#0066CC">● Centre (${centre.length})</div>
+        <div class="debat-col-body">${artHTML(centre,'de centre','#0066CC')}</div>
+      </div>
+      <div class="debat-col">
+        <div class="debat-col-head" style="background:#1E3A6E">▶ Droite (${droite.length})</div>
+        <div class="debat-col-body">${artHTML(droite,'de droite','#1E3A6E')}</div>
+      </div>
+    </div>`;
+  panel.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ── NEWSLETTER MAILCHIMP ──────────────────────────────────────────────
+// Remplace YOUR_MAILCHIMP_URL par ton URL Mailchimp après inscription
+const MAILCHIMP_URL = 'https://YOUR_MAILCHIMP_FORM_URL';
+
+function subscribeNewsletter() {
+  const email = document.getElementById('nlEmail').value.trim();
+  const msg = document.getElementById('nlMsg');
+  if (!email || !email.includes('@')) {
+    msg.style.display = 'block';
+    msg.style.color = '#FCA5A5';
+    msg.textContent = '⚠️ Entrez une adresse email valide.';
+    return;
+  }
+  if (MAILCHIMP_URL.includes('YOUR_MAILCHIMP')) {
+    // Mode démo — affiche un message de succès pour tester
+    msg.style.display = 'block';
+    msg.style.color = '#86EFAC';
+    msg.textContent = '✅ Merci ! Vous serez bientôt abonné à la newsletter.';
+    document.getElementById('nlEmail').value = '';
+    return;
+  }
+  // Vrai envoi Mailchimp
+  fetch(MAILCHIMP_URL, {
+    method: 'POST',
+    body: new URLSearchParams({EMAIL: email}),
+    mode: 'no-cors'
+  }).then(() => {
+    msg.style.display = 'block';
+    msg.style.color = '#86EFAC';
+    msg.textContent = '✅ Merci ! Vérifiez votre boîte email pour confirmer.';
+    document.getElementById('nlEmail').value = '';
+  }).catch(() => {
+    msg.style.display = 'block';
+    msg.style.color = '#FCA5A5';
+    msg.textContent = '⚠️ Erreur. Réessayez.';
+  });
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────
