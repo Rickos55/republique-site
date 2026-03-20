@@ -682,12 +682,12 @@ footer em{color:var(--red);font-style:normal}
       </div>
     </div>
     <div class="apropos-desc">
-      <p><strong>République</strong> est un site d'information politique française indépendant qui agrège en temps réel les articles de <strong>21 journaux</strong> couvrant tous les bords politiques.</p>
+      <p><strong>République</strong> est un site d'information politique française indépendant qui agrège en temps réel les articles de <strong>44 journaux</strong> couvrant tous les bords politiques.</p>
       <p>Notre objectif : offrir une vision <strong>neutre et objective</strong> de l'actualité politique française, sans parti pris, en donnant accès à la fois aux médias de gauche, de centre et de droite.</p>
       <p>La recherche intelligente est propulsée par l'IA <strong>Claude</strong> d'Anthropic, permettant de trouver des articles pertinents par le sens plutôt que par les seuls mots-clés.</p>
     </div>
     <div class="apropos-features">
-      <div class="apropos-feature"><span class="af-icon">📰</span><div><strong>21 sources RSS</strong><br>Tous les bords politiques</div></div>
+      <div class="apropos-feature"><span class="af-icon">📰</span><div><strong>44 sources RSS</strong><br>Tous les bords politiques</div></div>
       <div class="apropos-feature"><span class="af-icon">🔍</span><div><strong>Recherche IA</strong><br>Analyse sémantique</div></div>
       <div class="apropos-feature"><span class="af-icon">⚖️</span><div><strong>Comparaison</strong><br>Gauche vs Droite</div></div>
       <div class="apropos-feature"><span class="af-icon">📊</span><div><strong>Sondages</strong><br>4 élections à venir</div></div>
@@ -1202,52 +1202,70 @@ const POLITICIANS=[
   {name:'Emmanuel Macron',    init:'EM',color:'#002395',party:'Renaissance',pb:'#EEF2FF',pc:'#4338CA',
    role:'Président de la République',
    photo:'/img?url=https://upload.wikimedia.org/wikipedia/commons/f/f4/Emmanuel_Macron_in_2019.jpg',
-   kw:['macron','président de la république','élysée']},
+   kw:['macron','président de la république','élysée'],wiki:'Emmanuel_Macron'},
   {name:'Sébastien Lecornu',  init:'SL',color:'#16A34A',party:'Renaissance',pb:'#F0FDF4',pc:'#166534',
    role:'Premier ministre',
    photo:'/img?url=https://upload.wikimedia.org/wikipedia/commons/8/8e/S%C3%A9bastien_Lecornu_in_2022.jpg',
-   kw:['lecornu','sébastien lecornu','premier ministre','matignon']},
+   kw:['lecornu','sébastien lecornu','premier ministre','matignon'],wiki:'Sébastien_Lecornu'},
   {name:'Marine Le Pen',      init:'ML',color:'#003189',party:'RN',pb:'#FFF0F0',pc:'#B91C1C',
    role:'Présidente du groupe RN',
    photo:'/img?url=https://upload.wikimedia.org/wikipedia/commons/e/e8/Marine_le_pen_2015.jpg',
-   kw:['marine le pen','rassemblement national',' rn ']},
+   kw:['marine le pen','rassemblement national',' rn '],wiki:'Marine_Le_Pen'},
   {name:'Jordan Bardella',    init:'JB',color:'#00308F',party:'RN',pb:'#FFF0F0',pc:'#B91C1C',
    role:'Président du RN',
    photo:'/img?url=https://upload.wikimedia.org/wikipedia/commons/a/a6/Jordan_Bardella_2023.jpg',
-   kw:['bardella','jordan bardella']},
+   kw:['bardella','jordan bardella'],wiki:'Jordan_Bardella'},
   {name:'Jean-Luc Mélenchon', init:'JM',color:'#CC0000',party:'LFI',pb:'#FFF0F0',pc:'#CC0000',
    role:'Leader de La France Insoumise',
    photo:'/img?url=https://upload.wikimedia.org/wikipedia/commons/6/60/Jean-Luc_M%C3%A9lenchon_2017.jpg',
-   kw:['mélenchon','melenchon','france insoumise','lfi']},
+   kw:['mélenchon','melenchon','france insoumise','lfi'],wiki:'Jean-Luc_Mélenchon'},
   {name:'Édouard Philippe',   init:'EP',color:'#1E3A6E',party:'Horizons',pb:'#EEF2FF',pc:'#1E3A6E',
    role:'Maire du Havre / Horizons',
    photo:'/img?url=https://upload.wikimedia.org/wikipedia/commons/c/c8/%C3%89douard_Philippe_2019.jpg',
-   kw:['édouard philippe','edouard philippe','horizons']},
+   kw:['édouard philippe','edouard philippe','horizons'],wiki:'Édouard_Philippe'},
   {name:'Laurent Wauquiez',   init:'LW',color:'#0072C6',party:'LR',pb:'#EEF2FF',pc:'#0072C6',
    role:'Président du groupe LR',
    photo:'/img?url=https://upload.wikimedia.org/wikipedia/commons/d/d6/Laurent_Wauquiez_2021.jpg',
-   kw:['wauquiez','les républicains',' lr ']},
+   kw:['wauquiez','les républicains',' lr '],wiki:'Laurent_Wauquiez'},
   {name:'Olivier Faure',      init:'OF',color:'#BE185D',party:'PS',pb:'#FDF2F8',pc:'#9D174D',
    role:'Premier Secrétaire du PS',
    photo:'/img?url=https://upload.wikimedia.org/wikipedia/commons/1/16/Olivier_Faure_2022.jpg',
-   kw:['olivier faure','parti socialiste',' ps ']},
+   kw:['olivier faure','parti socialiste',' ps '],wiki:'Olivier_Faure'},
   {name:'Marine Tondelier',   init:'MT',color:'#15803D',party:'EELV',pb:'#F0FDF4',pc:'#166534',
    role:'Secrétaire nationale EELV',
    photo:'/img?url=https://upload.wikimedia.org/wikipedia/commons/9/9e/Marine_Tondelier_2023.jpg',
-   kw:['tondelier','eelv','les verts','écologiste']},
+   kw:['tondelier','eelv','les verts','écologiste'],wiki:'Marine_Tondelier'},
   {name:'Gabriel Attal',      init:'GA',color:'#3B82F6',party:'Renaissance',pb:'#EEF2FF',pc:'#4338CA',
    role:'Ancien Premier ministre',
    photo:'/img?url=https://upload.wikimedia.org/wikipedia/commons/0/04/Gabriel_Attal_2023.jpg',
-   kw:['gabriel attal','attal']},
+   kw:['gabriel attal','attal'],wiki:'Gabriel_Attal'},
   {name:'Éric Ciotti',        init:'EC',color:'#1E40AF',party:'UDR',pb:'#EEF2FF',pc:'#1E40AF',
    role:"Président de l'UDR",
    photo:'/img?url=https://upload.wikimedia.org/wikipedia/commons/5/5e/%C3%89ric_Ciotti_2022.jpg',
-   kw:['ciotti','udr']},
+   kw:['ciotti','udr'],wiki:'Éric_Ciotti'},
   {name:'Gérald Darmanin',    init:'GD',color:'#7C3AED',party:'Renaissance',pb:'#F5F3FF',pc:'#7C3AED',
    role:'Garde des Sceaux',
    photo:'/img?url=https://upload.wikimedia.org/wikipedia/commons/5/5c/G%C3%A9rald_Darmanin_2020.jpg',
-   kw:['darmanin','gérald darmanin','garde des sceaux']},
+   kw:['darmanin','gérald darmanin','garde des sceaux'],wiki:'Gérald_Darmanin'},
 ];
+
+// Mettre à jour les infos d'un politicien depuis Wikipedia
+async function updatePoliticianFromWiki(politicien, cardEl) {
+  try {
+    const r = await fetch('/wiki-info?name=' + encodeURIComponent(politicien.wiki));
+    if (!r.ok) return;
+    const data = await r.json();
+    if (!data.description) return;
+
+    // Mettre à jour le poste/description
+    const posteEl = cardEl.querySelector('.pol-poste-live');
+    if (posteEl && data.description) {
+      posteEl.textContent = data.description;
+      posteEl.style.color = 'var(--blue)';
+      posteEl.title = 'Source: Wikipedia — mis à jour en direct';
+    }
+  } catch(e) {}
+}
 
 function renderPoliticians(){
   const g=document.getElementById('pgrid');
@@ -1281,6 +1299,29 @@ function renderPoliticians(){
         </div>
       </div></div>`;
   }).join('');
+
+  // Mise à jour des postes depuis Wikipedia en arrière-plan
+  POLITICIANS.forEach(function(pol, i) {
+    if (!pol.wiki) return;
+    setTimeout(async function() {
+      try {
+        const r = await fetch('/wiki-info?name=' + encodeURIComponent(pol.wiki));
+        if (!r.ok) return;
+        const data = await r.json();
+        if (!data.description) return;
+        // Trouver la carte et mettre à jour le rôle
+        const cards = document.querySelectorAll('.pol-card');
+        if (cards[i]) {
+          const roleEl = cards[i].querySelector('.pol-role-txt');
+          if (roleEl) {
+            roleEl.textContent = data.description;
+            roleEl.style.color = 'var(--blue)';
+            roleEl.title = 'Mis à jour depuis Wikipedia';
+          }
+        }
+      } catch(e) {}
+    }, i * 400);
+  });
 }
 
 // ── COMPARAISON GAUCHE vs DROITE — avec synthèse IA Haiku ────────────
