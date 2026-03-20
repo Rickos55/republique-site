@@ -350,6 +350,9 @@ footer em{color:var(--red);font-style:normal}
 .share-wa{background:#25D366;color:#fff}.share-wa:hover{background:#20b958}
 .share-cp{background:var(--light);color:var(--text);border:1px solid var(--border)}.share-cp:hover{background:var(--border)}
 
+.comp-suggest{padding:.24rem .75rem;border-radius:50px;border:1.5px solid var(--border);font-size:.72rem;font-weight:600;cursor:pointer;background:var(--card);color:var(--text);transition:all .15s;font-family:'DM Sans',sans-serif}
+.comp-suggest:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+
 /* ── LAYOUT DESKTOP/MOBILE ────────────────────────────────────────────── */
 /* Desktop : vue en grille dense avec sidebar */
 .desktop-layout{display:grid;grid-template-columns:1fr 300px;gap:1.5rem;align-items:start}
@@ -423,12 +426,10 @@ footer em{color:var(--red);font-style:normal}
 <body>
 
 <!-- TICKER ACTUALITÉS EN DIRECT -->
-<div class="ticker-wrap">
+<div class="ticker-wrap" id="tickerWrap" style="display:none">
   <div class="ticker-label">🔴 Direct</div>
   <div class="ticker-inner">
-    <div class="ticker-track" id="tickerTrack">
-      <span style="color:rgba(255,255,255,.6);font-size:.72rem">Chargement des actualités…</span>
-    </div>
+    <div class="ticker-track" id="tickerTrack"></div>
   </div>
 </div>
 
@@ -486,8 +487,8 @@ footer em{color:var(--red);font-style:normal}
   <div class="live-pill" style="margin-top:.65rem"><div class="pulse"></div><span id="hdate">…</span></div>
 </div>
 
-<!-- PUB HAUT -->
-<div class="ad-slot ad-slot-wide" style="background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+<!-- PUB HAUT — masquée pour abonnés premium -->
+<div class="ad-slot ad-slot-wide" id="adTop" style="background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
   <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7302486476390124" data-ad-slot="auto" data-ad-format="horizontal" data-full-width-responsive="true"></ins>
 </div>
 
@@ -578,21 +579,55 @@ footer em{color:var(--red);font-style:normal}
 <!-- COMPARAISON GAUCHE vs DROITE -->
 <div id="s-comp" class="sec">
   <div class="stitle">Comparaison Gauche vs Droite</div>
-  <p style="font-size:.81rem;color:var(--gray);margin-bottom:1.2rem">Entrez un sujet pour voir comment les médias de gauche et de droite en parlent différemment.</p>
-  <div class="compare-search">
-    <input class="compare-input" id="compInput" placeholder="Ex : immigration, retraites, budget, sécurité…" onkeydown="if(event.key==='Enter')doCompare()">
+  <p style="font-size:.81rem;color:var(--gray);margin-bottom:1.4rem">Entrez un sujet pour voir comment les médias de chaque bord politique en parlent différemment.</p>
+
+  <!-- Sujets suggérés -->
+  <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem">
+    <span style="font-size:.7rem;font-weight:700;color:var(--gray);margin-right:.2rem;align-self:center">Suggestions :</span>
+    <button onclick="quickCompare('immigration')" class="comp-suggest">Immigration</button>
+    <button onclick="quickCompare('retraites')" class="comp-suggest">Retraites</button>
+    <button onclick="quickCompare('budget')" class="comp-suggest">Budget</button>
+    <button onclick="quickCompare('sécurité')" class="comp-suggest">Sécurité</button>
+    <button onclick="quickCompare('municipales')" class="comp-suggest">Municipales</button>
+    <button onclick="quickCompare('Europe')" class="comp-suggest">Europe</button>
+  </div>
+
+  <!-- Barre de recherche -->
+  <div style="display:flex;gap:.6rem;margin-bottom:1.2rem;flex-wrap:wrap">
+    <input class="compare-input" id="compInput" style="flex:1;min-width:220px" placeholder="Ou entrez votre propre sujet…" onkeydown="if(event.key==='Enter')doCompare()">
     <button class="compare-btn" id="compBtn" onclick="doCompare()">⚖️ Comparer</button>
   </div>
-  <div class="compare-thinking" id="compThink" style="display:none"><div class="mini-sp-dark"></div>Recherche des articles de chaque bord…</div>
+
+  <!-- Loading -->
+  <div class="compare-thinking" id="compThink" style="display:none">
+    <div class="mini-sp-dark"></div>
+    <span>Analyse des articles de chaque bord en cours…</span>
+  </div>
+
   <!-- Synthèse IA -->
   <div id="compSynth" style="display:none;margin-bottom:1.2rem"></div>
+
+  <!-- Résultats en 3 colonnes -->
   <div class="compare-grid" id="compGrid" style="display:none">
     <div class="compare-col">
-      <div class="compare-col-head" style="background:#CC0000">◀ Presse de Gauche</div>
+      <div class="compare-col-head" style="background:linear-gradient(135deg,#CC0000,#AA0000)">
+        ◀ Presse de Gauche
+        <span class="debat-col-count" id="compLeftCount"></span>
+      </div>
       <div class="compare-col-body" id="compLeft"></div>
     </div>
     <div class="compare-col">
-      <div class="compare-col-head" style="background:#1E3A6E">▶ Presse de Droite</div>
+      <div class="compare-col-head" style="background:linear-gradient(135deg,#0066CC,#004A99)">
+        ● Presse de Centre
+        <span class="debat-col-count" id="compCentreCount"></span>
+      </div>
+      <div class="compare-col-body" id="compCentre"></div>
+    </div>
+    <div class="compare-col">
+      <div class="compare-col-head" style="background:linear-gradient(135deg,#1E3A6E,#0D2455)">
+        ▶ Presse de Droite
+        <span class="debat-col-count" id="compRightCount"></span>
+      </div>
       <div class="compare-col-body" id="compRight"></div>
     </div>
   </div>
@@ -802,19 +837,7 @@ footer em{color:var(--red);font-style:normal}
 
   </div>
 
-  <!-- CARTE DE FRANCE -->
-  <div class="stitle" style="margin-top:2rem">🗺️ Carte électorale — Municipales 2026 (1er tour)</div>
-  <p style="font-size:.81rem;color:var(--gray);margin-bottom:1rem">Résultats indicatifs des grandes villes · Cliquez sur une région pour voir les détails</p>
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.3rem">
-    <div id="carteContent"></div>
-    <div class="carte-legend" style="margin-top:1rem">
-      <div class="carte-leg-item"><div class="carte-leg-dot" style="background:#CC0000"></div>Gauche / NFP</div>
-      <div class="carte-leg-item"><div class="carte-leg-dot" style="background:#0066CC"></div>Centre / Renaissance</div>
-      <div class="carte-leg-item"><div class="carte-leg-dot" style="background:#1E3A6E"></div>Droite / LR</div>
-      <div class="carte-leg-item"><div class="carte-leg-dot" style="background:#003189"></div>RN</div>
-      <div class="carte-leg-item"><div class="carte-leg-dot" style="background:#888"></div>Divers</div>
-    </div>
-  </div>
+
 
   <!-- NEWSLETTER PREMIUM -->
   <div class="stitle" style="margin-top:2rem">⭐ Newsletter Premium</div>
@@ -831,10 +854,14 @@ footer em{color:var(--red);font-style:normal}
     <div class="premium-price">2,99€ <span>/ mois · Annulable à tout moment</span></div>
     <div class="nl-form">
       <input class="nl-input" id="premiumEmail" type="email" placeholder="Votre adresse email…">
-      <button class="nl-btn" onclick="subscribePremium()" style="background:gold;color:#1A1A1A">S'abonner →</button>
+      <button class="nl-btn" id="stripeBtn" onclick="startStripeCheckout()" style="background:gold;color:#1A1A1A;font-weight:700">S'abonner 2,99€/mois →</button>
     </div>
     <div id="premiumMsg" style="font-size:.78rem;margin-top:.6rem;display:none"></div>
-    <div style="font-size:.68rem;color:rgba(255,255,255,.35);margin-top:.5rem">Lancement officiel bientôt · Inscrivez-vous pour être notifié en premier</div>
+    <div style="display:flex;align-items:center;gap:.6rem;margin-top:.7rem;flex-wrap:wrap">
+      <span style="font-size:.68rem;color:rgba(255,255,255,.4)">🔒 Paiement sécurisé Stripe</span>
+      <span style="font-size:.68rem;color:rgba(255,255,255,.4)">· Annulable à tout moment</span>
+      <span style="font-size:.68rem;color:rgba(255,255,255,.4)">· Sans engagement</span>
+    </div>
   </div>
 
 </div>
@@ -1226,6 +1253,11 @@ function renderPoliticians(){
 }
 
 // ── COMPARAISON GAUCHE vs DROITE — avec synthèse IA Haiku ────────────
+function quickCompare(subject){
+  document.getElementById('compInput').value = subject;
+  doCompare();
+}
+
 async function doCompare(){
   const q=document.getElementById('compInput').value.trim();
   if(!q)return;
@@ -1244,12 +1276,19 @@ async function doCompare(){
   const centreArts=allArticles.filter(a=>a.bord==='centre'&&match(a)).slice(0,3);
 
   // 2. Afficher les articles
-  document.getElementById('compLeft').innerHTML=gaucheArts.length
-    ?gaucheArts.map(a=>`<div class="compare-article"><a href="${esc(a.link)}" target="_blank">${esc(a.title)}</a><span class="compare-src">${esc(a.name)} · ${age(a.date)}</span></div>`).join('')
-    :`<div class="compare-empty">Aucun article de gauche trouvé sur "${q}".</div>`;
-  document.getElementById('compRight').innerHTML=droiteArts.length
-    ?droiteArts.map(a=>`<div class="compare-article"><a href="${esc(a.link)}" target="_blank">${esc(a.title)}</a><span class="compare-src">${esc(a.name)} · ${age(a.date)}</span></div>`).join('')
-    :`<div class="compare-empty">Aucun article de droite trouvé sur "${q}".</div>`;
+  const artListHTML = (arts, label) => arts.length
+    ? arts.map(a=>`<div class="compare-article"><a href="${esc(a.link)}" target="_blank">${esc(a.title)}</a><span class="compare-src">${esc(a.name)} · ${age(a.date)}</span></div>`).join('')
+    : `<div class="compare-empty">Aucun article ${label} trouvé sur ce sujet.</div>`;
+
+  document.getElementById('compLeft').innerHTML = artListHTML(gaucheArts, 'de gauche');
+  document.getElementById('compRight').innerHTML = artListHTML(droiteArts, 'de droite');
+  document.getElementById('compCentre').innerHTML = artListHTML(centreArts, 'de centre');
+  const lc = document.getElementById('compLeftCount');
+  const cc = document.getElementById('compCentreCount');
+  const rc = document.getElementById('compRightCount');
+  if(lc) lc.textContent = gaucheArts.length+' article'+(gaucheArts.length>1?'s':'');
+  if(cc) cc.textContent = centreArts.length+' article'+(centreArts.length>1?'s':'');
+  if(rc) rc.textContent = droiteArts.length+' article'+(droiteArts.length>1?'s':'');
 
   document.getElementById('compThink').classList.remove('on');
   document.getElementById('compThink').style.display='none';
@@ -1429,7 +1468,7 @@ function showTab(id,el){
   clearSearch();
   if(id==='sond'&&!chartsReady)renderPolls();
   if(id==='debats')renderDebats();
-  if(id==='outils'){renderPopScore();renderWordCloud();renderEvolChart();renderCarte();}
+  if(id==='outils'){renderPopScore();renderWordCloud();renderEvolChart();}
 }
 
 // ── DÉBATS POLITIQUES PAR THÈME ──────────────────────────────────────
@@ -1602,12 +1641,13 @@ function showTabMobile(id){
 // ── TICKER ────────────────────────────────────────────────────────────
 function updateTicker(){
   const track = document.getElementById('tickerTrack');
+  const wrap  = document.getElementById('tickerWrap');
   if(!track || !allArticles.length) return;
   const items = allArticles.slice(0,20).map(a=>
     `<a class="ticker-item" href="${esc(a.link)}" target="_blank">${esc(a.title)}</a><span class="ticker-sep">◆</span>`
   ).join('');
-  // Double pour boucle infinie fluide
   track.innerHTML = items + items;
+  if(wrap) wrap.style.display = 'flex';
 }
 
 // ── SCORE POPULARITÉ ──────────────────────────────────────────────────
@@ -1686,20 +1726,22 @@ function renderEvolChart(){
 
 // ── CARTE DE FRANCE ───────────────────────────────────────────────────
 const VILLES = [
-  {nom:'Paris',bord:'gauche',color:'#CC0000',desc:'NFP en tête — Hidalgo reconduite'},
-  {nom:'Marseille',bord:'droite',color:'#1E3A6E',desc:'LR / Droite — Ménard progressiste'},
-  {nom:'Lyon',bord:'gauche',color:'#CC0000',desc:'NFP — Grégory en tête'},
-  {nom:'Toulouse',bord:'gauche',color:'#CC0000',desc:'Gauche unie en tête'},
-  {nom:'Bordeaux',bord:'centre',color:'#0066CC',desc:'Centre — liste Moudenc'},
-  {nom:'Nice',bord:'droite',color:'#1E3A6E',desc:'LR — Estrosi largement en tête'},
-  {nom:'Nantes',bord:'gauche',color:'#CC0000',desc:'Gauche — Retailleau absent'},
-  {nom:'Strasbourg',bord:'gauche',color:'#CC0000',desc:'NFP — Pia Imbs reconduite'},
-  {nom:'Montpellier',bord:'gauche',color:'#CC0000',desc:'Gauche unie en tête'},
-  {nom:'Rennes',bord:'gauche',color:'#CC0000',desc:'Gauche — Métropole stable'},
-  {nom:'Lille',bord:'gauche',color:'#CC0000',desc:'NFP — Martine Aubry'},
-  {nom:'Le Havre',bord:'droite',color:'#1E3A6E',desc:'Horizons — Philippe largement favori'},
-  {nom:'Toulon',bord:'rn',color:'#003189',desc:'RN — Falco en tête'},
-  {nom:'Perpignan',bord:'rn',color:'#003189',desc:'RN — Ménard favori'},
+  {nom:'Paris',bord:'gauche',color:'#CC0000',score:'37,4%',desc:'Grégoire (PS) en tête · Dati 25,5% · Chikirou (LFI) 12%'},
+  {nom:'Marseille',bord:'gauche',color:'#CC0000',score:'36,7%',desc:'Payan (gauche) 36,7% vs Allisio (RN) 35% — suspense total'},
+  {nom:'Lyon',bord:'gauche',color:'#CC0000',score:'37,4%',desc:'Doucet (Écolos) 37,4% vs Aulas (droite) 36,8% — coude-à-coude'},
+  {nom:'Toulouse',bord:'droite',color:'#1E3A6E',score:'37,2%',desc:'Moudenc (DVD) 37,2% · Piquemal (LFI) 27,6%'},
+  {nom:'Nice',bord:'rn',color:'#003189',score:'1er',desc:'Ciotti (UDR) largement en tête · Estrosi battu'},
+  {nom:'Bordeaux',bord:'centre',color:'#0066CC',score:'3 listes',desc:'Trois candidats à plus de 20% · Second tour serré'},
+  {nom:'Nantes',bord:'gauche',color:'#CC0000',score:'1er',desc:'Gauche en tête · Maire sortant reconduit'},
+  {nom:'Strasbourg',bord:'gauche',color:'#CC0000',score:'1er',desc:'Trautmann (PS) en tête · Barseghian (Écolos) 3e'},
+  {nom:'Montpellier',bord:'gauche',color:'#CC0000',score:'1er',desc:'Gauche unie en tête au 1er tour'},
+  {nom:'Rennes',bord:'gauche',color:'#CC0000',score:'1er',desc:'Gauche en tête · Mesmeur (LFI) 18,6%'},
+  {nom:'Lille',bord:'gauche',color:'#CC0000',score:'26,3%',desc:'Deslandes (PS) 26,3% · Addouche (LFI) 23,4% — serré'},
+  {nom:'Le Havre',bord:'droite',color:'#1E3A6E',score:'1er',desc:'Philippe (Horizons) largement en tête'},
+  {nom:'Toulon',bord:'rn',color:'#003189',score:'42%',desc:'Lavalette (RN) domine à 42% · Second tour quasi-gagné'},
+  {nom:'Perpignan',bord:'rn',color:'#003189',score:'1er',desc:'RN en tête — Ménard camp favori'},
+  {nom:'Nîmes',bord:'rn',color:'#003189',score:'1er',desc:'RN en tête au 1er tour'},
+  {nom:'Roubaix',bord:'gauche',color:'#CC0000',score:'46,6%',desc:'Guiraud (LFI) 46,6% — quasi-élu dès le 1er tour'},
 ];
 
 function renderCarte(){
@@ -1708,10 +1750,13 @@ function renderCarte(){
   el.innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.6rem">
       ${VILLES.map(v=>`
-        <div style="background:${v.color}15;border:1px solid ${v.color}44;border-radius:10px;padding:.7rem .9rem;cursor:default">
-          <div style="font-weight:700;font-size:.85rem;color:var(--text)">${v.nom}</div>
-          <div style="font-size:.72rem;color:${v.color};font-weight:600;margin:.1rem 0">${v.bord==='gauche'?'◀ Gauche':v.bord==='droite'?'▶ Droite':v.bord==='centre'?'● Centre':'▶▶ RN'}</div>
-          <div style="font-size:.71rem;color:var(--gray)">${v.desc}</div>
+        <div style="background:${v.color}15;border:1.5px solid ${v.color}44;border-radius:10px;padding:.7rem .9rem;cursor:default;transition:transform .15s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.18rem">
+            <span style="font-weight:700;font-size:.86rem;color:var(--text)">${v.nom}</span>
+            <span style="font-size:.68rem;font-weight:700;color:${v.color}">${v.score}</span>
+          </div>
+          <div style="font-size:.71rem;color:${v.color};font-weight:700;margin-bottom:.18rem">${v.bord==='gauche'?'◀ Gauche/NFP':v.bord==='droite'?'▶ Droite/LR':v.bord==='centre'?'● Centre':v.bord==='rn'?'▶▶ RN':'◆ Divers'}</div>
+          <div style="font-size:.7rem;color:var(--gray);line-height:1.35">${v.desc}</div>
         </div>`).join('')}
     </div>`;
 }
@@ -1792,13 +1837,44 @@ Les 3 valeurs doivent totaliser 100. Pas de markdown.`}]})});
 }
 
 // Newsletter premium
-function subscribePremium(){
+async function startStripeCheckout(){
   const email = document.getElementById('premiumEmail').value.trim();
-  const msg = document.getElementById('premiumMsg');
-  if(!email||!email.includes('@')){ msg.style.display='block';msg.style.color='#FCA5A5';msg.textContent='⚠️ Email invalide.';return; }
-  msg.style.display='block';msg.style.color='#86EFAC';
-  msg.textContent='✅ Merci ! Vous serez parmi les premiers abonnés au lancement.';
-  document.getElementById('premiumEmail').value='';
+  const msg   = document.getElementById('premiumMsg');
+  const btn   = document.getElementById('stripeBtn');
+  if(!email||!email.includes('@')){
+    msg.style.display='block';msg.style.color='#FCA5A5';msg.textContent='⚠️ Entrez un email valide.';return;
+  }
+  btn.disabled=true;btn.textContent='Redirection…';
+  msg.style.display='none';
+  try{
+    const resp = await fetch('/stripe/checkout',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email})
+    });
+    const data = await resp.json();
+    if(data.url){
+      window.location.href = data.url; // Redirection vers Stripe Checkout
+    } else {
+      msg.style.display='block';msg.style.color='#FCA5A5';
+      msg.textContent = data.error || 'Erreur — réessayez.';
+      btn.disabled=false;btn.textContent="S'abonner 2,99€/mois →";
+    }
+  }catch{
+    msg.style.display='block';msg.style.color='#FCA5A5';msg.textContent='Erreur de connexion.';
+    btn.disabled=false;btn.textContent="S'abonner 2,99€/mois →";
+  }
+}
+
+// Gardé pour la liste d'attente gratuite (section À propos)
+function subscribePremium(){
+  startStripeCheckout();
+}
+
+function hidePubsForPremium(){
+  if(localStorage.getItem('premiumUser')==='1'){
+    document.querySelectorAll('.ad-slot,.adsbygoogle').forEach(el=>el.closest('.ad-slot')?.style.setProperty('display','none','important'));
+  }
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────

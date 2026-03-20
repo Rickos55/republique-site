@@ -339,6 +339,117 @@ app.get('/newsletter/status', (req, res) => {
   });
 });
 
+// ── STRIPE PAIEMENT ──────────────────────────────────────────────────
+const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY || '';
+const STRIPE_PRICE  = process.env.STRIPE_PRICE_ID   || ''; // ID du prix créé sur Stripe
+const SITE_URL      = process.env.SITE_URL || 'https://republique-politique.fr';
+
+// Route : créer une session de paiement Stripe Checkout
+app.post('/stripe/checkout', async (req, res) => {
+  if (!STRIPE_SECRET) return res.status(503).json({ error: 'Stripe non configuré.' });
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email requis.' });
+  try {
+    const r = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${STRIPE_SECRET}`,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        'mode': 'subscription',
+        'customer_email': email,
+        'line_items[0][price]': STRIPE_PRICE,
+        'line_items[0][quantity]': '1',
+        'success_url': `${SITE_URL}/premium-success?session_id={CHECKOUT_SESSION_ID}`,
+        'cancel_url': `${SITE_URL}/#apropos`,
+        'locale': 'fr',
+        'allow_promotion_codes': 'true',
+        'subscription_data[metadata][source]': 'republique-politique.fr'
+      })
+    });
+    const session = await r.json();
+    if (session.url) {
+      res.json({ url: session.url });
+    } else {
+      console.error('Stripe error:', session);
+      res.status(500).json({ error: session.error?.message || 'Erreur Stripe' });
+    }
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Route : webhook Stripe — appelé automatiquement après paiement réussi
+app.post('/stripe/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || '';
+  let event;
+  try {
+    // Vérification basique sans SDK (on vérifie juste le type d'événement)
+    event = JSON.parse(req.body);
+  } catch(e) {
+    return res.status(400).send('Webhook parse error');
+  }
+
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    const email = session.customer_email || session.customer_details?.email;
+    if (email && MC_API_KEY && MC_LIST_ID) {
+      // Ajouter l'abonné à Mailchimp avec tag "premium"
+      try {
+        await fetch(`https://${MC_SERVER}.api.mailchimp.com/3.0/lists/${MC_LIST_ID}/members`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${Buffer.from(`anystring:${MC_API_KEY}`).toString('base64')}`
+          },
+          body: JSON.stringify({
+            email_address: email,
+            status: 'subscribed',
+            tags: ['premium'],
+            merge_fields: { FNAME: 'Abonné Premium' }
+          })
+        });
+        console.log(`✅ Nouvel abonné premium ajouté : ${email}`);
+      } catch(e) {
+        console.error('Erreur ajout Mailchimp:', e.message);
+      }
+    }
+  }
+  res.json({ received: true });
+});
+
+// Route : page de succès après paiement
+app.get('/premium-success', (req, res) => {
+  res.send(`<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Abonnement confirmé — République</title>
+<style>
+  body{font-family:Arial,sans-serif;background:#0D2B6E;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}
+  .box{background:#fff;border-radius:20px;padding:3rem;text-align:center;max-width:480px;width:90%}
+  h1{color:#0D2B6E;font-size:2rem;margin-bottom:.5rem}
+  p{color:#555;line-height:1.7;margin-bottom:1.2rem}
+  .badge{background:gold;color:#1A1A1A;font-weight:700;padding:.4rem 1.2rem;border-radius:50px;font-size:.9rem;display:inline-block;margin-bottom:1.2rem}
+  .btn{background:#0D2B6E;color:#fff;padding:.8rem 2rem;border-radius:50px;text-decoration:none;font-weight:700;display:inline-block;margin-top:.5rem}
+  .btn:hover{background:#1A3F8F}
+</style>
+</head>
+<body>
+  <div class="box">
+    <div style="font-size:3rem">🎉</div>
+    <h1>Bienvenue !</h1>
+    <div class="badge">⭐ Abonné Premium</div>
+    <p>Votre abonnement à la <strong>Newsletter République Premium</strong> est confirmé.<br>
+    Vous recevrez votre première édition demain matin à 7h00.</p>
+    <p style="font-size:.85rem;color:#888">Un email de confirmation vous a été envoyé.<br>Vous pouvez annuler à tout moment depuis Mailchimp.</p>
+    <a href="https://republique-politique.fr" class="btn">Retour au site →</a>
+  </div>
+</body>
+</html>`);
+});
+
 app.listen(PORT, () => {
   console.log(`\n✅ Serveur lancé sur le port ${PORT}`);
   console.log(`🤖 IA Recherche : Claude Sonnet (~0.01$/requête)`);
