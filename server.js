@@ -686,6 +686,97 @@ app.get('/premium-success', (req, res) => {
 </html>`);
 });
 
+// ── ROUTE PRÉVISUALISATION NEWSLETTER ────────────────────────────────
+app.post('/newsletter/preview', async (req, res) => {
+  const token = req.body?.token;
+  if (token !== (process.env.ADMIN_PASSWORD || 'republique-admin-2026')) {
+    return res.status(401).json({ error: 'Non autorisé' });
+  }
+  const type = req.body?.type || 'gratuit';
+  console.log(`👁️ Prévisualisation newsletter ${type}...`);
+  try {
+    // Récupérer articles RSS
+    const FEEDS_PREVIEW = [
+      'https://www.lemonde.fr/politique/rss_full.xml',
+      'https://www.lefigaro.fr/rss/figaro_politique.xml',
+      'https://www.francetvinfo.fr/politique.rss',
+      'https://www.liberation.fr/arc/outboundfeeds/rss-all/',
+      'https://www.bfmtv.com/rss/news-24-7/',
+    ];
+    const articles = [];
+    for (const url of FEEDS_PREVIEW) {
+      try {
+        const ctrl = new AbortController();
+        const t = setTimeout(() => ctrl.abort(), 5000);
+        const r = await fetch(url, { signal: ctrl.signal, headers: { 'User-Agent': 'Mozilla/5.0' } });
+        clearTimeout(t);
+        const txt = await r.text();
+        const items = txt.match(/<item>[\s\S]*?<\/item>/g) || [];
+        items.slice(0, 4).forEach(item => {
+          const title = (item.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/) || item.match(/<title>(.*?)<\/title>/))?.[1] || '';
+          if (title.length > 10) articles.push(title.trim());
+        });
+      } catch {}
+    }
+    const tops = articles.slice(0, 20).map((t, i) => `${i+1}. ${t}`).join('
+');
+
+    // Générer avec Claude
+    const model = type === 'premium' ? 'claude-sonnet-4-20250514' : 'claude-haiku-4-5-20251001';
+    const system = type === 'premium'
+      ? `Tu es un analyste politique français expert. Génère une newsletter premium. Format (sans markdown) :
+TITRE: [titre]
+INTRO: [2 phrases]
+NEWS1: [titre] | [2-3 phrases analyse]
+NEWS2: [titre] | [2-3 phrases analyse]
+NEWS3: [titre] | [2-3 phrases analyse]
+NEWS4: [titre] | [2-3 phrases analyse]
+NEWS5: [titre] | [2-3 phrases analyse]
+ANALYSE_GAUCHE: [3 phrases]
+ANALYSE_DROITE: [3 phrases]
+EXCLUSIF: [2 phrases angle exclusif]
+CONCLUSION: [1 phrase]`
+      : `Tu es un journaliste politique français neutre. Format (sans markdown) :
+TITRE: [titre accrocheur]
+INTRO: [1 phrase accroche]
+NEWS1: [titre court] | [1 phrase explication]
+NEWS2: [titre court] | [1 phrase explication]
+NEWS3: [titre court] | [1 phrase explication]
+NEWS4: [titre court] | [1 phrase explication]
+NEWS5: [titre court] | [1 phrase explication]
+CONCLUSION: [1 phrase]`;
+
+    const aiResp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({ model, max_tokens: type === 'premium' ? 1200 : 600, system, messages: [{ role: 'user', content: `Articles:
+${tops}
+
+Génère la newsletter.` }] })
+    });
+    const aiData = await aiResp.json();
+    const aiText = aiData.content?.[0]?.text || '';
+
+    const getField = (key) => { const m = aiText.match(new RegExp(`${key}:\s*(.+)`)); return m ? m[1].trim() : ''; };
+    const titre = getField('TITRE') || 'Newsletter du jour';
+    const intro = getField('INTRO') || '';
+    const news = [1,2,3,4,5,6,7].map(i => {
+      const line = getField(`NEWS${i}`); if (!line) return null;
+      const [t, d] = line.split('|').map(s => s.trim());
+      return { titre: t, desc: d || '' };
+    }).filter(Boolean);
+    const analyseGauche = getField('ANALYSE_GAUCHE') || '';
+    const analyseDroite = getField('ANALYSE_DROITE') || '';
+    const exclusif = getField('EXCLUSIF') || '';
+    const conclusion = getField('CONCLUSION') || '';
+    const today = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+    res.json({ success: true, type, titre, intro, news, analyseGauche, analyseDroite, exclusif, conclusion, today, rawText: aiText });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // ── PAGE ADMIN ───────────────────────────────────────────────────────
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'republique-admin-2026';
 
@@ -815,11 +906,25 @@ td{padding:.55rem 0;border-bottom:1px solid #21262D;color:#C9D1D9}
   <!-- NEWSLETTER -->
   <div class="card">
     <h2>📧 Newsletter</h2>
-    <div style="display:flex;gap:.8rem;flex-wrap:wrap">
-      <button class="btn btn-primary" onclick="sendNL('gratuit')">Envoyer newsletter gratuite maintenant</button>
-      <button class="btn btn-blue" onclick="sendNL('premium')">Envoyer newsletter premium maintenant</button>
+    <div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:1rem">
+      <button class="btn btn-primary" onclick="previewNL('gratuit')">👁️ Prévisualiser gratuite</button>
+      <button class="btn btn-blue" onclick="previewNL('premium')">👁️ Prévisualiser premium</button>
     </div>
     <div id="nl-response" class="response"></div>
+
+    <!-- Zone de prévisualisation -->
+    <div id="preview-zone" style="display:none;margin-top:1.2rem">
+      <div style="border:1px solid #30363D;border-radius:10px;overflow:hidden">
+        <div style="background:#21262D;padding:.8rem 1rem;display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:.85rem;font-weight:600;color:#fff" id="preview-title">Aperçu</div>
+          <div style="display:flex;gap:.6rem">
+            <button class="btn btn-primary" id="send-btn" onclick="confirmSend()" style="padding:.4rem .9rem;font-size:.78rem">✅ Envoyer maintenant</button>
+            <button class="btn" onclick="closePreview()" style="padding:.4rem .9rem;font-size:.78rem;background:#21262D;color:#8B949E;border:1px solid #30363D">✕ Annuler</button>
+          </div>
+        </div>
+        <div id="preview-content" style="background:#fff;max-height:600px;overflow-y:auto"></div>
+      </div>
+    </div>
   </div>
 
   <!-- SOURCES RSS -->
@@ -862,25 +967,117 @@ td{padding:.55rem 0;border-bottom:1px solid #21262D;color:#C9D1D9}
 </div>
 
 <script>
-async function sendNL(type) {
-  const btn = event.target;
+let currentPreviewType = 'gratuit';
+
+async function previewNL(type) {
+  currentPreviewType = type;
   const resp = document.getElementById('nl-response');
-  btn.disabled = true;
-  btn.textContent = 'Envoi en cours...';
-  resp.style.display = 'none';
+  const zone = document.getElementById('preview-zone');
+  const content = document.getElementById('preview-content');
+  const titleEl = document.getElementById('preview-title');
+
+  resp.className = 'response ok';
+  resp.textContent = '⏳ Génération de l\'aperçu en cours (15-30 secondes)...';
+  resp.style.display = 'block';
+  zone.style.display = 'none';
+
   try {
-    const r = await fetch('/newsletter/send?token=${ADMIN_PASSWORD}', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({token:'${ADMIN_PASSWORD}'})});
+    const r = await fetch('/newsletter/preview', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token: '${ADMIN_PASSWORD}', type })
+    });
     const d = await r.json();
-    resp.className = 'response ok';
-    resp.textContent = '✅ ' + (d.message || 'Newsletter envoyée !');
-    resp.style.display = 'block';
+    if (!d.success) throw new Error(d.error);
+
+    titleEl.textContent = (type === 'premium' ? '⭐ Premium' : '📧 Gratuite') + ' — ' + d.titre;
+
+    // Construire l'aperçu HTML
+    const newsHTML = d.news.map((n, i) => `
+      <div style="padding:12px 0;border-bottom:1px solid #E0D9CF;display:flex;gap:10px">
+        <span style="background:#0D2B6E;color:#fff;font-weight:700;font-size:11px;padding:2px 7px;border-radius:50px;flex-shrink:0;margin-top:2px">${i+1}</span>
+        <div>
+          <div style="font-weight:700;font-size:14px;color:#1A1A1A;margin-bottom:4px">${n.titre}</div>
+          <div style="font-size:12px;color:#444;line-height:1.6">${n.desc}</div>
+        </div>
+      </div>`).join('');
+
+    const premiumExtra = type === 'premium' && (d.analyseGauche || d.analyseDroite) ? `
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:0">
+        <tr>
+          <td width="50%" style="background:#FFF0F0;padding:16px 20px;vertical-align:top">
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#CC0000;margin-bottom:6px">◀ Analyse Gauche</div>
+            <div style="font-size:12px;color:#333;line-height:1.6">${d.analyseGauche}</div>
+          </td>
+          <td width="50%" style="background:#EEF2FF;padding:16px 20px;vertical-align:top">
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#1E3A6E;margin-bottom:6px">▶ Analyse Droite</div>
+            <div style="font-size:12px;color:#333;line-height:1.6">${d.analyseDroite}</div>
+          </td>
+        </tr>
+      </table>
+      ${d.exclusif ? '<div style=\"background:#1A1A2E;padding:16px 24px\"><div style=\"font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:gold;margin-bottom:6px\">⭐ Angle exclusif Premium</div><div style=\"font-size:13px;color:#fff;line-height:1.6\">' + d.exclusif + '</div></div>' : ''}` : '';
+
+    content.innerHTML = \`
+      <div style="font-family:Arial,sans-serif">
+        <div style="background:#0D2B6E;padding:18px 28px;text-align:center">
+          ${type === 'premium' ? '<div style=\"color:gold;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:4px\">⭐ Edition Premium</div>' : ''}
+          <div style="color:#fff;font-size:18px;font-weight:700">🇫🇷 République</div>
+          <div style="color:rgba(255,255,255,0.5);font-size:11px;margin-top:3px;text-transform:uppercase">${d.today}</div>
+        </div>
+        <div style="background:#C1121F;padding:14px 28px">
+          <div style="color:#fff;font-size:15px;font-weight:700">${d.titre}</div>
+          <div style="color:rgba(255,255,255,0.85);font-size:12px;margin-top:4px">${d.intro}</div>
+        </div>
+        <div style="background:#fff;padding:20px 28px">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#aaa;margin-bottom:10px">${d.news.length} actualités du jour</div>
+          ${newsHTML}
+        </div>
+        ${premiumExtra}
+        <div style="background:#F6F3EE;padding:12px 28px;border-top:1px solid #E0D9CF">
+          <div style="font-size:12px;color:#777;font-style:italic">${d.conclusion}</div>
+        </div>
+        <div style="background:#0D2B6E;padding:12px 28px;text-align:center">
+          <div style="color:rgba(255,255,255,0.4);font-size:10px">République · republique-politique.fr</div>
+        </div>
+      </div>\`;
+
+    zone.style.display = 'block';
+    resp.textContent = '✅ Aperçu généré ! Vérifiez avant d\'envoyer.';
+    zone.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
   } catch(e) {
     resp.className = 'response err';
     resp.textContent = '❌ Erreur : ' + e.message;
+  }
+}
+
+function closePreview() {
+  document.getElementById('preview-zone').style.display = 'none';
+}
+
+async function confirmSend() {
+  const btn = document.getElementById('send-btn');
+  const resp = document.getElementById('nl-response');
+  btn.disabled = true;
+  btn.textContent = 'Envoi en cours...';
+  try {
+    const r = await fetch('/newsletter/send', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token: '${ADMIN_PASSWORD}' })
+    });
+    const d = await r.json();
+    resp.className = 'response ok';
+    resp.textContent = '✅ Newsletter envoyée avec succès !';
+    resp.style.display = 'block';
+    document.getElementById('preview-zone').style.display = 'none';
+  } catch(e) {
+    resp.className = 'response err';
+    resp.textContent = '❌ Erreur envoi : ' + e.message;
     resp.style.display = 'block';
   }
   btn.disabled = false;
-  btn.textContent = type === 'premium' ? 'Envoyer newsletter premium maintenant' : 'Envoyer newsletter gratuite maintenant';
+  btn.textContent = '✅ Envoyer maintenant';
 }
 
 // Charger les derniers articles
