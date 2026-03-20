@@ -1230,7 +1230,7 @@ const POLITICIANS=[
   {name:'Olivier Faure',      init:'OF',color:'#BE185D',party:'PS',pb:'#FDF2F8',pc:'#9D174D',
    role:'Premier Secrétaire du PS',
    photo:'/img?url=https://upload.wikimedia.org/wikipedia/commons/1/16/Olivier_Faure_2022.jpg',
-   kw:['olivier faure','parti socialiste',' ps '],wiki:'Olivier_Faure'},
+   kw:['olivier faure','parti socialiste',' ps '],wiki:'Olivier_Faure_(homme_politique)'},
   {name:'Marine Tondelier',   init:'MT',color:'#15803D',party:'EELV',pb:'#F0FDF4',pc:'#166534',
    role:'Secrétaire nationale EELV',
    photo:'/img?url=https://upload.wikimedia.org/wikipedia/commons/9/9e/Marine_Tondelier_2023.jpg',
@@ -1313,10 +1313,12 @@ function renderPoliticians(){
         const cards = document.querySelectorAll('.pol-card');
         if (cards[i]) {
           const roleEl = cards[i].querySelector('.pol-role-txt');
-          if (roleEl) {
-            roleEl.textContent = data.description;
+          if (roleEl && data.poste && data.poste.length > 5) {
+            // Capitaliser la première lettre
+            const poste = data.poste.charAt(0).toUpperCase() + data.poste.slice(1);
+            roleEl.textContent = poste;
             roleEl.style.color = 'var(--blue)';
-            roleEl.title = 'Mis à jour depuis Wikipedia';
+            roleEl.title = 'Poste mis à jour depuis Wikipedia en direct';
           }
         }
       } catch(e) {}

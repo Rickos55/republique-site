@@ -204,10 +204,11 @@ function getField(text, key) {
 
 async function generateNewsletter(type, articles) {
   const tops = articles.slice(0, 20).map(function(a, i) { return (i+1) + '. ' + a.title; }).join('\n');
-  const model = type === 'premium' ? 'claude-sonnet-4-20250514' : 'claude-haiku-4-5-20251001';
-  const maxTokens = type === 'premium' ? 1500 : 700;
+  // Haiku pour gratuit (rapide + économique), Haiku aussi pour premium preview (test)
+  const model = 'claude-haiku-4-5-20251001';
+  const maxTokens = type === 'premium' ? 1200 : 700;
   const system = type === 'premium'
-    ? 'Tu es un analyste politique français expert, neutre et rigoureux. Génère une newsletter premium détaillée.\nFormat exact (sans markdown) :\nTITRE: [titre accrocheur]\nINTRO: [2 phrases]\nNEWS1: [titre] | [2-3 phrases analyse]\nNEWS2: [titre] | [2-3 phrases analyse]\nNEWS3: [titre] | [2-3 phrases analyse]\nNEWS4: [titre] | [2-3 phrases analyse]\nNEWS5: [titre] | [2-3 phrases analyse]\nNEWS6: [titre] | [2-3 phrases analyse]\nNEWS7: [titre] | [2-3 phrases analyse]\nANALYSE_GAUCHE: [3 phrases]\nANALYSE_DROITE: [3 phrases]\nEXCLUSIF: [2 phrases angle exclusif]\nCONCLUSION: [1 phrase]'
+    ? 'Tu es un éditorialiste politique français expert, neutre et rigoureux. Génère une newsletter premium très détaillée et analytique.\nFormat exact (sans markdown, sans #, sans *) :\nTITRE: [titre accrocheur et percutant]\nINTRO: [2-3 phrases d\'accroche percutantes qui posent les enjeux du jour]\nNEWS1: [titre informatif] | [3-4 phrases : contexte + analyse + conséquences]\nNEWS2: [titre informatif] | [3-4 phrases : contexte + analyse + conséquences]\nNEWS3: [titre informatif] | [3-4 phrases : contexte + analyse + conséquences]\nNEWS4: [titre informatif] | [3-4 phrases : contexte + analyse + conséquences]\nNEWS5: [titre informatif] | [3-4 phrases : contexte + analyse + conséquences]\nNEWS6: [titre informatif] | [3-4 phrases : contexte + analyse + conséquences]\nNEWS7: [titre informatif] | [3-4 phrases : contexte + analyse + conséquences]\nANALYSE_GAUCHE: [4 phrases détaillées sur le traitement médiatique de gauche]\nANALYSE_DROITE: [4 phrases détaillées sur le traitement médiatique de droite]\nEXCLUSIF: [3 phrases sur un angle ou fait que les médias mainstream sous-traitent]\nPERSPECTIVE: [2 phrases sur ce que ça signifie pour la présidentielle 2027]\nCONCLUSION: [1 phrase de clôture éditoriale]'
     : 'Tu es un journaliste politique français neutre. Génère une newsletter quotidienne courte.\nFormat (sans markdown) :\nTITRE: [titre accrocheur]\nINTRO: [1 phrase]\nNEWS1: [titre court] | [1 phrase]\nNEWS2: [titre court] | [1 phrase]\nNEWS3: [titre court] | [1 phrase]\nNEWS4: [titre court] | [1 phrase]\nNEWS5: [titre court] | [1 phrase]\nCONCLUSION: [1 phrase]';
 
   const aiResp = await fetch('https://api.anthropic.com/v1/messages', {
@@ -229,10 +230,11 @@ async function generateNewsletter(type, articles) {
   const analyseGauche = getField(aiText, 'ANALYSE_GAUCHE');
   const analyseDroite = getField(aiText, 'ANALYSE_DROITE');
   const exclusif = getField(aiText, 'EXCLUSIF');
+  const perspective = getField(aiText, 'PERSPECTIVE');
   const conclusion = getField(aiText, 'CONCLUSION') || 'Bonne journée et à demain.';
   const today = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
 
-  return { titre, intro, news, analyseGauche, analyseDroite, exclusif, conclusion, today };
+  return { titre, intro, news, analyseGauche, analyseDroite, exclusif, perspective, conclusion, today };
 }
 
 function buildEmailHTML(type, data) {
@@ -245,7 +247,8 @@ function buildEmailHTML(type, data) {
     '<td width="50%" style="background:#FFF0F0;padding:18px 20px;vertical-align:top"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#CC0000;margin-bottom:8px">Analyse Gauche</div><div style="font-size:13px;color:#333;line-height:1.6">' + data.analyseGauche + '</div></td>' +
     '<td width="50%" style="background:#EEF2FF;padding:18px 20px;vertical-align:top"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#1E3A6E;margin-bottom:8px">Analyse Droite</div><div style="font-size:13px;color:#333;line-height:1.6">' + data.analyseDroite + '</div></td>' +
     '</tr></table></td></tr>' +
-    (data.exclusif ? '<tr><td style="background:#1A1A2E;padding:18px 28px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:gold;margin-bottom:8px">Angle exclusif Premium</div><div style="font-size:13px;color:#fff;line-height:1.6">' + data.exclusif + '</div></td></tr>' : '')
+    (data.exclusif ? '<tr><td style="background:#1A1A2E;padding:18px 28px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:gold;margin-bottom:8px">Angle exclusif Premium</div><div style="font-size:13px;color:#fff;line-height:1.6">' + data.exclusif + '</div></td></tr>' : '') +
+    (data.perspective ? '<tr><td style="background:#0D2B6E;padding:16px 28px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#93C5FD;margin-bottom:8px">Perspective 2027</div><div style="font-size:13px;color:#E0E7FF;line-height:1.6">' + data.perspective + '</div></td></tr>' : '')
   ) : '';
 
   return '<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;background:#F6F3EE;font-family:Arial,sans-serif">' +
@@ -473,10 +476,26 @@ app.get('/wiki-info', async (req, res) => {
     if (!r.ok) return res.status(404).json({ error: 'Non trouvé' });
 
     const data = await r.json();
+    const extrait = data.extract || '';
+    // Extraire le poste actuel depuis l'extrait Wikipedia
+    let posteActuel = data.description || '';
+    const patterns = [
+      /Il est ([^\.]+depuis[^\.]+)\./,
+      /Elle est ([^\.]+depuis[^\.]+)\./,
+      /Il occupe ([^\.]+)\./,
+      /Elle occupe ([^\.]+)\./,
+      /Il est ([^\.]{10,80})\./,
+      /Elle est ([^\.]{10,80})\./,
+    ];
+    for (const p of patterns) {
+      const m = extrait.match(p);
+      if (m && m[1].length < 120) { posteActuel = m[1].trim(); break; }
+    }
     const result = {
       titre: data.title || name,
       description: data.description || '',
-      extrait: (data.extract || '').substring(0, 300),
+      poste: posteActuel,
+      extrait: extrait.substring(0, 400),
       url: data.content_urls?.desktop?.page || ''
     };
 
