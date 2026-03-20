@@ -44,6 +44,33 @@ app.get('/rss', async (req, res) => {
   }
 });
 
+// ── Proxy images Wikipedia — contourne le blocage hotlinking ─────────
+app.get('/img', async (req, res) => {
+  const url = req.query.url;
+  if (!url || !url.includes('wikimedia.org')) return res.status(400).send('URL invalide');
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 8000);
+  try {
+    const r = await fetch(url, {
+      signal: ctrl.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 République-Politique-Site/1.0',
+        'Referer': 'https://fr.wikipedia.org/'
+      }
+    });
+    clearTimeout(timer);
+    const type = r.headers.get('content-type') || 'image/jpeg';
+    res.setHeader('Content-Type', type);
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    const buf = await r.buffer();
+    res.send(buf);
+  } catch(e) {
+    clearTimeout(timer);
+    res.status(500).send('Erreur');
+  }
+});
+
 // ── Route IA Recherche — Claude Sonnet (intelligent, ~0.01$/requête) ──
 // Utilisé pour la recherche d'articles : analyse sémantique poussée
 app.post('/ai', async (req, res) => {
