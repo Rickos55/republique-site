@@ -1,265 +1,302 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- SEO PRINCIPAL -->
+<!-- SEO -->
 <title>République — Actualité Politique Française en Direct</title>
-<meta name="description" content="Suivez l'actualité politique française en temps réel. Tous les journaux, tous les bords : Le Monde, Le Figaro, Libération, BFM TV, France Info. Sondages électoraux, présidentielle 2027, législatives, municipales.">
-<meta name="keywords" content="actualité politique france, politique française, sondages élections, présidentielle 2027, législatives 2027, municipales 2026, sénatoriales 2026, macron, le pen, mélenchon, lecornu, assemblée nationale, sénat, gouvernement france">
+<meta name="description" content="Suivez l'actualité politique française en temps réel. Tous les journaux, tous les bords : Le Monde, Le Figaro, Libération, BFM TV, France Info. Sondages électoraux, présidentielle 2027.">
+<meta name="keywords" content="actualité politique france, politique française, sondages élections, présidentielle 2027, législatives 2027, municipales 2026, macron, le pen, mélenchon, lecornu, assemblée nationale, sénat">
 <meta name="author" content="A.D">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 <meta name="language" content="fr">
 <meta name="revisit-after" content="1 day">
 <link rel="canonical" href="https://republique-site.onrender.com/">
-<!-- Google Search Console verification -->
 <meta name="google-site-verification" content="wiIvr-_VFhEUYk2jZylnEK8zRK9uzFj376BaMurvvaw" />
 
-<!-- OPEN GRAPH - Facebook, WhatsApp, LinkedIn -->
+<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:site_name" content="République — Politique Française">
 <meta property="og:title" content="République — Actualité Politique Française en Direct">
 <meta property="og:description" content="Tous les journaux, tous les bords politiques. Actualités en direct, sondages et calendrier électoral 2026-2027.">
 <meta property="og:url" content="https://republique-site.onrender.com/">
-
-<!-- TWITTER CARD -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="République — Actualité Politique Française en Direct">
 <meta name="twitter:description" content="Tous les journaux, tous les bords. Actualités politiques françaises en direct.">
 
-<!-- DONNÉES STRUCTURÉES Google -->
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","name":"République — Politique Française","url":"https://republique-site.onrender.com/","description":"Actualité politique française en direct. Tous les journaux, tous les bords politiques.","inLanguage":"fr-FR","potentialAction":{"@type":"SearchAction","target":"https://republique-site.onrender.com/?q={search_term_string}","query-input":"required name=search_term_string"}}
-</script>
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"NewsMediaOrganization","name":"République — Politique Française","url":"https://republique-site.onrender.com/","description":"Agrégateur d'actualités politiques françaises couvrant tous les bords politiques.","inLanguage":"fr-FR"}
-</script>
+<!-- Données structurées -->
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"République — Politique Française","url":"https://republique-site.onrender.com/","inLanguage":"fr-FR","potentialAction":{"@type":"SearchAction","target":"https://republique-site.onrender.com/?q={search_term_string}","query-input":"required name=search_term_string"}}</script>
+
+<!-- FAVICON SVG -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%230D2B6E'/><rect x='0' y='0' width='33' height='100' rx='8' fill='%23002395'/><rect x='33' y='0' width='34' height='100' fill='%23fff'/><rect x='67' y='0' width='33' height='100' rx='8' fill='%23ED2939'/><text x='50' y='68' font-size='42' text-anchor='middle' font-family='serif' font-weight='900' fill='%23fff'>R</text></svg>">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<!-- Google AdSense -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7302486476390124" crossorigin="anonymous"></script>
+
 <style>
-:root{--blue:#0D2B6E;--red:#C1121F;--bg:#F6F3EE;--card:#fff;--border:#E0D9CF;--light:#EDE8DF;--gray:#888;--text:#1A1A1A}
+/* ── THEME VARIABLES ─────────────────────────────────────────────── */
+:root {
+  --blue:#0D2B6E; --red:#C1121F;
+  --bg:#F6F3EE; --card:#fff; --border:#E0D9CF; --light:#EDE8DF;
+  --gray:#888; --text:#1A1A1A; --nav-bg:#0D2B6E;
+  --shadow:rgba(0,0,0,.08);
+}
+[data-theme="dark"] {
+  --bg:#0F1117; --card:#1A1D27; --border:#2A2D3A; --light:#1E2130;
+  --gray:#666; --text:#E8E8E8; --nav-bg:#080C18;
+  --shadow:rgba(0,0,0,.3);
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text)}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);transition:background .3s,color .3s}
 
-/* NAV */
-nav{background:var(--blue);height:58px;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300;box-shadow:0 2px 20px rgba(0,0,0,.35)}
-.logo{font-family:'Playfair Display',serif;font-weight:900;font-size:1.35rem;color:#fff;display:flex;align-items:center;gap:8px}
+/* ── NAV ──────────────────────────────────────────────────────────── */
+nav{background:var(--nav-bg);height:58px;padding:0 1.2rem;display:flex;align-items:center;gap:.75rem;position:sticky;top:0;z-index:300;box-shadow:0 2px 20px rgba(0,0,0,.35)}
+.logo{font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;color:#fff;display:flex;align-items:center;gap:8px;flex-shrink:0}
 .logo em{color:var(--red);font-style:normal}
-.flag{width:5px;height:26px;display:flex;flex-direction:column;border-radius:2px;overflow:hidden}
-.flag s{flex:1;text-decoration:none}
-.flag s:nth-child(1){background:#002395}.flag s:nth-child(2){background:#fff}.flag s:nth-child(3){background:#ED2939}
-.nav-tabs{display:flex;height:100%}
-.tab{padding:0 .9rem;height:100%;display:flex;align-items:center;color:rgba(255,255,255,.6);font-size:.76rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;border-bottom:3px solid transparent;cursor:pointer;transition:all .2s;user-select:none}
+.logo-icon{width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,#002395 33%,#fff 33%,#fff 66%,#ED2939 66%);display:flex;align-items:center;justify-content:center;font-family:serif;font-weight:900;font-size:.85rem;color:#0D2B6E;flex-shrink:0}
+.nav-tabs{display:flex;height:100%;flex:1;overflow-x:auto}
+.tab{padding:0 .75rem;height:100%;display:flex;align-items:center;color:rgba(255,255,255,.6);font-size:.74rem;font-weight:600;text-transform:uppercase;letter-spacing:.4px;border-bottom:3px solid transparent;cursor:pointer;transition:all .2s;user-select:none;white-space:nowrap}
 .tab:hover{color:#fff}.tab.on{color:#fff;border-bottom-color:var(--red)}
+.nav-actions{display:flex;align-items:center;gap:.5rem;flex-shrink:0}
+.dark-toggle{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:50px;color:#fff;padding:.3rem .7rem;font-size:.75rem;cursor:pointer;transition:all .2s;white-space:nowrap}
+.dark-toggle:hover{background:rgba(255,255,255,.2)}
+.notif-btn{background:var(--red);border:none;border-radius:50px;color:#fff;padding:.3rem .7rem;font-size:.75rem;cursor:pointer;white-space:nowrap;transition:background .2s}
+.notif-btn:hover{background:#a50f18}
 
-/* HERO */
-.hero{background:linear-gradient(135deg,#0A2260,#1A3F8F 60%,#0D2B6E);padding:2.2rem 1.5rem 2rem;text-align:center;position:relative;overflow:hidden}
+/* ── HERO ─────────────────────────────────────────────────────────── */
+.hero{background:linear-gradient(135deg,#0A2260,#1A3F8F 60%,#0D2B6E);padding:2rem 1.5rem 1.8rem;text-align:center;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;inset:0;opacity:.04;background:repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 1px,transparent 12px)}
-.hero h1{font-family:'Playfair Display',serif;font-size:2.3rem;font-weight:900;color:#fff;position:relative}
-.hero p{color:rgba(255,255,255,.55);font-size:.88rem;margin-top:.25rem;position:relative}
-.live-pill{margin-top:.7rem;display:inline-flex;align-items:center;gap:.45rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.8);padding:.28rem .85rem;border-radius:50px;font-size:.72rem;position:relative}
+.hero h1{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:#fff;position:relative}
+.hero p{color:rgba(255,255,255,.55);font-size:.87rem;margin-top:.2rem;position:relative}
+.live-pill{margin-top:.65rem;display:inline-flex;align-items:center;gap:.45rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.8);padding:.26rem .82rem;border-radius:50px;font-size:.71rem;position:relative}
 .pulse{width:7px;height:7px;background:#4ade80;border-radius:50%;animation:pulse 1.6s infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.5)}}
 
-/* SEARCH BAR — z-index élevé pour être cliquable au dessus de tout */
-.search-wrap{position:relative;z-index:10;display:flex;align-items:center;gap:.5rem;padding:.38rem .5rem .38rem 1.1rem;margin:.9rem auto 0;max-width:600px;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);border-radius:50px;cursor:text;transition:background .2s}
+/* ── SEARCH ───────────────────────────────────────────────────────── */
+.search-wrap{position:relative;z-index:10;display:flex;align-items:center;gap:.5rem;padding:.36rem .5rem .36rem 1rem;margin:.85rem auto 0;max-width:600px;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);border-radius:50px;cursor:text}
 .search-wrap:focus-within{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.5)}
-.search-wrap input{flex:1;background:none;border:none;outline:none;color:#fff;font-family:'DM Sans',sans-serif;font-size:.92rem;cursor:text;min-width:0}
-.search-wrap input::placeholder{color:rgba(255,255,255,.55)}
-.search-btn{flex-shrink:0;background:var(--red);border:none;border-radius:50px;color:#fff;padding:.42rem 1.1rem;font-size:.8rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:background .15s}
-.search-btn:hover{background:#a50f18}
-.search-btn:disabled{background:#888;cursor:not-allowed}
+.search-wrap input{flex:1;background:none;border:none;outline:none;color:#fff;font-family:'DM Sans',sans-serif;font-size:.9rem;min-width:0}
+.search-wrap input::placeholder{color:rgba(255,255,255,.5)}
+.search-btn{flex-shrink:0;background:var(--red);border:none;border-radius:50px;color:#fff;padding:.4rem 1rem;font-size:.78rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:background .15s}
+.search-btn:hover{background:#a50f18}.search-btn:disabled{background:#888;cursor:not-allowed}
 
-/* SEARCH PANEL */
+/* ── SEARCH PANEL ─────────────────────────────────────────────────── */
 .search-panel{max-width:1280px;margin:1.2rem auto 0;padding:0 1.4rem;display:none}
 .search-panel.on{display:block;animation:up .3s ease}
 .search-panel-head{display:flex;align-items:center;gap:.7rem;margin-bottom:.8rem;flex-wrap:wrap}
-.search-panel-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--blue)}
-.search-close{margin-left:auto;font-size:.78rem;font-weight:600;color:var(--red);cursor:pointer;background:none;border:1px solid var(--red);border-radius:50px;padding:.2rem .7rem;font-family:'DM Sans',sans-serif;transition:all .15s}
+.search-panel-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--blue)}
+[data-theme="dark"] .search-panel-title{color:#7B9FFF}
+.search-close{margin-left:auto;font-size:.76rem;font-weight:600;color:var(--red);cursor:pointer;background:none;border:1px solid var(--red);border-radius:50px;padding:.18rem .65rem;font-family:'DM Sans',sans-serif;transition:all .15s}
 .search-close:hover{background:var(--red);color:#fff}
-
-/* SORT BAR */
-.sort-bar{display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
-.sort-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--gray)}
-.sort-btn{padding:.22rem .7rem;border-radius:50px;border:1.5px solid var(--border);font-size:.71rem;font-weight:600;cursor:pointer;background:var(--card);color:#666;transition:all .15s;user-select:none}
-.sort-btn:hover{border-color:#aaa;color:#222}
-.sort-btn.on{background:var(--blue);color:#fff;border-color:var(--blue)}
-
-/* AI ANSWER */
-.ai-answer{background:var(--blue);color:#fff;border-radius:12px;padding:1.2rem 1.4rem;margin-bottom:1.2rem;line-height:1.75;font-size:.9rem}
-.ai-answer-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.55);margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem}
+.sort-bar{display:flex;align-items:center;gap:.45rem;margin-bottom:1rem;flex-wrap:wrap}
+.sort-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--gray)}
+.sort-btn{padding:.2rem .65rem;border-radius:50px;border:1.5px solid var(--border);font-size:.7rem;font-weight:600;cursor:pointer;background:var(--card);color:var(--gray);transition:all .15s;user-select:none}
+.sort-btn:hover{border-color:#aaa}.sort-btn.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.ai-answer{background:var(--blue);color:#fff;border-radius:12px;padding:1.1rem 1.3rem;margin-bottom:1.1rem;line-height:1.75;font-size:.88rem}
+.ai-answer-label{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.5);margin-bottom:.55rem;display:flex;align-items:center;gap:.4rem}
 .ai-answer-label::before{content:'✦';color:var(--red)}
-.ai-thinking-bar{background:var(--blue);border-radius:12px;padding:1rem 1.4rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:.7rem;color:rgba(255,255,255,.8);font-size:.88rem}
+.ai-thinking-bar{background:var(--blue);border-radius:12px;padding:.9rem 1.3rem;margin-bottom:1.1rem;display:flex;align-items:center;gap:.7rem;color:rgba(255,255,255,.8);font-size:.86rem}
 
-/* SECTIONS */
-.sec{display:none;max-width:1280px;margin:0 auto;padding:1.6rem 1.4rem}
+/* ── SECTIONS ─────────────────────────────────────────────────────── */
+.sec{display:none;max-width:1280px;margin:0 auto;padding:1.5rem 1.4rem}
 .sec.on{display:block;animation:up .3s ease}
 @keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.stitle{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--blue);margin-bottom:1.1rem;display:flex;align-items:center;gap:.7rem}
+.stitle{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--blue);margin-bottom:1rem;display:flex;align-items:center;gap:.7rem}
+[data-theme="dark"] .stitle{color:#7B9FFF}
 .stitle::after{content:'';flex:1;height:1.5px;background:linear-gradient(90deg,var(--border),transparent)}
 
-/* FILTER */
-.fbar{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.1rem;align-items:center}
-.flbl{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gray);margin-right:.2rem}
-.chip{padding:.24rem .7rem;border-radius:50px;border:1.5px solid var(--border);font-size:.71rem;font-weight:600;cursor:pointer;background:var(--card);color:#666;transition:all .15s;user-select:none}
-.chip:hover{border-color:#aaa;color:#222}.chip.on{color:#fff;border-color:transparent}
+/* ── FILTER ───────────────────────────────────────────────────────── */
+.fbar{display:flex;flex-wrap:wrap;gap:.38rem;margin-bottom:1rem;align-items:center}
+.flbl{font-size:.69rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gray);margin-right:.2rem}
+.chip{padding:.22rem .68rem;border-radius:50px;border:1.5px solid var(--border);font-size:.7rem;font-weight:600;cursor:pointer;background:var(--card);color:var(--gray);transition:all .15s;user-select:none}
+.chip:hover{border-color:#aaa}.chip.on{color:#fff;border-color:transparent}
 .c-all.on{background:#1A1A1A}.c-gauche.on{background:#CC0000}.c-centre.on{background:#0066CC}
 .c-droite.on{background:#1E3A6E}.c-eco.on{background:#1A7A3A}.c-public.on{background:#0891B2}
 
-/* GRID */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:.95rem}
+/* ── GRID / CARDS ─────────────────────────────────────────────────── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.9rem}
 .card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s;cursor:pointer}
-.card:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(0,0,0,.1)}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 32px var(--shadow)}
 .card-top{height:4px}
-.card-body{padding:.9rem;flex:1;display:flex;flex-direction:column}
-.card-head{display:flex;align-items:center;gap:.35rem;margin-bottom:.38rem;flex-wrap:wrap}
-.card-src{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
-.card-bord{font-size:.59rem;font-weight:700;text-transform:uppercase;padding:.08rem .42rem;border-radius:50px}
-.card-age{font-size:.66rem;color:var(--gray);margin-left:auto;white-space:nowrap}
-.card-title{font-family:'Playfair Display',serif;font-size:.91rem;font-weight:700;line-height:1.4;flex:1;margin-bottom:.32rem}
-.card-desc{font-size:.77rem;color:var(--gray);line-height:1.55}
-.card-link{font-size:.71rem;font-weight:700;margin-top:.6rem;display:inline-block}
-.card-hot{font-size:.63rem;background:#FEF9C3;color:#92400E;padding:.08rem .38rem;border-radius:50px;font-weight:700}
+.card-body{padding:.88rem;flex:1;display:flex;flex-direction:column}
+.card-head{display:flex;align-items:center;gap:.33rem;margin-bottom:.35rem;flex-wrap:wrap}
+.card-src{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+.card-bord{font-size:.58rem;font-weight:700;text-transform:uppercase;padding:.07rem .4rem;border-radius:50px}
+.card-age{font-size:.65rem;color:var(--gray);margin-left:auto;white-space:nowrap}
+.card-title{font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;line-height:1.4;flex:1;margin-bottom:.3rem}
+.card-desc{font-size:.76rem;color:var(--gray);line-height:1.55}
+.card-link{font-size:.7rem;font-weight:700;margin-top:.58rem;display:inline-block}
+.card-hot{font-size:.62rem;background:#FEF9C3;color:#92400E;padding:.07rem .37rem;border-radius:50px;font-weight:700}
 
-/* PAGINATION */
-.pagination{display:flex;justify-content:center;align-items:center;gap:.4rem;margin-top:1.8rem;flex-wrap:wrap}
-.page-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1.5px solid var(--border);font-size:.82rem;font-weight:600;cursor:pointer;background:var(--card);color:#555;transition:all .15s;user-select:none}
+/* ── PAGINATION ───────────────────────────────────────────────────── */
+.pagination{display:flex;justify-content:center;align-items:center;gap:.38rem;margin-top:1.6rem;flex-wrap:wrap}
+.page-btn{width:35px;height:35px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1.5px solid var(--border);font-size:.8rem;font-weight:600;cursor:pointer;background:var(--card);color:var(--text);transition:all .15s;user-select:none}
 .page-btn:hover{border-color:var(--blue);color:var(--blue)}
 .page-btn.on{background:var(--blue);color:#fff;border-color:var(--blue)}
 .page-btn.disabled{opacity:.35;cursor:not-allowed;pointer-events:none}
-.page-dots{font-size:.9rem;color:var(--gray);padding:0 .2rem}
+.page-dots{font-size:.9rem;color:var(--gray)}
 
-/* LOADING */
+/* ── LOADING ──────────────────────────────────────────────────────── */
 .center-box{display:flex;flex-direction:column;align-items:center;gap:.9rem;padding:3rem 1rem;color:var(--gray);text-align:center}
 .spinner{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:sp .8s linear infinite}
 .mini-sp{width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 
-/* POLITICIANS */
-.pol-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.95rem}
+/* ── AD SLOTS ─────────────────────────────────────────────────────── */
+.ad-slot{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.4rem;text-align:center;margin:1rem 0;min-height:90px}
+.ad-slot-wide{margin:0;border-radius:0;border-left:none;border-right:none;min-height:90px;padding:.6rem 1rem}
+
+/* ── POLITICIANS ──────────────────────────────────────────────────── */
+.pol-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:.9rem}
 .pol-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
 .pol-card-top{height:4px}
-.pol-card-body{padding:.95rem}
-.pol-card-head{display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem}
-.pol-av{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;color:#fff;flex-shrink:0}
-.pol-name{font-family:'Playfair Display',serif;font-size:.97rem;font-weight:700;line-height:1.2}
-.pol-role-txt{font-size:.7rem;color:var(--gray);margin-top:.08rem}
-.pol-tag{display:inline-block;padding:.12rem .45rem;border-radius:50px;font-size:.6rem;font-weight:700;text-transform:uppercase;margin-top:.25rem}
-.pol-news{border-top:1px solid var(--border);padding-top:.7rem;margin-top:.7rem}
-.pol-news-lbl{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin-bottom:.45rem}
-.pol-art{font-size:.77rem;color:#444;line-height:1.4;padding:.35rem 0;border-bottom:1px solid var(--border);display:flex;gap:.45rem}
+.pol-card-body{padding:.9rem}
+.pol-card-head{display:flex;align-items:center;gap:.65rem;margin-bottom:.65rem}
+.pol-av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700;color:#fff;flex-shrink:0}
+.pol-name{font-family:'Playfair Display',serif;font-size:.93rem;font-weight:700;line-height:1.2}
+.pol-role-txt{font-size:.68rem;color:var(--gray);margin-top:.07rem}
+.pol-tag{display:inline-block;padding:.11rem .43rem;border-radius:50px;font-size:.59rem;font-weight:700;text-transform:uppercase;margin-top:.22rem}
+.pol-news{border-top:1px solid var(--border);padding-top:.65rem;margin-top:.65rem}
+.pol-news-lbl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin-bottom:.42rem}
+.pol-art{font-size:.76rem;color:var(--text);line-height:1.4;padding:.32rem 0;border-bottom:1px solid var(--border);display:flex;gap:.42rem}
 .pol-art:last-child{border-bottom:none}
 .pol-dot{width:4px;height:4px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:5px}
 .pol-art a{color:var(--blue);text-decoration:none;font-weight:500}
+[data-theme="dark"] .pol-art a{color:#7B9FFF}
 .pol-art a:hover{text-decoration:underline}
-.pol-art-src{font-size:.62rem;color:var(--gray);margin-left:.25rem}
-.pol-none{font-size:.77rem;color:var(--gray);font-style:italic}
+.pol-art-src{font-size:.61rem;color:var(--gray);margin-left:.22rem}
+.pol-none{font-size:.76rem;color:var(--gray);font-style:italic}
 
-/* POLLS */
-.polls-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:1.1rem}
-.poll{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem}
-.poll-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;margin-bottom:.2rem}
-.poll-title{font-family:'Playfair Display',serif;font-size:.98rem;font-weight:700;flex:1}
-.poll-badge{font-size:.61rem;font-weight:700;text-transform:uppercase;padding:.18rem .48rem;border-radius:50px;white-space:nowrap}
-.poll-src{font-size:.7rem;color:var(--gray);margin-bottom:.95rem}
-.brow{margin-bottom:.54rem}
-.blbl{display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.22rem;font-weight:500}
-.btrack{height:8px;background:var(--light);border-radius:4px;overflow:hidden}
-.bfill{height:100%;border-radius:4px;transition:width 1.4s cubic-bezier(.4,0,.2,1)}
-.poll-note{font-size:.67rem;color:var(--gray);font-style:italic;margin-top:.7rem;padding-top:.7rem;border-top:1px solid var(--border)}
-.poll-arts{margin-top:.85rem;border-top:1px solid var(--border);padding-top:.85rem}
-.poll-arts-lbl{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin-bottom:.45rem}
-.poll-art-item{font-size:.76rem;color:#444;padding:.32rem 0;border-bottom:1px solid var(--border);display:flex;gap:.4rem;align-items:flex-start}
+/* ── COMPARAISON GAUCHE/DROITE ────────────────────────────────────── */
+.compare-search{display:flex;gap:.6rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.compare-input{flex:1;min-width:200px;padding:.62rem .85rem;border:1.5px solid var(--border);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:.87rem;background:var(--card);color:var(--text);outline:none;transition:border-color .2s}
+.compare-input:focus{border-color:var(--blue)}
+.compare-btn{padding:.62rem 1.2rem;background:var(--blue);color:#fff;border:none;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:600;cursor:pointer;transition:background .2s;white-space:nowrap}
+.compare-btn:hover{background:#1A3F8F}.compare-btn:disabled{background:#aaa;cursor:not-allowed}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.compare-col{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.compare-col-head{padding:.75rem 1rem;display:flex;align-items:center;gap:.5rem;font-weight:700;font-size:.85rem;color:#fff}
+.compare-col-body{padding:.9rem}
+.compare-article{padding:.45rem 0;border-bottom:1px solid var(--border);font-size:.78rem;line-height:1.45;color:var(--text)}
+.compare-article:last-child{border-bottom:none}
+.compare-article a{color:var(--blue);text-decoration:none;font-weight:600;display:block;margin-bottom:.15rem}
+[data-theme="dark"] .compare-article a{color:#7B9FFF}
+.compare-article a:hover{text-decoration:underline}
+.compare-src{font-size:.65rem;color:var(--gray)}
+.compare-empty{font-size:.78rem;color:var(--gray);font-style:italic;padding:.5rem 0}
+.compare-thinking{display:none;align-items:center;gap:.5rem;padding:1rem;color:var(--gray);font-size:.82rem}
+.compare-thinking.on{display:flex}
+.mini-sp-dark{width:13px;height:13px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:sp .7s linear infinite}
+
+/* ── POLLS / CHARTS ───────────────────────────────────────────────── */
+.polls-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:1.1rem}
+.poll{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.15rem}
+.poll-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;margin-bottom:.18rem}
+.poll-title{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;flex:1;color:var(--text)}
+.poll-badge{font-size:.6rem;font-weight:700;text-transform:uppercase;padding:.17rem .46rem;border-radius:50px;white-space:nowrap}
+.poll-src{font-size:.69rem;color:var(--gray);margin-bottom:.9rem}
+.poll-chart-wrap{position:relative;height:180px;margin-bottom:.9rem}
+.poll-arts{margin-top:.8rem;border-top:1px solid var(--border);padding-top:.8rem}
+.poll-arts-lbl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin-bottom:.42rem}
+.poll-art-item{font-size:.75rem;color:var(--text);padding:.3rem 0;border-bottom:1px solid var(--border);display:flex;gap:.38rem;align-items:flex-start}
 .poll-art-item:last-child{border-bottom:none}
 .poll-art-item a{color:var(--blue);text-decoration:none;font-weight:500;flex:1}
+[data-theme="dark"] .poll-art-item a{color:#7B9FFF}
 .poll-art-item a:hover{text-decoration:underline}
+.poll-note{font-size:.65rem;color:var(--gray);font-style:italic;padding-top:.65rem;border-top:1px solid var(--border);margin-top:.65rem}
 
-/* CALENDAR */
-.calist{display:flex;flex-direction:column;gap:.75rem}
-.caev{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.9rem 1.15rem;display:flex;gap:.9rem;align-items:center;transition:box-shadow .18s}
-.caev:hover{box-shadow:0 6px 16px rgba(0,0,0,.07)}
-.cadt{min-width:50px;text-align:center;background:var(--blue);color:#fff;border-radius:8px;padding:.45rem}
-.caday{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;line-height:1}
-.camon{font-size:.59rem;text-transform:uppercase;letter-spacing:.7px;opacity:.8}
-.cat{font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700;margin-bottom:.1rem}
-.cad{font-size:.74rem;color:var(--gray)}
-.cabadge{margin-left:auto;padding:.18rem .6rem;border-radius:50px;font-size:.63rem;font-weight:700;text-transform:uppercase;white-space:nowrap}
+/* ── CALENDAR ─────────────────────────────────────────────────────── */
+.calist{display:flex;flex-direction:column;gap:.72rem}
+.caev{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.88rem 1.1rem;display:flex;gap:.88rem;align-items:center;transition:box-shadow .18s}
+.caev:hover{box-shadow:0 6px 16px var(--shadow)}
+.cadt{min-width:48px;text-align:center;background:var(--blue);color:#fff;border-radius:8px;padding:.43rem}
+.caday{font-family:'Playfair Display',serif;font-size:1.32rem;font-weight:700;line-height:1}
+.camon{font-size:.58rem;text-transform:uppercase;letter-spacing:.7px;opacity:.8}
+.cat{font-family:'Playfair Display',serif;font-size:.86rem;font-weight:700;margin-bottom:.1rem;color:var(--text)}
+.cad{font-size:.72rem;color:var(--gray)}
+.cabadge{margin-left:auto;padding:.17rem .58rem;border-radius:50px;font-size:.62rem;font-weight:700;text-transform:uppercase;white-space:nowrap}
 .b-r{background:#FEE2E2;color:#B91C1C}.b-b{background:#EEF2FF;color:#4338CA}.b-g{background:#F0FDF4;color:#166534}.b-p{background:#F5F3FF;color:#7C3AED}
 
-/* FOOTER */
-footer{background:var(--blue);color:rgba(255,255,255,.45);text-align:center;padding:1.5rem 1rem;font-size:.76rem;margin-top:2.5rem;line-height:1.8}
-footer strong{color:rgba(255,255,255,.9)}
+/* ── FOOTER ───────────────────────────────────────────────────────── */
+footer{background:var(--nav-bg);color:rgba(255,255,255,.4);text-align:center;padding:1.4rem 1rem;font-size:.74rem;margin-top:2.5rem;line-height:1.9}
+footer strong{color:rgba(255,255,255,.88)}
 footer em{color:var(--red);font-style:normal}
-footer .creator{margin-top:.4rem;font-size:.7rem;color:rgba(255,255,255,.35)}
+.creator{margin-top:.35rem;font-size:.68rem;color:rgba(255,255,255,.3)}
+
+/* ── NOTIFICATION TOAST ───────────────────────────────────────────── */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--blue);color:#fff;padding:.85rem 1.2rem;border-radius:12px;font-size:.83rem;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:999;display:none;animation:slideIn .3s ease;max-width:300px}
+.toast.on{display:block}
+@keyframes slideIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
 
 @media(max-width:700px){
-  .hero h1{font-size:1.75rem}.tab{padding:0 .45rem;font-size:.66rem}
+  .hero h1{font-size:1.7rem}.tab{padding:0 .42rem;font-size:.64rem}
   .grid,.pol-grid,.polls-grid{grid-template-columns:1fr}
-  .search-wrap{margin:.7rem 1rem 0}
+  .compare-grid{grid-template-columns:1fr}
+  .search-wrap{margin:.65rem .8rem 0}
+  .dark-toggle span{display:none}
 }
 </style>
 </head>
 <body>
 
+<!-- NOTIFICATION TOAST -->
+<div class="toast" id="toast"></div>
+
 <nav>
-  <div class="logo"><div class="flag"><s></s><s></s><s></s></div>Répu<em>blique</em></div>
+  <div class="logo">
+    <div class="logo-icon">R</div>
+    Répu<em>blique</em>
+  </div>
   <div class="nav-tabs">
-    <div class="tab on" onclick="showTab('actu',this)">Actualités</div>
-    <div class="tab"    onclick="showTab('pol',this)">Politiciens</div>
-    <div class="tab"    onclick="showTab('sond',this)">Sondages</div>
-    <div class="tab"    onclick="showTab('cal',this)">Calendrier</div>
+    <div class="tab on"  onclick="showTab('actu',this)">Actualités</div>
+    <div class="tab"     onclick="showTab('pol',this)">Politiciens</div>
+    <div class="tab"     onclick="showTab('comp',this)">Comparaison</div>
+    <div class="tab"     onclick="showTab('sond',this)">Sondages</div>
+    <div class="tab"     onclick="showTab('cal',this)">Calendrier</div>
+  </div>
+  <div class="nav-actions">
+    <button class="dark-toggle" onclick="toggleDark()">🌙 <span>Mode sombre</span></button>
+    <button class="notif-btn" id="notifBtn" onclick="askNotif()">🔔 Alertes</button>
   </div>
 </nav>
 
 <div class="hero">
   <h1>Politique Française</h1>
   <p>Tous les journaux · Tous les bords · Information neutre &amp; objective</p>
-  <!-- BARRE DE RECHERCHE — pointer-events:all pour garantir le clic -->
   <div class="search-wrap" style="pointer-events:all">
-    <input id="searchIn"
-      placeholder="Recherchez un sujet, un nom, un parti…"
-      onkeydown="if(event.key==='Enter')doSearch()"
-      autocomplete="off">
+    <input id="searchIn" placeholder="Recherchez un sujet, un nom, un parti…" onkeydown="if(event.key==='Enter')doSearch()" autocomplete="off">
     <button class="search-btn" id="searchBtn" onclick="doSearch()">🔍 Rechercher</button>
   </div>
-  <div class="live-pill" style="margin-top:.7rem"><div class="pulse"></div><span id="hdate">…</span></div>
+  <div class="live-pill" style="margin-top:.65rem"><div class="pulse"></div><span id="hdate">…</span></div>
 </div>
 
-<!-- BANDEAU PUBLICITAIRE -->
-<div style="background:#fff;border-bottom:1px solid #E0D9CF;padding:.6rem 1rem;text-align:center;min-height:90px">
-  <ins class="adsbygoogle"
-    style="display:block"
-    data-ad-client="ca-pub-7302486476390124"
-    data-ad-slot="auto"
-    data-ad-format="horizontal"
-    data-full-width-responsive="true"></ins>
+<!-- PUB HAUT -->
+<div class="ad-slot ad-slot-wide" style="background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7302486476390124" data-ad-slot="auto" data-ad-format="horizontal" data-full-width-responsive="true"></ins>
 </div>
 
-<!-- RÉSULTATS RECHERCHE IA -->
+<!-- RÉSULTATS RECHERCHE -->
 <div class="search-panel" id="searchPanel">
   <div class="search-panel-head">
     <div class="search-panel-title" id="searchTitle">Résultats</div>
     <button class="search-close" onclick="clearSearch()">✕ Fermer</button>
   </div>
-  <!-- Tri des résultats -->
   <div class="sort-bar" id="sortBar" style="display:none">
-    <span class="sort-label">Trier par :</span>
-    <div class="sort-btn on" onclick="sortResults('pertinence',this)">✦ Pertinence</div>
-    <div class="sort-btn" onclick="sortResults('date',this)">🕐 Date</div>
-    <div class="sort-btn" onclick="sortResults('source',this)">📰 Source</div>
+    <span class="sort-label">Trier :</span>
+    <div class="sort-btn on" onclick="sortRes('pertinence',this)">✦ Pertinence</div>
+    <div class="sort-btn" onclick="sortRes('date',this)">🕐 Date</div>
+    <div class="sort-btn" onclick="sortRes('source',this)">📰 Source</div>
   </div>
   <div id="aiThinking" class="ai-thinking-bar" style="display:none">
-    <div class="mini-sp"></div>
-    <span>L'IA analyse votre question et sélectionne les articles pertinents…</span>
+    <div class="mini-sp"></div><span>L'IA analyse et sélectionne les articles pertinents…</span>
   </div>
   <div id="aiAnswerBox" style="display:none"></div>
   <div id="searchGrid"></div>
-  <div id="searchPagination" class="pagination"></div>
+  <div id="searchPag" class="pagination"></div>
 </div>
 
 <!-- ACTUALITÉS -->
@@ -275,48 +312,132 @@ footer .creator{margin-top:.4rem;font-size:.7rem;color:rgba(255,255,255,.35)}
   </div>
   <div class="stitle" id="ncount">Actualités en direct</div>
   <div id="ngrid"><div class="center-box"><div class="spinner"></div><p>Chargement des articles…</p></div></div>
-  <div id="newsPagination" class="pagination"></div>
+  <div id="newsPag" class="pagination"></div>
+
+  <!-- PUB MILIEU ARTICLES -->
+  <div class="ad-slot" style="margin-top:1.5rem">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7302486476390124" data-ad-slot="auto" data-ad-format="rectangle" data-full-width-responsive="true"></ins>
+  </div>
 </div>
 
 <!-- POLITICIENS -->
 <div id="s-pol" class="sec">
   <div class="stitle">Figures politiques — Articles en direct</div>
-  <p style="font-size:.81rem;color:var(--gray);margin-bottom:1.1rem">Mis à jour automatiquement depuis les flux RSS · Mars 2026</p>
+  <p style="font-size:.8rem;color:var(--gray);margin-bottom:1rem">Mis à jour automatiquement depuis les flux RSS · Mars 2026</p>
   <div id="pgrid"><div class="center-box"><div class="spinner"></div><p>Chargement…</p></div></div>
 </div>
 
-<!-- SONDAGES -->
+<!-- COMPARAISON GAUCHE vs DROITE -->
+<div id="s-comp" class="sec">
+  <div class="stitle">Comparaison Gauche vs Droite</div>
+  <p style="font-size:.8rem;color:var(--gray);margin-bottom:1.1rem">Entrez un sujet pour voir comment les médias de gauche et de droite en parlent différemment.</p>
+  <div class="compare-search">
+    <input class="compare-input" id="compInput" placeholder="Ex : immigration, retraites, budget, sécurité…" onkeydown="if(event.key==='Enter')doCompare()">
+    <button class="compare-btn" id="compBtn" onclick="doCompare()">Comparer</button>
+  </div>
+  <div class="compare-thinking" id="compThink"><div class="mini-sp-dark"></div>Recherche des articles de chaque bord…</div>
+  <div class="compare-grid" id="compGrid" style="display:none">
+    <div class="compare-col">
+      <div class="compare-col-head" style="background:#CC0000">◀ Presse de Gauche</div>
+      <div class="compare-col-body" id="compLeft"></div>
+    </div>
+    <div class="compare-col">
+      <div class="compare-col-head" style="background:#1E3A6E">▶ Presse de Droite</div>
+      <div class="compare-col-body" id="compRight"></div>
+    </div>
+  </div>
+  <!-- PUB COMPARAISON -->
+  <div class="ad-slot" style="margin-top:1.5rem">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7302486476390124" data-ad-slot="auto" data-ad-format="rectangle" data-full-width-responsive="true"></ins>
+  </div>
+</div>
+
+<!-- SONDAGES avec graphiques -->
 <div id="s-sond" class="sec">
-  <div class="stitle">Sondages électoraux — 4 scrutins à venir</div>
-  <p style="font-size:.81rem;color:var(--gray);margin-bottom:1.1rem">Barres issues des derniers sondages publiés · Articles extraits en direct des RSS</p>
-  <div id="sgrid"><div class="center-box"><div class="spinner"></div><p>Recherche des sondages…</p></div></div>
+  <div class="stitle">Sondages électoraux — 4 scrutins</div>
+  <p style="font-size:.8rem;color:var(--gray);margin-bottom:1.1rem">Graphiques interactifs · Articles de sondages extraits en direct des RSS</p>
+  <div id="sgrid"><div class="center-box"><div class="spinner"></div><p>Chargement…</p></div></div>
 </div>
 
 <!-- CALENDRIER -->
 <div id="s-cal" class="sec">
   <div class="stitle">Calendrier électoral 2026–2029</div>
   <div class="calist">
-    <div class="caev"><div class="cadt"><div class="caday">22</div><div class="camon">Mar</div></div><div><div class="cat">Municipales — 2e tour</div><div class="cad">Second tour dans les communes sans majorité au 1er tour du 15 mars</div></div><span class="cabadge b-g">Municipales</span></div>
-    <div class="caev"><div class="cadt"><div class="caday">Sep</div><div class="camon">2026</div></div><div><div class="cat">Élections Sénatoriales</div><div class="cad">Renouvellement de la moitié du Sénat — scrutin indirect</div></div><span class="cabadge b-p">Sénatoriales</span></div>
-    <div class="caev"><div class="cadt"><div class="caday">Avr</div><div class="camon">2027</div></div><div><div class="cat">Élection Présidentielle</div><div class="cad">1er et 2e tour — élection du Président de la République</div></div><span class="cabadge b-r">Présidentielle</span></div>
-    <div class="caev"><div class="cadt"><div class="caday">Jun</div><div class="camon">2027</div></div><div><div class="cat">Élections Législatives</div><div class="cad">Renouvellement des 577 députés de l'Assemblée nationale</div></div><span class="cabadge b-r">Législatives</span></div>
+    <div class="caev"><div class="cadt"><div class="caday">22</div><div class="camon">Mar</div></div><div><div class="cat">Municipales — 2e tour</div><div class="cad">Second tour dans les communes sans majorité</div></div><span class="cabadge b-g">Municipales</span></div>
+    <div class="caev"><div class="cadt"><div class="caday">Sep</div><div class="camon">2026</div></div><div><div class="cat">Élections Sénatoriales</div><div class="cad">Renouvellement de la moitié du Sénat</div></div><span class="cabadge b-p">Sénatoriales</span></div>
+    <div class="caev"><div class="cadt"><div class="caday">Avr</div><div class="camon">2027</div></div><div><div class="cat">Élection Présidentielle</div><div class="cad">1er et 2e tour — Président de la République</div></div><span class="cabadge b-r">Présidentielle</span></div>
+    <div class="caev"><div class="cadt"><div class="caday">Jun</div><div class="camon">2027</div></div><div><div class="cat">Élections Législatives</div><div class="cad">Renouvellement des 577 députés</div></div><span class="cabadge b-r">Législatives</span></div>
     <div class="caev"><div class="cadt"><div class="caday">Jun</div><div class="camon">2029</div></div><div><div class="cat">Élections Européennes</div><div class="cad">Renouvellement du Parlement européen</div></div><span class="cabadge b-b">Européennes</span></div>
   </div>
   <div class="stitle" style="margin-top:1.8rem">Actualités électorales en direct</div>
-  <div id="calgrid"><div class="center-box"><div class="spinner"></div><p>Recherche d'articles…</p></div></div>
+  <div id="calgrid"><div class="center-box"><div class="spinner"></div><p>Chargement…</p></div></div>
 </div>
 
 <footer>
   <strong>République</strong> — Information politique française neutre &amp; objective<br>
   21 flux RSS en direct · Recherche IA <em>Claude</em> · Actualisation toutes les 10 min
-  <div class="creator">© 2026 — Créé par <strong style="color:rgba(255,255,255,.6)">A.D</strong></div>
+  <div class="creator">© 2026 — Créé par <strong style="color:rgba(255,255,255,.55)">A.D</strong></div>
 </footer>
 
 <script>
+// ── DATE ──────────────────────────────────────────────────────────────
 document.getElementById('hdate').textContent =
   new Date().toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 
-// ══ SOURCES RSS ═══════════════════════════════════════════════════════
+// ── MODE SOMBRE ───────────────────────────────────────────────────────
+function toggleDark(){
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme')==='dark';
+  html.setAttribute('data-theme', isDark?'light':'dark');
+  localStorage.setItem('theme', isDark?'light':'dark');
+  document.querySelector('.dark-toggle').textContent = isDark ? '🌙 Mode sombre' : '☀️ Mode clair';
+  // Redraw charts if visible
+  if(chartsReady) { chartsReady=false; renderPolls(); }
+}
+// Restore theme
+(function(){
+  const t=localStorage.getItem('theme');
+  if(t==='dark'){
+    document.documentElement.setAttribute('data-theme','dark');
+    document.querySelector('.dark-toggle').textContent='☀️ Mode clair';
+  }
+})();
+
+// ── NOTIFICATIONS PUSH ────────────────────────────────────────────────
+function askNotif(){
+  if(!('Notification' in window)){showToast('❌ Notifications non supportées par ce navigateur');return;}
+  if(Notification.permission==='granted'){showToast('✅ Notifications déjà activées !');return;}
+  Notification.requestPermission().then(p=>{
+    if(p==='granted'){
+      showToast('✅ Notifications activées ! Vous serez alerté des grandes news.');
+      localStorage.setItem('notif','on');
+      document.getElementById('notifBtn').textContent='🔔 Alertes ON';
+      document.getElementById('notifBtn').style.background='#15803D';
+    } else {
+      showToast('❌ Notifications refusées.');
+    }
+  });
+}
+
+function sendNotif(title, body){
+  if(Notification.permission==='granted' && localStorage.getItem('notif')==='on'){
+    new Notification(title,{body, icon:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="12" fill="%230D2B6E"/><text x="50" y="68" font-size="52" text-anchor="middle" font-family="serif" font-weight="900" fill="white">R</text></svg>'});
+  }
+}
+
+function showToast(msg, duration=3500){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'), duration);
+}
+
+// Restore notif state
+if(localStorage.getItem('notif')==='on' && Notification.permission==='granted'){
+  document.getElementById('notifBtn').textContent='🔔 Alertes ON';
+  document.getElementById('notifBtn').style.background='#15803D';
+}
+
+// ── SOURCES RSS ───────────────────────────────────────────────────────
 const FEEDS=[
   {name:'Le Monde',         color:'#1A1A2E',bord:'centre',url:'https://www.lemonde.fr/politique/rss_full.xml'},
   {name:'Libération',       color:'#E63946',bord:'gauche', url:'https://www.liberation.fr/arc/outboundfeeds/rss-all/'},
@@ -342,45 +463,10 @@ const FEEDS=[
 ];
 const BORD_LABEL={gauche:'Gauche',centre:'Centre',droite:'Droite',eco:'Économie',public:'Médias publics'};
 const BORD_COLOR={gauche:'#CC0000',centre:'#0066CC',droite:'#1E3A6E',eco:'#1A7A3A',public:'#0891B2'};
-let allArticles=[], activeBord='all';
+let allArticles=[], activeBord='all', newsPage=1;
+let searchRes=[], searchPage=1, searchSort='pertinence';
+let chartsReady=false;
 
-// ══ PAGINATION ═════════════════════════════════════════════════════════
-const PER_PAGE = 24; // articles par page
-let newsPage = 1;
-let searchResults = [], searchPage = 1, searchSort = 'pertinence';
-
-function renderPagination(containerId, currentPage, total, onPage) {
-  const totalPages = Math.ceil(total / PER_PAGE);
-  const el = document.getElementById(containerId);
-  if (totalPages <= 1) { el.innerHTML = ''; return; }
-
-  let html = '';
-  // Précédent
-  html += `<div class="page-btn ${currentPage===1?'disabled':''}" onclick="if(${currentPage}>1)${onPage}(${currentPage-1})">‹</div>`;
-
-  // Pages style Google
-  const pages = [];
-  for (let i = 1; i <= totalPages; i++) {
-    if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
-      pages.push(i);
-    } else if (pages[pages.length-1] !== '…') {
-      pages.push('…');
-    }
-  }
-  pages.forEach(p => {
-    if (p === '…') {
-      html += `<div class="page-dots">…</div>`;
-    } else {
-      html += `<div class="page-btn ${p===currentPage?'on':''}" onclick="${onPage}(${p})">${p}</div>`;
-    }
-  });
-
-  // Suivant
-  html += `<div class="page-btn ${currentPage===totalPages?'disabled':''}" onclick="if(${currentPage}<${totalPages})${onPage}(${currentPage+1})">›</div>`;
-  el.innerHTML = html;
-}
-
-// ══ FETCH RSS ══════════════════════════════════════════════════════════
 async function fetchFeed(f){
   try{
     const r=await fetch(`/rss?url=${encodeURIComponent(f.url)}`);
@@ -401,171 +487,145 @@ async function fetchFeed(f){
 async function loadAll(){
   const batches=await Promise.all(FEEDS.map(fetchFeed));
   const seen=new Set();
+  const prev = allArticles.length;
   allArticles=batches.flat()
     .filter(a=>{const k=a.title.slice(0,35).toLowerCase();if(seen.has(k))return false;seen.add(k);return true;})
     .sort((a,b)=>b.date-a.date);
-  newsPage=1;
+  // Notification si nouveaux articles
+  if(prev>0 && allArticles.length>prev){
+    const newest=allArticles[0];
+    sendNotif('🗞️ Nouvelle actualité politique', newest.title);
+  }
+  newsPage=1; chartsReady=false;
   renderNews(); renderPoliticians(); renderPolls(); renderCalendar();
 }
 
-// ══ RECHERCHE IA ═══════════════════════════════════════════════════════
-async function doSearch(){
-  const q = document.getElementById('searchIn').value.trim();
-  if(!q) return;
-
-  const panel = document.getElementById('searchPanel');
-  panel.classList.add('on');
-  document.getElementById('searchTitle').textContent = `Recherche : « ${q} »`;
-  document.getElementById('aiThinking').style.display = 'flex';
-  document.getElementById('aiAnswerBox').style.display = 'none';
-  document.getElementById('searchGrid').innerHTML = '';
-  document.getElementById('searchPagination').innerHTML = '';
-  document.getElementById('sortBar').style.display = 'none';
-  document.getElementById('searchBtn').disabled = true;
-  panel.scrollIntoView({behavior:'smooth', block:'start'});
-
-  const ctx = allArticles.slice(0,120).map((a,i)=>`[${i}] ${a.title} (${a.name})`).join('\n');
-
-  try{
-    const resp = await fetch('/ai',{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        max_tokens: 600,
-        system:`Tu es un assistant de recherche d'articles de presse politique française.
-Réponds UNIQUEMENT avec un JSON valide : {"indices":[3,7,12...],"answer":"Réponse neutre 2-3 phrases."}
-- indices : numéros des articles les plus pertinents pour la requête (max 24, triés par pertinence décroissante)
-- answer : réponse factuelle et neutre à la question en français
-Ne mets RIEN d'autre que le JSON.`,
-        messages:[{role:'user',content:`Requête : "${q}"\n\nArticles :\n${ctx}`}]
-      })
-    });
-    const d = await resp.json();
-    const raw = d.content?.[0]?.text || '{}';
-    let indices=[], answer='';
-    try{ const p=JSON.parse(raw.trim()); indices=p.indices||[]; answer=p.answer||''; }catch{}
-
-    document.getElementById('aiThinking').style.display='none';
-
-    if(answer){
-      document.getElementById('aiAnswerBox').style.display='block';
-      document.getElementById('aiAnswerBox').innerHTML=`
-        <div class="ai-answer">
-          <div class="ai-answer-label">Analyse IA — Réponse neutre &amp; objective</div>
-          <div>${esc(answer).replace(/\n/g,'<br>')}</div>
-        </div>`;
-    }
-
-    // Stocker les résultats avec score de pertinence
-    searchResults = indices.length > 0
-      ? indices.map((idx,rank)=>({...allArticles[idx], relevanceRank:rank})).filter(a=>a&&a.title)
-      : simpleFallback(q);
-
-    searchPage = 1;
-    searchSort = 'pertinence';
-    document.getElementById('sortBar').style.display = searchResults.length > 0 ? 'flex' : 'none';
-    document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('on'));
-    document.querySelector('.sort-btn').classList.add('on');
-    renderSearchPage();
-
-  }catch(e){
-    document.getElementById('aiThinking').style.display='none';
-    searchResults = simpleFallback(q);
-    searchPage = 1;
-    document.getElementById('sortBar').style.display = searchResults.length>0?'flex':'none';
-    renderSearchPage();
+// ── PAGINATION ────────────────────────────────────────────────────────
+const PER_PAGE=24;
+function renderPag(id, cur, total, fn){
+  const pages=Math.ceil(total/PER_PAGE);
+  const el=document.getElementById(id);
+  if(pages<=1){el.innerHTML='';return;}
+  let h=`<div class="page-btn ${cur===1?'disabled':''}" onclick="${fn}(${cur-1})">‹</div>`;
+  const ps=[];
+  for(let i=1;i<=pages;i++){
+    if(i===1||i===pages||(i>=cur-2&&i<=cur+2))ps.push(i);
+    else if(ps[ps.length-1]!=='…')ps.push('…');
   }
-
-  document.getElementById('searchBtn').disabled = false;
+  ps.forEach(p=>{
+    if(p==='…')h+=`<div class="page-dots">…</div>`;
+    else h+=`<div class="page-btn ${p===cur?'on':''}" onclick="${fn}(${p})">${p}</div>`;
+  });
+  h+=`<div class="page-btn ${cur===pages?'disabled':''}" onclick="${fn}(${cur+1})">›</div>`;
+  el.innerHTML=h;
 }
 
-function sortResults(mode, el){
-  searchSort = mode;
+// ── RECHERCHE IA ──────────────────────────────────────────────────────
+async function doSearch(){
+  const q=document.getElementById('searchIn').value.trim();
+  if(!q)return;
+  const panel=document.getElementById('searchPanel');
+  panel.classList.add('on');
+  document.getElementById('searchTitle').textContent=`Recherche : « ${q} »`;
+  document.getElementById('aiThinking').style.display='flex';
+  document.getElementById('aiAnswerBox').style.display='none';
+  document.getElementById('searchGrid').innerHTML='';
+  document.getElementById('searchPag').innerHTML='';
+  document.getElementById('sortBar').style.display='none';
+  document.getElementById('searchBtn').disabled=true;
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
+  const ctx=allArticles.slice(0,120).map((a,i)=>`[${i}] ${a.title} (${a.name})`).join('\n');
+  try{
+    const resp=await fetch('/ai',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({max_tokens:600,
+        system:`Tu es un assistant de recherche d'articles de presse politique française. Réponds UNIQUEMENT avec un JSON valide : {"indices":[3,7,12...],"answer":"Réponse neutre 2-3 phrases."} - indices : numéros des articles les plus pertinents (max 24) - answer : réponse factuelle et neutre. Rien d'autre que le JSON.`,
+        messages:[{role:'user',content:`Requête : "${q}"\n\nArticles :\n${ctx}`}]})});
+    const d=await resp.json();
+    const raw=d.content?.[0]?.text||'{}';
+    let indices=[],answer='';
+    try{const p=JSON.parse(raw.trim());indices=p.indices||[];answer=p.answer||'';}catch{}
+    document.getElementById('aiThinking').style.display='none';
+    if(answer){
+      document.getElementById('aiAnswerBox').style.display='block';
+      document.getElementById('aiAnswerBox').innerHTML=`<div class="ai-answer"><div class="ai-answer-label">Analyse IA — Réponse neutre</div><div>${esc(answer).replace(/\n/g,'<br>')}</div></div>`;
+    }
+    searchRes=indices.length>0?indices.map(i=>allArticles[i]).filter(Boolean):simpleFallback(q);
+    searchPage=1; searchSort='pertinence';
+    document.getElementById('sortBar').style.display=searchRes.length?'flex':'none';
+    document.querySelectorAll('.sort-btn').forEach((b,i)=>b.classList.toggle('on',i===0));
+    renderSearchPage();
+  }catch{
+    document.getElementById('aiThinking').style.display='none';
+    searchRes=simpleFallback(q); searchPage=1;
+    document.getElementById('sortBar').style.display=searchRes.length?'flex':'none';
+    renderSearchPage();
+  }
+  document.getElementById('searchBtn').disabled=false;
+}
+
+function sortRes(mode,el){
+  searchSort=mode; searchPage=1;
   document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('on'));
-  el.classList.add('on');
-  searchPage = 1;
-  renderSearchPage();
+  el.classList.add('on'); renderSearchPage();
 }
 
 function renderSearchPage(){
-  // Trier selon le mode choisi
-  let sorted = [...searchResults];
-  if(searchSort === 'date') sorted.sort((a,b)=>b.date-a.date);
-  else if(searchSort === 'source') sorted.sort((a,b)=>a.name.localeCompare(b.name));
-  // pertinence = ordre IA (déjà trié)
-
-  const total = sorted.length;
-  const start = (searchPage-1)*PER_PAGE;
-  const page  = sorted.slice(start, start+PER_PAGE);
-
-  document.getElementById('searchTitle').textContent =
-    `${total} résultat${total>1?'s':''} — page ${searchPage}/${Math.ceil(total/PER_PAGE)||1}`;
-
-  if(!page.length){
-    document.getElementById('searchGrid').innerHTML=`<div class="center-box"><p>Aucun article trouvé.</p></div>`;
-    document.getElementById('searchPagination').innerHTML='';
-    return;
-  }
-
-  document.getElementById('searchGrid').className='grid';
-  document.getElementById('searchGrid').innerHTML=page.map((a,i)=>cardHTML(a, searchSort==='pertinence'&&i<3&&searchPage===1)).join('');
-  renderPagination('searchPagination', searchPage, total, 'goSearchPage');
+  let sorted=[...searchRes];
+  if(searchSort==='date')sorted.sort((a,b)=>b.date-a.date);
+  else if(searchSort==='source')sorted.sort((a,b)=>a.name.localeCompare(b.name));
+  const total=sorted.length;
+  const start=(searchPage-1)*PER_PAGE;
+  const page=sorted.slice(start,start+PER_PAGE);
+  document.getElementById('searchTitle').textContent=`${total} résultat${total>1?'s':''} — page ${searchPage}/${Math.ceil(total/PER_PAGE)||1}`;
+  const g=document.getElementById('searchGrid');
+  if(!page.length){g.innerHTML=`<div class="center-box"><p>Aucun article trouvé.</p></div>`;return;}
+  g.className='grid';
+  g.innerHTML=page.map((a,i)=>cardHTML(a,searchSort==='pertinence'&&i<3&&searchPage===1)).join('');
+  renderPag('searchPag',searchPage,total,'goSP');
 }
-
-function goSearchPage(p){
-  searchPage=p;
-  renderSearchPage();
-  document.getElementById('searchPanel').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
+function goSP(p){searchPage=p;renderSearchPage();document.getElementById('searchPanel').scrollIntoView({behavior:'smooth',block:'start'});}
 function simpleFallback(q){
-  const words=q.toLowerCase().split(/\s+/).filter(w=>w.length>2);
-  return allArticles.filter(a=>words.some(w=>(a.title+' '+a.desc).toLowerCase().includes(w)));
+  const w=q.toLowerCase().split(/\s+/).filter(x=>x.length>2);
+  return allArticles.filter(a=>w.some(x=>(a.title+' '+a.desc).toLowerCase().includes(x)));
 }
-
 function clearSearch(){
   document.getElementById('searchPanel').classList.remove('on');
   document.getElementById('searchIn').value='';
   document.getElementById('searchGrid').innerHTML='';
-  document.getElementById('searchPagination').innerHTML='';
+  document.getElementById('searchPag').innerHTML='';
   document.getElementById('aiAnswerBox').style.display='none';
   document.getElementById('aiThinking').style.display='none';
   document.getElementById('sortBar').style.display='none';
-  searchResults=[];
+  searchRes=[];
 }
 
-// ══ ACTUALITÉS AVEC PAGINATION ═════════════════════════════════════════
+// ── ACTUALITÉS ────────────────────────────────────────────────────────
 function renderNews(){
-  const list = activeBord==='all' ? allArticles : allArticles.filter(a=>a.bord===activeBord);
-  const total = list.length;
-  const now = new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  const list=activeBord==='all'?allArticles:allArticles.filter(a=>a.bord===activeBord);
+  const total=list.length;
+  const now=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
   document.getElementById('ncount').innerHTML=
     `<span>${total} articles — ${activeBord==='all'?'Tous les journaux':BORD_LABEL[activeBord]}</span>
-     <span style="font-size:.69rem;font-weight:400;color:var(--gray);margin-left:.5rem">Mis à jour ${now}</span>`;
-  const start = (newsPage-1)*PER_PAGE;
-  const page  = list.slice(start, start+PER_PAGE);
-  const g = document.getElementById('ngrid');
-  if(!page.length){ g.innerHTML=`<div class="center-box"><p>Aucun article chargé.</p></div>`; return; }
+     <span style="font-size:.68rem;font-weight:400;color:var(--gray);margin-left:.5rem">Mis à jour ${now}</span>`;
+  const start=(newsPage-1)*PER_PAGE;
+  const page=list.slice(start,start+PER_PAGE);
+  const g=document.getElementById('ngrid');
+  if(!page.length){g.innerHTML=`<div class="center-box"><p>Aucun article chargé.</p></div>`;return;}
   g.className='grid';
   g.innerHTML=page.map(a=>cardHTML(a,false)).join('');
-  renderPagination('newsPagination', newsPage, total, 'goNewsPage');
+  renderPag('newsPag',newsPage,total,'goNP');
 }
+function goNP(p){newsPage=p;renderNews();document.getElementById('s-actu').scrollIntoView({behavior:'smooth',block:'start'});}
 
-function goNewsPage(p){
-  newsPage=p;
-  renderNews();
-  document.getElementById('s-actu').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-function cardHTML(a, hot=false){
-  const bc=BORD_COLOR[a.bord]||'#888', bl=BORD_LABEL[a.bord]||a.bord;
-  return`<div class="card" onclick="window.open('${esc(a.link)}','_blank')"
-    style="${hot?'border-color:var(--blue);box-shadow:0 0 0 2px #0D2B6E22':''}">
+function cardHTML(a,hot=false){
+  const bc=BORD_COLOR[a.bord]||'#888',bl=BORD_LABEL[a.bord]||a.bord;
+  return`<div class="card" onclick="window.open('${esc(a.link)}','_blank')" style="${hot?'border-color:var(--blue);box-shadow:0 0 0 2px #0D2B6E22':''}">
     <div class="card-top" style="background:${a.color}"></div>
     <div class="card-body">
       <div class="card-head">
         <span class="card-src" style="color:${a.color}">${esc(a.name)}</span>
         <span class="card-bord" style="background:${bc}22;color:${bc}">${bl}</span>
-        ${hot?'<span class="card-hot">✦ Top résultat</span>':''}
+        ${hot?'<span class="card-hot">✦ Top</span>':''}
         <span class="card-age">${age(a.date)}</span>
       </div>
       <div class="card-title">${esc(a.title)}</div>
@@ -574,75 +634,79 @@ function cardHTML(a, hot=false){
     </div></div>`;
 }
 
-// ══ POLITICIENS ════════════════════════════════════════════════════════
+// ── POLITICIENS ───────────────────────────────────────────────────────
 const POLITICIANS=[
-  {name:'Emmanuel Macron',    init:'EM',color:'#002395',party:'Renaissance',pb:'#EEF2FF',pc:'#4338CA',
-   role:'Président de la République',kw:['macron','président de la république','élysée']},
-  {name:'Sébastien Lecornu',  init:'SL',color:'#16A34A',party:'Renaissance',pb:'#F0FDF4',pc:'#166534',
-   role:'Premier ministre',kw:['lecornu','sébastien lecornu','premier ministre','matignon']},
-  {name:'Marine Le Pen',      init:'ML',color:'#003189',party:'RN',pb:'#FFF0F0',pc:'#B91C1C',
-   role:'Présidente du groupe RN',kw:['marine le pen','rassemblement national',' rn ']},
-  {name:'Jordan Bardella',    init:'JB',color:'#00308F',party:'RN',pb:'#FFF0F0',pc:'#B91C1C',
-   role:'Président du RN',kw:['bardella','jordan bardella']},
-  {name:'Jean-Luc Mélenchon', init:'JM',color:'#CC0000',party:'LFI',pb:'#FFF0F0',pc:'#CC0000',
-   role:'Leader de La France Insoumise',kw:['mélenchon','melenchon','france insoumise','lfi']},
-  {name:'Édouard Philippe',   init:'EP',color:'#1E3A6E',party:'Horizons',pb:'#EEF2FF',pc:'#1E3A6E',
-   role:'Maire du Havre / Horizons',kw:['édouard philippe','edouard philippe','horizons']},
-  {name:'Laurent Wauquiez',   init:'LW',color:'#0072C6',party:'LR',pb:'#EEF2FF',pc:'#0072C6',
-   role:'Président du groupe LR',kw:['wauquiez','les républicains',' lr ']},
-  {name:'Olivier Faure',      init:'OF',color:'#BE185D',party:'PS',pb:'#FDF2F8',pc:'#9D174D',
-   role:'Premier Secrétaire du PS',kw:['olivier faure','parti socialiste',' ps ']},
-  {name:'Marine Tondelier',   init:'MT',color:'#15803D',party:'EELV',pb:'#F0FDF4',pc:'#166534',
-   role:'Secrétaire nationale EELV',kw:['tondelier','eelv','les verts','écologiste']},
-  {name:'Gabriel Attal',      init:'GA',color:'#3B82F6',party:'Renaissance',pb:'#EEF2FF',pc:'#4338CA',
-   role:'Ancien Premier ministre',kw:['gabriel attal','attal']},
-  {name:'Éric Ciotti',        init:'EC',color:'#1E40AF',party:'UDR',pb:'#EEF2FF',pc:'#1E40AF',
-   role:'Président de l\'UDR',kw:['ciotti','udr']},
-  {name:'Gérald Darmanin',    init:'GD',color:'#7C3AED',party:'Renaissance',pb:'#F5F3FF',pc:'#7C3AED',
-   role:'Garde des Sceaux, ministre de la Justice',kw:['darmanin','gérald darmanin','garde des sceaux']},
+  {name:'Emmanuel Macron',    init:'EM',color:'#002395',party:'Renaissance',pb:'#EEF2FF',pc:'#4338CA',role:'Président de la République',kw:['macron','président de la république','élysée']},
+  {name:'Sébastien Lecornu',  init:'SL',color:'#16A34A',party:'Renaissance',pb:'#F0FDF4',pc:'#166534',role:'Premier ministre',kw:['lecornu','sébastien lecornu','premier ministre','matignon']},
+  {name:'Marine Le Pen',      init:'ML',color:'#003189',party:'RN',pb:'#FFF0F0',pc:'#B91C1C',role:'Présidente du groupe RN',kw:['marine le pen','rassemblement national',' rn ']},
+  {name:'Jordan Bardella',    init:'JB',color:'#00308F',party:'RN',pb:'#FFF0F0',pc:'#B91C1C',role:'Président du RN',kw:['bardella','jordan bardella']},
+  {name:'Jean-Luc Mélenchon', init:'JM',color:'#CC0000',party:'LFI',pb:'#FFF0F0',pc:'#CC0000',role:'Leader de La France Insoumise',kw:['mélenchon','melenchon','france insoumise','lfi']},
+  {name:'Édouard Philippe',   init:'EP',color:'#1E3A6E',party:'Horizons',pb:'#EEF2FF',pc:'#1E3A6E',role:'Maire du Havre / Horizons',kw:['édouard philippe','edouard philippe','horizons']},
+  {name:'Laurent Wauquiez',   init:'LW',color:'#0072C6',party:'LR',pb:'#EEF2FF',pc:'#0072C6',role:'Président du groupe LR',kw:['wauquiez','les républicains',' lr ']},
+  {name:'Olivier Faure',      init:'OF',color:'#BE185D',party:'PS',pb:'#FDF2F8',pc:'#9D174D',role:'Premier Secrétaire du PS',kw:['olivier faure','parti socialiste',' ps ']},
+  {name:'Marine Tondelier',   init:'MT',color:'#15803D',party:'EELV',pb:'#F0FDF4',pc:'#166534',role:'Secrétaire nationale EELV',kw:['tondelier','eelv','les verts','écologiste']},
+  {name:'Gabriel Attal',      init:'GA',color:'#3B82F6',party:'Renaissance',pb:'#EEF2FF',pc:'#4338CA',role:'Ancien Premier ministre',kw:['gabriel attal','attal']},
+  {name:'Éric Ciotti',        init:'EC',color:'#1E40AF',party:'UDR',pb:'#EEF2FF',pc:'#1E40AF',role:"Président de l'UDR",kw:['ciotti','udr']},
+  {name:'Gérald Darmanin',    init:'GD',color:'#7C3AED',party:'Renaissance',pb:'#F5F3FF',pc:'#7C3AED',role:'Garde des Sceaux',kw:['darmanin','gérald darmanin','garde des sceaux']},
 ];
-
 function renderPoliticians(){
   const g=document.getElementById('pgrid');
   g.className='pol-grid';
   g.innerHTML=POLITICIANS.map(pol=>{
     const arts=allArticles.filter(a=>pol.kw.some(k=>(a.title+' '+a.desc).toLowerCase().includes(k))).slice(0,4);
     const artsHTML=arts.length
-      ?arts.map(a=>`<div class="pol-art"><div class="pol-dot"></div>
-        <div><a href="${esc(a.link)}" target="_blank">${esc(a.title)}</a>
-        <span class="pol-art-src">— ${esc(a.name)} · ${age(a.date)}</span></div></div>`).join('')
+      ?arts.map(a=>`<div class="pol-art"><div class="pol-dot"></div><div><a href="${esc(a.link)}" target="_blank">${esc(a.title)}</a><span class="pol-art-src">— ${esc(a.name)} · ${age(a.date)}</span></div></div>`).join('')
       :`<div class="pol-none">Aucun article récent.</div>`;
-    return`<div class="pol-card">
-      <div class="pol-card-top" style="background:${pol.color}"></div>
-      <div class="pol-card-body">
-        <div class="pol-card-head">
-          <div class="pol-av" style="background:${pol.color}">${pol.init}</div>
-          <div><div class="pol-name">${pol.name}</div>
-            <div class="pol-role-txt">${pol.role}</div>
-            <span class="pol-tag" style="background:${pol.pb};color:${pol.pc}">${pol.party}</span></div>
-        </div>
-        <div class="pol-news">
-          <div class="pol-news-lbl">📰 ${arts.length} article${arts.length>1?'s':''} récent${arts.length>1?'s':''}</div>
-          ${artsHTML}
-        </div>
-      </div></div>`;
+    return`<div class="pol-card"><div class="pol-card-top" style="background:${pol.color}"></div><div class="pol-card-body">
+      <div class="pol-card-head"><div class="pol-av" style="background:${pol.color}">${pol.init}</div>
+        <div><div class="pol-name">${pol.name}</div><div class="pol-role-txt">${pol.role}</div>
+        <span class="pol-tag" style="background:${pol.pb};color:${pol.pc}">${pol.party}</span></div></div>
+      <div class="pol-news"><div class="pol-news-lbl">📰 ${arts.length} article${arts.length>1?'s':''} récent${arts.length>1?'s':''}</div>${artsHTML}</div>
+    </div></div>`;
   }).join('');
 }
 
-// ══ SONDAGES ══════════════════════════════════════════════════════════
+// ── COMPARAISON GAUCHE vs DROITE ──────────────────────────────────────
+function doCompare(){
+  const q=document.getElementById('compInput').value.trim();
+  if(!q)return;
+  document.getElementById('compBtn').disabled=true;
+  document.getElementById('compThink').classList.add('on');
+  document.getElementById('compGrid').style.display='none';
+
+  const gauche=allArticles.filter(a=>a.bord==='gauche'&&(a.title+' '+a.desc).toLowerCase().includes(q.toLowerCase())).slice(0,6);
+  const droite=allArticles.filter(a=>a.bord==='droite'&&(a.title+' '+a.desc).toLowerCase().includes(q.toLowerCase())).slice(0,6);
+
+  // Si pas assez, chercher par mots
+  const words=q.toLowerCase().split(/\s+/).filter(w=>w.length>2);
+  const gaucheEx=gauche.length<3?allArticles.filter(a=>a.bord==='gauche'&&words.some(w=>(a.title+a.desc).toLowerCase().includes(w))).slice(0,6):gauche;
+  const droiteEx=droite.length<3?allArticles.filter(a=>a.bord==='droite'&&words.some(w=>(a.title+a.desc).toLowerCase().includes(w))).slice(0,6):droite;
+
+  document.getElementById('compLeft').innerHTML=gaucheEx.length
+    ?gaucheEx.map(a=>`<div class="compare-article"><a href="${esc(a.link)}" target="_blank">${esc(a.title)}</a><span class="compare-src">${esc(a.name)} · ${age(a.date)}</span></div>`).join('')
+    :`<div class="compare-empty">Aucun article de gauche trouvé sur ce sujet.</div>`;
+  document.getElementById('compRight').innerHTML=droiteEx.length
+    ?droiteEx.map(a=>`<div class="compare-article"><a href="${esc(a.link)}" target="_blank">${esc(a.title)}</a><span class="compare-src">${esc(a.name)} · ${age(a.date)}</span></div>`).join('')
+    :`<div class="compare-empty">Aucun article de droite trouvé sur ce sujet.</div>`;
+
+  document.getElementById('compThink').classList.remove('on');
+  document.getElementById('compGrid').style.display='grid';
+  document.getElementById('compBtn').disabled=false;
+}
+
+// ── SONDAGES AVEC GRAPHIQUES Chart.js ─────────────────────────────────
 const ELECTIONS=[
   {label:'Présidentielle 2027',badge:'Présidentielle',badgeBg:'#FEE2E2',badgeColor:'#B91C1C',
    src:'Sondages agrégés IFOP / OpinionWay / BVA — mars 2026',
    kw:['présidentielle 2027','intentions de vote 2027','candidat 2027','sondage présidentiel'],
-   bars:[{name:'Marine Le Pen / RN',color:'#003189',pct:33},{name:'Édouard Philippe / Horizons',color:'#1E3A6E',pct:22},
-     {name:'NFP / Gauche unie',color:'#CC0000',pct:19},{name:'Centre (Renaissance)',color:'#002395',pct:14},
+   bars:[{name:'M. Le Pen / RN',color:'#003189',pct:33},{name:'É. Philippe / Horizons',color:'#1E3A6E',pct:22},
+     {name:'NFP / Gauche',color:'#CC0000',pct:19},{name:'Centre (Renaissance)',color:'#002395',pct:14},
      {name:'LR / Droite',color:'#0072C6',pct:8},{name:'Autres',color:'#888',pct:4}]},
   {label:'Législatives 2027',badge:'Législatives',badgeBg:'#EEF2FF',badgeColor:'#1E40AF',
    src:'Sondages agrégés — intentions de vote par bloc (mars 2026)',
    kw:['législatives 2027','élections législatives','sondage législatif'],
    bars:[{name:'Rassemblement National',color:'#003189',pct:34},{name:'NFP / Gauche unie',color:'#CC0000',pct:27},
-     {name:'Centre (Renaissance/Horizons)',color:'#002395',pct:20},{name:'Droite (LR/UDR)',color:'#0072C6',pct:12},
-     {name:'Autres',color:'#888',pct:7}]},
+     {name:'Centre',color:'#002395',pct:20},{name:'Droite (LR/UDR)',color:'#0072C6',pct:12},{name:'Autres',color:'#888',pct:7}]},
   {label:'Sénatoriales 2026',badge:'Sénatoriales',badgeBg:'#F5F3FF',badgeColor:'#7C3AED',
    src:'Projections — scrutin indirect série 2 (sept. 2026)',
    kw:['sénatoriales','sénat 2026','élections sénatoriales'],
@@ -655,30 +719,53 @@ const ELECTIONS=[
      {name:'RN',color:'#003189',pct:24},{name:'Divers',color:'#888',pct:10}]},
 ];
 
+const chartInstances={};
+
 function renderPolls(){
   const g=document.getElementById('sgrid');
   g.className='polls-grid';
-  g.innerHTML=ELECTIONS.map(el=>{
-    const arts=allArticles.filter(a=>el.kw.some(k=>(a.title+' '+a.desc).toLowerCase().includes(k))).slice(0,5);
-    const barsHTML=el.bars.map(b=>`<div class="brow"><div class="blbl"><span>${esc(b.name)}</span><span>${b.pct}%</span></div>
-      <div class="btrack"><div class="bfill" style="width:${b.pct}%;background:${b.color}"></div></div></div>`).join('');
+  g.innerHTML=ELECTIONS.map((el,idx)=>{
+    const arts=allArticles.filter(a=>el.kw.some(k=>(a.title+' '+a.desc).toLowerCase().includes(k))).slice(0,4);
     const artsHTML=arts.length
-      ?arts.map(a=>`<div class="poll-art-item">
-        <div class="pol-dot" style="background:${a.color};margin-top:5px;flex-shrink:0"></div>
-        <a href="${esc(a.link)}" target="_blank">${esc(a.title)}</a>
-        <span style="font-size:.62rem;color:var(--gray);margin-left:.3rem">${esc(a.name)}</span></div>`).join('')
-      :`<div style="font-size:.77rem;color:var(--gray);font-style:italic">Aucun article trouvé.</div>`;
+      ?arts.map(a=>`<div class="poll-art-item"><div style="width:4px;height:4px;border-radius:50%;background:${a.color};flex-shrink:0;margin-top:5px"></div><a href="${esc(a.link)}" target="_blank">${esc(a.title)}</a><span style="font-size:.62rem;color:var(--gray);margin-left:.3rem">${esc(a.name)}</span></div>`).join('')
+      :`<div style="font-size:.76rem;color:var(--gray);font-style:italic">Aucun article trouvé.</div>`;
     return`<div class="poll">
-      <div class="poll-hd"><div class="poll-title">${el.label}</div>
-        <span class="poll-badge" style="background:${el.badgeBg};color:${el.badgeColor}">${el.badge}</span></div>
-      <div class="poll-src">${el.src}</div>${barsHTML}
-      <div class="poll-note">⚠️ Chiffres indicatifs. Consultez les articles pour les données précises.</div>
+      <div class="poll-hd"><div class="poll-title">${el.label}</div><span class="poll-badge" style="background:${el.badgeBg};color:${el.badgeColor}">${el.badge}</span></div>
+      <div class="poll-src">${el.src}</div>
+      <div class="poll-chart-wrap"><canvas id="chart${idx}"></canvas></div>
+      <div class="poll-note">⚠️ Données indicatives issues des derniers sondages publiés.</div>
       <div class="poll-arts"><div class="poll-arts-lbl">📰 Articles trouvés (${arts.length})</div>${artsHTML}</div>
     </div>`;
   }).join('');
+
+  // Dessiner les graphiques après rendu
+  setTimeout(()=>{
+    const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+    const textColor=isDark?'#aaa':'#555';
+    ELECTIONS.forEach((el,idx)=>{
+      const canvas=document.getElementById(`chart${idx}`);
+      if(!canvas)return;
+      if(chartInstances[idx])chartInstances[idx].destroy();
+      chartInstances[idx]=new Chart(canvas,{
+        type:'doughnut',
+        data:{
+          labels:el.bars.map(b=>b.name),
+          datasets:[{data:el.bars.map(b=>b.pct),backgroundColor:el.bars.map(b=>b.color),borderWidth:2,borderColor:isDark?'#1A1D27':'#fff'}]
+        },
+        options:{
+          responsive:true,maintainAspectRatio:false,cutout:'60%',
+          plugins:{
+            legend:{position:'right',labels:{color:textColor,font:{size:11},boxWidth:12,padding:8}},
+            tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed}%`}}
+          }
+        }
+      });
+    });
+    chartsReady=true;
+  },100);
 }
 
-// ══ CALENDRIER ═════════════════════════════════════════════════════════
+// ── CALENDRIER ────────────────────────────────────────────────────────
 function renderCalendar(){
   const kw=['élection','sénatorial','législatif','municipal','présidentiel','scrutin','candidat','campagne','second tour','premier tour','municipales'];
   const arts=allArticles.filter(a=>kw.some(k=>(a.title+a.desc).toLowerCase().includes(k))).slice(0,24);
@@ -688,7 +775,7 @@ function renderCalendar(){
   g.innerHTML=arts.map(a=>cardHTML(a,false)).join('');
 }
 
-// ══ UTILS ═══════════════════════════════════════════════════════════════
+// ── UTILS ─────────────────────────────────────────────────────────────
 function age(d){
   const s=(Date.now()-d)/1000;
   if(s<120)return"À l'instant";
@@ -697,23 +784,24 @@ function age(d){
   return d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'});
 }
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function filt(b,el){
-  activeBord=b; newsPage=1;
-  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
-  el.classList.add('on'); renderNews();
-}
+function filt(b,el){activeBord=b;newsPage=1;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');renderNews();}
 function showTab(id,el){
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
-  document.getElementById('s-'+id).classList.add('on'); el.classList.add('on');
+  document.getElementById('s-'+id).classList.add('on');el.classList.add('on');
   clearSearch();
+  if(id==='sond'&&!chartsReady)renderPolls();
 }
 
-// ══ INIT ════════════════════════════════════════════════════════════════
+// ── INIT ──────────────────────────────────────────────────────────────
 loadAll();
-setInterval(loadAll, 600000);
+setInterval(loadAll,600000);
 </script>
-<!-- AdSense init après tout le JS -->
-<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+<!-- AdSense init -->
+<script>
+(adsbygoogle=window.adsbygoogle||[]).push({});
+(adsbygoogle=window.adsbygoogle||[]).push({});
+(adsbygoogle=window.adsbygoogle||[]).push({});
+</script>
 </body>
 </html>
