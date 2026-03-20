@@ -513,14 +513,14 @@ footer em{color:var(--red);font-style:normal}
 <!-- COMPARAISON GAUCHE vs DROITE -->
 <div id="s-comp" class="sec">
   <div class="stitle">Comparaison Gauche vs Droite</div>
-  <p style="font-size:.8rem;color:var(--gray);margin-bottom:1.1rem">Entrez un sujet pour voir comment les médias de gauche et de droite en parlent différemment.</p>
+  <p style="font-size:.81rem;color:var(--gray);margin-bottom:1.2rem">Entrez un sujet pour voir comment les médias de gauche et de droite en parlent différemment.</p>
   <div class="compare-search">
     <input class="compare-input" id="compInput" placeholder="Ex : immigration, retraites, budget, sécurité…" onkeydown="if(event.key==='Enter')doCompare()">
-    <button class="compare-btn" id="compBtn" onclick="doCompare()">Comparer</button>
+    <button class="compare-btn" id="compBtn" onclick="doCompare()">⚖️ Comparer</button>
   </div>
-  <div class="compare-thinking" id="compThink"><div class="mini-sp-dark"></div>Recherche des articles de chaque bord…</div>
+  <div class="compare-thinking" id="compThink" style="display:none"><div class="mini-sp-dark"></div>Recherche des articles de chaque bord…</div>
   <!-- Synthèse IA -->
-  <div id="compSynth" style="display:none;margin-bottom:1rem"></div>
+  <div id="compSynth" style="display:none;margin-bottom:1.2rem"></div>
   <div class="compare-grid" id="compGrid" style="display:none">
     <div class="compare-col">
       <div class="compare-col-head" style="background:#CC0000">◀ Presse de Gauche</div>
@@ -1015,8 +1015,10 @@ async function doCompare(){
   const q=document.getElementById('compInput').value.trim();
   if(!q)return;
   document.getElementById('compBtn').disabled=true;
+  document.getElementById('compThink').style.display='flex';
   document.getElementById('compThink').classList.add('on');
   document.getElementById('compGrid').style.display='none';
+  document.getElementById('compSynth').style.display='none';
 
   // 1. Filtrer les articles localement (gratuit)
   const words=q.toLowerCase().split(/\s+/).filter(w=>w.length>2);
@@ -1035,6 +1037,7 @@ async function doCompare(){
     :`<div class="compare-empty">Aucun article de droite trouvé sur "${q}".</div>`;
 
   document.getElementById('compThink').classList.remove('on');
+  document.getElementById('compThink').style.display='none';
   document.getElementById('compGrid').style.display='grid';
 
   // 3. Synthèse IA via Haiku (~0.001$ par appel)
@@ -1050,9 +1053,16 @@ async function doCompare(){
           body:JSON.stringify({messages:[{role:'user',content:`Sujet : "${q}"\n\nArticles de GAUCHE :\n${gTitles}\n\nArticles de DROITE :\n${dTitles}\n\nFais une synthèse neutre en 3-4 phrases maximum.`}]})});
         const d=await resp.json();
         const txt=d.content?.[0]?.text||'Synthèse indisponible.';
-        synthBox.innerHTML=`<div style="background:var(--blue);color:#fff;border-radius:10px;padding:.9rem 1.1rem;font-size:.84rem;line-height:1.7">
-          <div style="font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.5);margin-bottom:.5rem">✦ Synthèse IA — Claude Haiku · Neutre &amp; objectif</div>
-          ${esc(txt).replace(/\n/g,'<br>')}</div>`;
+        // Clean markdown from AI response
+        const cleanTxt = txt
+          .replace(/^#+\s*/gm, '')  // Remove # headers
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // Bold
+          .replace(/\*(.*?)\*/g, '$1')  // Italic
+          .replace(/\n\n/g, '</p><p>')
+          .replace(/\n/g, '<br>');
+        synthBox.innerHTML=`<div style="background:var(--blue);color:#fff;border-radius:12px;padding:1.1rem 1.3rem;font-size:.86rem;line-height:1.75;margin-bottom:1rem">
+          <div style="font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.5);margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem">✦ Synthèse IA — Claude Haiku · Neutre &amp; objectif</div>
+          <p style="margin:0">${cleanTxt}</p></div>`;
       }catch{
         synthBox.style.display='none';
       }
