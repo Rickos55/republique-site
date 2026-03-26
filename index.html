@@ -547,7 +547,7 @@ footer em{color:var(--red);font-style:normal}
     <div class="chip" id="reg-national" onclick="filtRegion('national',this)" style="background:#0066CC22;color:#0066CC;border-color:#0066CC44">📡 National</div>
     <div class="chip" id="reg-idf" onclick="filtRegion('idf',this)" style="background:#66339922;color:#663399;border-color:#66339944">🏙️ Île-de-France</div>
     <div class="chip" id="reg-paca" onclick="filtRegion('paca',this)" style="background:#FF660022;color:#FF6600;border-color:#FF660044">☀️ PACA</div>
-    <div class="chip" id="reg-om" onclick="filtRegion('outremer',this)" style="background:#00990022;color:#009900;border-color:#00990044">🌴 Outre-mer</div>
+    <div class="chip" id="reg-om" onclick="filtRegion('outremer',this)" style="background:#00990022;color:#009900;border-color:#00990044">🌴 Outre-mer (12 sources)</div>
   </div>
   <!-- Toggle vue grille / liste -->
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
@@ -713,12 +713,12 @@ footer em{color:var(--red);font-style:normal}
       </div>
     </div>
     <div class="apropos-desc">
-      <p><strong>République</strong> est un site d'information politique française indépendant qui agrège en temps réel les articles de <strong>44 journaux</strong> couvrant tous les bords politiques.</p>
+      <p><strong>République</strong> est un site d'information politique française indépendant qui agrège en temps réel les articles de <strong>50 journaux</strong> couvrant tous les bords politiques.</p>
       <p>Notre objectif : offrir une vision <strong>neutre et objective</strong> de l'actualité politique française, sans parti pris, en donnant accès à la fois aux médias de gauche, de centre et de droite.</p>
       <p>La recherche intelligente est propulsée par l'IA <strong>Claude</strong> d'Anthropic, permettant de trouver des articles pertinents par le sens plutôt que par les seuls mots-clés.</p>
     </div>
     <div class="apropos-features">
-      <div class="apropos-feature"><span class="af-icon">📰</span><div><strong>44 sources RSS</strong><br>Tous les bords politiques</div></div>
+      <div class="apropos-feature"><span class="af-icon">📰</span><div><strong>50 sources RSS</strong><br>Tous les bords politiques</div></div>
       <div class="apropos-feature"><span class="af-icon">🔍</span><div><strong>Recherche IA</strong><br>Analyse sémantique</div></div>
       <div class="apropos-feature"><span class="af-icon">⚖️</span><div><strong>Comparaison</strong><br>Gauche vs Droite</div></div>
       <div class="apropos-feature"><span class="af-icon">📊</span><div><strong>Sondages</strong><br>4 élections à venir</div></div>
@@ -736,7 +736,7 @@ footer em{color:var(--red);font-style:normal}
         <span class="asrc regional">Sud Ouest</span><span class="asrc regional">La Dépêche</span>
         <span class="asrc regional">Le Parisien</span><span class="asrc regional">Ouest France</span><span class="asrc regional">Nice Matin</span><span class="asrc regional">La Provence</span>
         <span class="asrc gauche">Reporterre</span><span class="asrc gauche">Blast</span><span class="asrc gauche">Le Media</span><span class="asrc gauche">Politis</span>
-        <span class="asrc public">Outre-mer 1ere</span><span class="asrc public">Guyane 1ere</span><span class="asrc public">Martinique 1ere</span><span class="asrc public">TV5 Monde</span>
+        <span class="asrc public">Outre-mer 1ere</span><span class="asrc public">Guyane 1ere</span><span class="asrc public">Martinique 1ere</span><span class="asrc public">Guadeloupe 1ere</span><span class="asrc public">Reunion 1ere</span><span class="asrc public">Mayotte 1ere</span><span class="asrc public">Nouvelle-Calédonie 1ere</span><span class="asrc public">Polynésie 1ere</span><span class="asrc public">France-Antilles</span><span class="asrc public">TV5 Monde</span>
         <span class="asrc centre">Le Courrier Int</span><span class="asrc centre">L Express</span>
       </div>
     </div>
@@ -903,7 +903,7 @@ footer em{color:var(--red);font-style:normal}
 
 <footer>
   <strong>République</strong> — Information politique française neutre &amp; objective<br>
-  44 flux RSS en direct · Recherche IA <em>Claude</em> · Actualisation toutes les 10 min
+  50 flux RSS en direct · Recherche IA <em>Claude</em> · Actualisation toutes les 10 min
   <div class="creator">© 2026 — Créé par <strong style="color:rgba(255,255,255,.55)">A.D</strong></div>
 </footer>
 
@@ -1011,12 +1011,19 @@ const FEEDS=[
   {name:'Nice Matin',       color:'#0066CC',bord:'centre', url:'https://www.nicematin.com/rss'},
   {name:'La Provence',      color:'#CC3300',bord:'centre', url:'https://www.laprovence.com/rss.xml'},
   // ── Outre-mer ──────────────────────────────────────────────────────
+  // ── Outre-mer ──────────────────────────────────────────────────────
   {name:'Outre-mer 1ere',   color:'#0066CC',bord:'public', url:'https://la1ere.francetvinfo.fr/rss'},
-  {name:'France-Antilles',  color:'#003399',bord:'public', url:'https://www.france-antilles.fr/feed'},
-  {name:'Martinique 1ere',  color:'#0066CC',bord:'public', url:'https://la1ere.francetvinfo.fr/martinique/rss'},
-  {name:'Guadeloupe 1ere',  color:'#0066CC',bord:'public', url:'https://la1ere.francetvinfo.fr/guadeloupe/rss'},
   {name:'Guyane 1ere',      color:'#009900',bord:'public', url:'https://la1ere.francetvinfo.fr/guyane/rss'},
-  {name:'Reunion 1ere',     color:'#FF6600',bord:'public', url:'https://la1ere.francetvinfo.fr/reunion/rss'},
+  {name:'Martinique 1ere',  color:'#C0392B',bord:'public', url:'https://la1ere.francetvinfo.fr/martinique/rss'},
+  {name:'Guadeloupe 1ere',  color:'#8E44AD',bord:'public', url:'https://la1ere.francetvinfo.fr/guadeloupe/rss'},
+  {name:'Reunion 1ere',     color:'#E67E22',bord:'public', url:'https://la1ere.francetvinfo.fr/reunion/rss'},
+  {name:'Mayotte 1ere',     color:'#27AE60',bord:'public', url:'https://la1ere.francetvinfo.fr/mayotte/rss'},
+  {name:'Nouvelle-Caledonie',color:'#2980B9',bord:'public',url:'https://la1ere.francetvinfo.fr/nouvelle-caledonie/rss'},
+  {name:'Polynesie 1ere',   color:'#16A085',bord:'public', url:'https://la1ere.francetvinfo.fr/polynesie/rss'},
+  {name:'France-Antilles',  color:'#003399',bord:'public', url:'https://www.france-antilles.fr/feed'},
+  {name:'Guyane Infos',     color:'#006600',bord:'public', url:'https://www.guyane.fr/rss'},
+  {name:'LInfo Reunion',    color:'#CC6600',bord:'public', url:'https://www.linfo.re/feed'},
+  {name:'Martinique Actu',  color:'#990000',bord:'public', url:'https://martinique.franceantilles.fr/feed'},
   // ── International francophone ──────────────────────────────────────
   {name:'TV5 Monde',        color:'#003366',bord:'public', url:'https://information.tv5monde.com/rss-france.xml'},
   {name:'Le Courrier Int',  color:'#336699',bord:'centre', url:'https://www.courrierinternational.com/rss.xml'},
@@ -1626,7 +1633,10 @@ const SOURCE_REGION = {
   'Ouest France': 'bretagne',
   'Guyane 1ere': 'outremer', 'Martinique 1ere': 'outremer',
   'Guadeloupe 1ere': 'outremer', 'Reunion 1ere': 'outremer',
-  'Outre-mer 1ere': 'outremer', 'France-Antilles': 'outremer',
+  'Mayotte 1ere': 'outremer', 'Nouvelle-Caledonie': 'outremer',
+  'Polynesie 1ere': 'outremer', 'Outre-mer 1ere': 'outremer',
+  'France-Antilles': 'outremer', 'Guyane Infos': 'outremer',
+  'LInfo Reunion': 'outremer', 'Martinique Actu': 'outremer',
 };
 
 function getArticleRegion(a) {
