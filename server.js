@@ -275,9 +275,38 @@ function buildEmailHTML(type, data) {
 
 async function sendToMailchimp(type, htmlContent, subject) {
   if (!MC_API_KEY || !MC_LIST_ID) { console.error('Mailchimp non configuré'); return false; }
-  const recipients = type === 'premium'
-    ? { list_id: MC_LIST_ID, segment_opts: { match: 'all', conditions: [{ condition_type: 'Tags', field: 'tags', op: 'contains', value: 'premium' }] } }
-    : { list_id: MC_LIST_ID };
+  // Pour premium : récupérer les emails tagués "premium" via API
+  let recipients = { list_id: MC_LIST_ID };
+  if (type === 'premium') {
+    try {
+      const tagResp = await fetch('https://' + MC_SERVER + '.api.mailchimp.com/3.0/lists/' + MC_LIST_ID + '/members?tags=premium&status=subscribed&count=200', {
+        headers: { 'Authorization': 'Basic ' + Buffer.from('anystring:' + MC_API_KEY).toString('base64') }
+      });
+      const tagData = await tagResp.json();
+      const premiumEmails = (tagData.members || []).map(m => m.email_address);
+      console.log('📧 Abonnés premium trouvés:', premiumEmails.length);
+      if (premiumEmails.length === 0) {
+        console.log('⚠️ Aucun abonné premium — envoi annulé');
+        return false;
+      }
+      // Créer un segment statique avec ces emails
+      recipients = {
+        list_id: MC_LIST_ID,
+        segment_opts: {
+          match: 'any',
+          conditions: premiumEmails.map(email => ({
+            condition_type: 'EmailAddress',
+            field: 'EMAIL',
+            op: 'is',
+            value: email
+          }))
+        }
+      };
+    } catch(e) {
+      console.error('Erreur récupération emails premium:', e.message);
+      recipients = { list_id: MC_LIST_ID }; // fallback = tout le monde
+    }
+  }
 
   const campaignResp = await fetch('https://' + MC_SERVER + '.api.mailchimp.com/3.0/campaigns', {
     method: 'POST',
