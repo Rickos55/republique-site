@@ -744,6 +744,33 @@ footer em{color:var(--red);font-style:normal}
     <div id="map-tooltip" style="position:absolute;background:#1A1A2E;color:#fff;padding:.5rem .8rem;border-radius:8px;font-size:.75rem;pointer-events:none;display:none;z-index:99;min-width:150px"></div>
   </div>
 
+  <!-- DOM-TOM boxes -->
+  <div style="margin-top:.8rem">
+    <div style="font-size:.72rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem">🌴 Départements d'outre-mer</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.5rem">
+      <div style="background:#CC000020;border:1.5px solid #CC0000;border-radius:8px;padding:.5rem .7rem">
+        <div style="font-size:.72rem;font-weight:700;color:#CC0000">971 — Guadeloupe</div>
+        <div style="font-size:.68rem;color:var(--gray)">Gauche · 55%</div>
+      </div>
+      <div style="background:#88888820;border:1.5px solid #888;border-radius:8px;padding:.5rem .7rem">
+        <div style="font-size:.72rem;font-weight:700;color:#555">972 — Martinique</div>
+        <div style="font-size:.68rem;color:var(--gray)">Divers gauche · 58%</div>
+      </div>
+      <div style="background:#CC000020;border:1.5px solid #CC0000;border-radius:8px;padding:.5rem .7rem">
+        <div style="font-size:.72rem;font-weight:700;color:#CC0000">973 — Guyane</div>
+        <div style="font-size:.68rem;color:var(--gray)">Gauche · 53%</div>
+      </div>
+      <div style="background:#CC000020;border:1.5px solid #CC0000;border-radius:8px;padding:.5rem .7rem">
+        <div style="font-size:.72rem;font-weight:700;color:#CC0000">974 — La Réunion</div>
+        <div style="font-size:.68rem;color:var(--gray)">Gauche · 51%</div>
+      </div>
+      <div style="background:#88888820;border:1.5px solid #888;border-radius:8px;padding:.5rem .7rem">
+        <div style="font-size:.72rem;font-weight:700;color:#555">976 — Mayotte</div>
+        <div style="font-size:.68rem;color:var(--gray)">Divers · 52%</div>
+      </div>
+    </div>
+  </div>
+
   <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:.8rem">
     <div style="display:flex;align-items:center;gap:.3rem;font-size:.72rem;color:var(--gray)"><div style="width:12px;height:12px;border-radius:3px;background:#CC0000"></div>Gauche/NFP</div>
     <div style="display:flex;align-items:center;gap:.3rem;font-size:.72rem;color:var(--gray)"><div style="width:12px;height:12px;border-radius:3px;background:#0066CC"></div>Centre</div>
@@ -2366,7 +2393,7 @@ function loadCarte() {
     const path = d3.geoPath().projection(proj);
     const tooltip = document.getElementById('map-tooltip');
 
-    d3.json('https://cdn.jsdelivr.net/npm/france-geojson/departements-avec-outre-mer.geojson').then(function(geo) {
+    d3.json('https://cdn.jsdelivr.net/npm/france-geojson/departements.geojson').then(function(geo) {
       d3svg.selectAll('path')
         .data(geo.features)
         .join('path')

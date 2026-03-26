@@ -1,3 +1,7 @@
-// Service Worker stub
-self.addEventListener('install', function(e) {});
-self.addEventListener('fetch', function(e) {});
+const CACHE = 'republique-v1';
+self.addEventListener('install', function(e) {
+  self.skipWaiting();
+});
+self.addEventListener('activate', function(e) {
+  e.waitUntil(clients.claim());
+});
