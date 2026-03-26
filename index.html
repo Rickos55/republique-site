@@ -479,7 +479,7 @@ footer em{color:var(--red);font-style:normal}
     <div class="tab"     onclick="showTab('comp',this)">Comparaison</div>
     <div class="tab"     onclick="showTab('sond',this)">Sondages</div>
     <div class="tab"     onclick="showTab('cal',this)">Calendrier</div>
-    <div class="tab"     onclick="showTab('carte',this)">🗺️ Carte</div>
+    <div class="tab"     onclick="showTab('carte',this)">📊 Projections</div>
     <div class="tab"     onclick="showTab('debats',this)">Débats</div>
     <div class="tab"     onclick="showTab('apropos',this)">À propos</div>
     <div class="tab"     onclick="showTab('outils',this)">🤖 Outils IA</div>
@@ -726,80 +726,127 @@ footer em{color:var(--red);font-style:normal}
   <div class="debats-grid" id="debatsGrid"></div>
 </div>
 
-<!-- CARTE FRANCE -->
+<!-- PROJECTIONS DE SIÈGES -->
 <div id="s-carte" class="sec">
-  <div class="stitle">Carte électorale — Municipales 2026</div>
-  <p style="font-size:.81rem;color:var(--gray);margin-bottom:1rem">Résultats définitifs du 2e tour · 22 mars 2026 · Survolez un département pour les détails</p>
+  <div class="stitle">📊 Projections de sièges</div>
+  <p style="font-size:.81rem;color:var(--gray);margin-bottom:1.2rem">Estimations des équilibres politiques pour les prochaines élections · Basées sur les sondages et résultats récents</p>
 
-  <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.8rem">
-    <button class="chip c-all on" id="cfb-all" onclick="setCarteFiltre('all',this)">Tous</button>
-    <button class="chip" id="cfb-gauche" onclick="setCarteFiltre('gauche',this)" style="background:#CC000022;color:#CC0000;border-color:#CC000044">◀ Gauche/NFP</button>
-    <button class="chip" id="cfb-centre" onclick="setCarteFiltre('centre',this)" style="background:#0066CC22;color:#0066CC;border-color:#0066CC44">● Centre</button>
-    <button class="chip" id="cfb-droite" onclick="setCarteFiltre('droite',this)" style="background:#1E3A6E22;color:#1E3A6E;border-color:#1E3A6E44">▶ Droite/LR</button>
-    <button class="chip" id="cfb-rn" onclick="setCarteFiltre('rn',this)" style="background:#00318922;color:#003189;border-color:#00318944">▶▶ RN</button>
+  <!-- Sélecteur d'élection -->
+  <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem">
+    <button class="chip c-all on" id="proj-btn-pres" onclick="showProjection('pres',this)">🇫🇷 Présidentielle 2027</button>
+    <button class="chip" id="proj-btn-leg" onclick="showProjection('leg',this)" style="background:#0066CC22;color:#0066CC;border-color:#0066CC44">📜 Législatives 2027</button>
+    <button class="chip" id="proj-btn-sen" onclick="showProjection('sen',this)" style="background:#88888822;color:#555;border-color:#88888844">🏛️ Sénatoriales 2026</button>
   </div>
 
-  <div style="position:relative">
-    <svg id="france-map" style="width:100%;cursor:pointer;max-height:550px"></svg>
-    <div id="map-tooltip" style="position:absolute;background:#1A1A2E;color:#fff;padding:.5rem .8rem;border-radius:8px;font-size:.75rem;pointer-events:none;display:none;z-index:99;min-width:150px"></div>
+  <!-- Présidentielle 2027 -->
+  <div id="proj-pres">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem;margin-bottom:1rem">
+      <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gray);margin-bottom:1rem">1er tour — Intentions de vote (mars 2026)</div>
+      <div id="chart-pres-1" style="position:relative;height:220px"><canvas id="canvas-pres-1"></canvas></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem;margin-bottom:1rem">
+      <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gray);margin-bottom:1rem">2e tour — Hypothèses de duel</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem">
+        <div>
+          <div style="font-size:.78rem;font-weight:600;color:var(--text);margin-bottom:.5rem">Le Pen vs Philippe</div>
+          <div style="background:#E0E7FF;border-radius:50px;height:28px;position:relative;overflow:hidden">
+            <div style="background:#003189;height:100%;width:52%;border-radius:50px;display:flex;align-items:center;justify-content:center">
+              <span style="color:#fff;font-size:.72rem;font-weight:700">Le Pen 52%</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-top:.2rem"><span style="font-size:.7rem;color:var(--gray)">Philippe 48%</span></div>
+        </div>
+        <div>
+          <div style="font-size:.78rem;font-weight:600;color:var(--text);margin-bottom:.5rem">Le Pen vs candidat NFP</div>
+          <div style="background:#E0E7FF;border-radius:50px;height:28px;position:relative;overflow:hidden">
+            <div style="background:#003189;height:100%;width:55%;border-radius:50px;display:flex;align-items:center;justify-content:center">
+              <span style="color:#fff;font-size:.72rem;font-weight:700">Le Pen 55%</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-top:.2rem"><span style="font-size:.7rem;color:var(--gray)">NFP 45%</span></div>
+        </div>
+        <div>
+          <div style="font-size:.78rem;font-weight:600;color:var(--text);margin-bottom:.5rem">Philippe vs candidat NFP</div>
+          <div style="background:#E0E7FF;border-radius:50px;height:28px;position:relative;overflow:hidden">
+            <div style="background:#0066CC;height:100%;width:58%;border-radius:50px;display:flex;align-items:center;justify-content:center">
+              <span style="color:#fff;font-size:.72rem;font-weight:700">Philippe 58%</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-top:.2rem"><span style="font-size:.7rem;color:var(--gray)">NFP 42%</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:.72rem;color:var(--gray);font-style:italic">Source : agrégation de sondages IFOP, BVA, Elabe — mars 2026</div>
   </div>
 
-  <!-- DOM-TOM boxes -->
-  <div style="margin-top:.8rem">
-    <div style="font-size:.72rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem">🌴 Départements d'outre-mer</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.5rem">
-      <div style="background:#CC000020;border:1.5px solid #CC0000;border-radius:8px;padding:.5rem .7rem">
-        <div style="font-size:.72rem;font-weight:700;color:#CC0000">971 — Guadeloupe</div>
-        <div style="font-size:.68rem;color:var(--gray)">Gauche · 55%</div>
+  <!-- Législatives 2027 -->
+  <div id="proj-leg" style="display:none">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem;margin-bottom:1rem">
+      <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gray);margin-bottom:1rem">Projection de sièges — Assemblée nationale (577 sièges)</div>
+      <div id="chart-leg" style="position:relative;height:260px"><canvas id="canvas-leg"></canvas></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.6rem;margin-bottom:1rem">
+      <div style="background:#CC000015;border:1px solid #CC000044;border-radius:10px;padding:.7rem">
+        <div style="font-size:1.4rem;font-weight:700;color:#CC0000">195</div>
+        <div style="font-size:.72rem;color:var(--gray)">NFP / Gauche</div>
+        <div style="font-size:.68rem;color:var(--gray);margin-top:.2rem">+42 vs 2022</div>
       </div>
-      <div style="background:#88888820;border:1.5px solid #888;border-radius:8px;padding:.5rem .7rem">
-        <div style="font-size:.72rem;font-weight:700;color:#555">972 — Martinique</div>
-        <div style="font-size:.68rem;color:var(--gray)">Divers gauche · 58%</div>
+      <div style="background:#0066CC15;border:1px solid #0066CC44;border-radius:10px;padding:.7rem">
+        <div style="font-size:1.4rem;font-weight:700;color:#0066CC">112</div>
+        <div style="font-size:.72rem;color:var(--gray)">Centre / Renaissance</div>
+        <div style="font-size:.68rem;color:var(--gray);margin-top:.2rem">-53 vs 2022</div>
       </div>
-      <div style="background:#CC000020;border:1.5px solid #CC0000;border-radius:8px;padding:.5rem .7rem">
-        <div style="font-size:.72rem;font-weight:700;color:#CC0000">973 — Guyane</div>
-        <div style="font-size:.68rem;color:var(--gray)">Gauche · 53%</div>
+      <div style="background:#1E3A6E15;border:1px solid #1E3A6E44;border-radius:10px;padding:.7rem">
+        <div style="font-size:1.4rem;font-weight:700;color:#1E3A6E">78</div>
+        <div style="font-size:.72rem;color:var(--gray)">Droite / LR-UDR</div>
+        <div style="font-size:.68rem;color:var(--gray);margin-top:.2rem">+14 vs 2022</div>
       </div>
-      <div style="background:#CC000020;border:1.5px solid #CC0000;border-radius:8px;padding:.5rem .7rem">
-        <div style="font-size:.72rem;font-weight:700;color:#CC0000">974 — La Réunion</div>
-        <div style="font-size:.68rem;color:var(--gray)">Gauche · 51%</div>
+      <div style="background:#00318915;border:1px solid #00318944;border-radius:10px;padding:.7rem">
+        <div style="font-size:1.4rem;font-weight:700;color:#003189">172</div>
+        <div style="font-size:.72rem;color:var(--gray)">RN / Alliés</div>
+        <div style="font-size:.68rem;color:var(--gray);margin-top:.2rem">+61 vs 2022</div>
       </div>
-      <div style="background:#88888820;border:1.5px solid #888;border-radius:8px;padding:.5rem .7rem">
-        <div style="font-size:.72rem;font-weight:700;color:#555">976 — Mayotte</div>
-        <div style="font-size:.68rem;color:var(--gray)">Divers · 52%</div>
+      <div style="background:#88888815;border:1px solid #88888844;border-radius:10px;padding:.7rem">
+        <div style="font-size:1.4rem;font-weight:700;color:#888">20</div>
+        <div style="font-size:.72rem;color:var(--gray)">Divers</div>
+        <div style="font-size:.68rem;color:var(--gray);margin-top:.2rem">Majorité: 289</div>
       </div>
+    </div>
+    <div style="background:#FFF3CD;border:1px solid #FFD700;border-radius:10px;padding:.8rem;font-size:.78rem;color:#856404">
+      ⚠️ Aucun bloc n'atteint la majorité absolue (289) → probable gouvernement minoritaire ou coalition
     </div>
   </div>
 
-  <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:.8rem">
-    <div style="display:flex;align-items:center;gap:.3rem;font-size:.72rem;color:var(--gray)"><div style="width:12px;height:12px;border-radius:3px;background:#CC0000"></div>Gauche/NFP</div>
-    <div style="display:flex;align-items:center;gap:.3rem;font-size:.72rem;color:var(--gray)"><div style="width:12px;height:12px;border-radius:3px;background:#0066CC"></div>Centre</div>
-    <div style="display:flex;align-items:center;gap:.3rem;font-size:.72rem;color:var(--gray)"><div style="width:12px;height:12px;border-radius:3px;background:#1E3A6E"></div>Droite/LR</div>
-    <div style="display:flex;align-items:center;gap:.3rem;font-size:.72rem;color:var(--gray)"><div style="width:12px;height:12px;border-radius:3px;background:#003189"></div>RN</div>
-    <div style="display:flex;align-items:center;gap:.3rem;font-size:.72rem;color:var(--gray)"><div style="width:12px;height:12px;border-radius:3px;background:#888"></div>Divers</div>
-  </div>
-
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:.5rem;margin-top:1rem">
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.7rem;text-align:center">
-      <div style="font-size:1.6rem;font-weight:700;color:#CC0000" id="cs-gauche">—</div>
-      <div style="font-size:.68rem;color:var(--gray)">Gauche/NFP</div>
+  <!-- Sénatoriales 2026 -->
+  <div id="proj-sen" style="display:none">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem;margin-bottom:1rem">
+      <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gray);margin-bottom:1rem">Projection — Sénat (348 sièges · renouvellement série 2)</div>
+      <div id="chart-sen" style="position:relative;height:240px"><canvas id="canvas-sen"></canvas></div>
     </div>
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.7rem;text-align:center">
-      <div style="font-size:1.6rem;font-weight:700;color:#0066CC" id="cs-centre">—</div>
-      <div style="font-size:.68rem;color:var(--gray)">Centre</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.6rem;margin-bottom:1rem">
+      <div style="background:#1E3A6E15;border:1px solid #1E3A6E44;border-radius:10px;padding:.7rem">
+        <div style="font-size:1.4rem;font-weight:700;color:#1E3A6E">148</div>
+        <div style="font-size:.72rem;color:var(--gray)">Droite / LR</div>
+      </div>
+      <div style="background:#0066CC15;border:1px solid #0066CC44;border-radius:10px;padding:.7rem">
+        <div style="font-size:1.4rem;font-weight:700;color:#0066CC">82</div>
+        <div style="font-size:.72rem;color:var(--gray)">Centre</div>
+      </div>
+      <div style="background:#CC000015;border:1px solid #CC000044;border-radius:10px;padding:.7rem">
+        <div style="font-size:1.4rem;font-weight:700;color:#CC0000">74</div>
+        <div style="font-size:.72rem;color:var(--gray)">Gauche</div>
+      </div>
+      <div style="background:#00318915;border:1px solid #00318944;border-radius:10px;padding:.7rem">
+        <div style="font-size:1.4rem;font-weight:700;color:#003189">38</div>
+        <div style="font-size:.72rem;color:var(--gray)">RN</div>
+        <div style="font-size:.68rem;color:#CC0000;margin-top:.2rem">1er groupe RN au Sénat</div>
+      </div>
+      <div style="background:#88888815;border:1px solid #88888844;border-radius:10px;padding:.7rem">
+        <div style="font-size:1.4rem;font-weight:700;color:#888">6</div>
+        <div style="font-size:.72rem;color:var(--gray)">Divers</div>
+      </div>
     </div>
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.7rem;text-align:center">
-      <div style="font-size:1.6rem;font-weight:700;color:#1E3A6E" id="cs-droite">—</div>
-      <div style="font-size:.68rem;color:var(--gray)">Droite/LR</div>
-    </div>
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.7rem;text-align:center">
-      <div style="font-size:1.6rem;font-weight:700;color:#003189" id="cs-rn">—</div>
-      <div style="font-size:.68rem;color:var(--gray)">RN</div>
-    </div>
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.7rem;text-align:center">
-      <div style="font-size:1.6rem;font-weight:700;color:#888" id="cs-divers">—</div>
-      <div style="font-size:.68rem;color:var(--gray)">Divers</div>
-    </div>
+    <div style="font-size:.72rem;color:var(--gray);font-style:italic">Projection basée sur résultats municipales 2026 · Les sénateurs sont élus au suffrage indirect par les grands électeurs</div>
   </div>
 </div>
 
@@ -1836,7 +1883,7 @@ function showTab(id,el){
   if(id==='sond'&&!chartsReady)renderPolls();
   if(id==='debats')renderDebats();
   if(id==='outils'){renderPopScore();renderWordCloud();renderEvolChart();}
-  if(id==='carte'){loadCarte();}
+  if(id==='carte'){renderProjections();}
 }
 
 // ── DÉBATS POLITIQUES PAR THÈME ──────────────────────────────────────
@@ -2300,142 +2347,81 @@ function hidePubsForPremium(){
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────
-// ── CARTE FRANCE ─────────────────────────────────────────────────────
-const CARTE_COULEURS = {gauche:'#CC0000',centre:'#0066CC',droite:'#1E3A6E',rn:'#003189',divers:'#888'};
-const CARTE_DATA = {
-  '01':{n:'Ain',b:'droite',g:'Droite/LR',s:'51%'},'02':{n:'Aisne',b:'rn',g:'RN',s:'48%'},
-  '03':{n:'Allier',b:'gauche',g:'Gauche',s:'52%'},'04':{n:'Alpes-de-Haute-Provence',b:'rn',g:'RN',s:'49%'},
-  '05':{n:'Hautes-Alpes',b:'droite',g:'Droite',s:'50%'},'06':{n:'Alpes-Maritimes',b:'rn',g:'RN Ciotti',s:'53%'},
-  '07':{n:'Ardèche',b:'droite',g:'Droite',s:'54%'},'08':{n:'Ardennes',b:'rn',g:'RN',s:'51%'},
-  '09':{n:'Ariège',b:'gauche',g:'Gauche',s:'55%'},'10':{n:'Aube',b:'droite',g:'Droite',s:'50%'},
-  '11':{n:'Aude',b:'gauche',g:'Gauche',s:'51%'},'12':{n:'Aveyron',b:'droite',g:'Droite',s:'58%'},
-  '13':{n:'Bouches-du-Rhône',b:'gauche',g:'Gauche Payan',s:'52%'},'14':{n:'Calvados',b:'centre',g:'Centre',s:'50%'},
-  '15':{n:'Cantal',b:'droite',g:'Droite',s:'62%'},'16':{n:'Charente',b:'gauche',g:'Gauche',s:'51%'},
-  '17':{n:'Charente-Maritime',b:'droite',g:'Droite',s:'50%'},'18':{n:'Cher',b:'gauche',g:'Gauche',s:'52%'},
-  '19':{n:'Corrèze',b:'droite',g:'Droite',s:'55%'},'2A':{n:'Corse-du-Sud',b:'divers',g:'Nationalistes',s:'58%'},
-  '2B':{n:'Haute-Corse',b:'divers',g:'Nationalistes',s:'61%'},'21':{n:'Côte-d\'Or',b:'droite',g:'Droite',s:'52%'},
-  '22':{n:'Côtes-d\'Armor',b:'gauche',g:'Gauche',s:'56%'},'23':{n:'Creuse',b:'gauche',g:'Gauche',s:'53%'},
-  '24':{n:'Dordogne',b:'gauche',g:'Gauche',s:'51%'},'25':{n:'Doubs',b:'droite',g:'Droite',s:'51%'},
-  '26':{n:'Drôme',b:'droite',g:'Droite',s:'50%'},'27':{n:'Eure',b:'rn',g:'RN',s:'49%'},
-  '28':{n:'Eure-et-Loir',b:'centre',g:'Centre',s:'50%'},'29':{n:'Finistère',b:'gauche',g:'Gauche',s:'58%'},
-  '30':{n:'Gard',b:'rn',g:'RN',s:'52%'},'31':{n:'Haute-Garonne',b:'gauche',g:'Gauche Toulouse',s:'55%'},
-  '32':{n:'Gers',b:'gauche',g:'Gauche',s:'53%'},'33':{n:'Gironde',b:'gauche',g:'Gauche Bordeaux',s:'53%'},
-  '34':{n:'Hérault',b:'gauche',g:'Gauche Montpellier',s:'51%'},'35':{n:'Ille-et-Vilaine',b:'gauche',g:'Gauche',s:'57%'},
-  '36':{n:'Indre',b:'droite',g:'Droite',s:'51%'},'37':{n:'Indre-et-Loire',b:'centre',g:'Centre',s:'51%'},
-  '38':{n:'Isère',b:'gauche',g:'Gauche',s:'51%'},'39':{n:'Jura',b:'droite',g:'Droite',s:'53%'},
-  '40':{n:'Landes',b:'gauche',g:'Gauche',s:'54%'},'41':{n:'Loir-et-Cher',b:'droite',g:'Droite',s:'52%'},
-  '42':{n:'Loire',b:'droite',g:'Droite',s:'51%'},'43':{n:'Haute-Loire',b:'droite',g:'Droite',s:'57%'},
-  '44':{n:'Loire-Atlantique',b:'gauche',g:'Gauche Nantes',s:'54%'},'45':{n:'Loiret',b:'centre',g:'Centre',s:'50%'},
-  '46':{n:'Lot',b:'droite',g:'Droite',s:'56%'},'47':{n:'Lot-et-Garonne',b:'rn',g:'RN',s:'50%'},
-  '48':{n:'Lozère',b:'droite',g:'Droite',s:'60%'},'49':{n:'Maine-et-Loire',b:'droite',g:'Droite',s:'53%'},
-  '50':{n:'Manche',b:'droite',g:'Droite Philippe',s:'54%'},'51':{n:'Marne',b:'centre',g:'Centre',s:'51%'},
-  '52':{n:'Haute-Marne',b:'droite',g:'Droite',s:'53%'},'53':{n:'Mayenne',b:'droite',g:'Droite',s:'58%'},
-  '54':{n:'Meurthe-et-Moselle',b:'gauche',g:'Gauche Nancy',s:'52%'},'55':{n:'Meuse',b:'rn',g:'RN',s:'50%'},
-  '56':{n:'Morbihan',b:'droite',g:'Droite',s:'52%'},'57':{n:'Moselle',b:'rn',g:'RN',s:'51%'},
-  '58':{n:'Nièvre',b:'gauche',g:'Gauche',s:'53%'},'59':{n:'Nord',b:'gauche',g:'Gauche Lille',s:'50%'},
-  '60':{n:'Oise',b:'rn',g:'RN',s:'50%'},'61':{n:'Orne',b:'droite',g:'Droite',s:'52%'},
-  '62':{n:'Pas-de-Calais',b:'rn',g:'RN',s:'53%'},'63':{n:'Puy-de-Dôme',b:'gauche',g:'Gauche Clermont',s:'51%'},
-  '64':{n:'Pyrénées-Atlantiques',b:'gauche',g:'Gauche',s:'52%'},'65':{n:'Hautes-Pyrénées',b:'gauche',g:'Gauche',s:'54%'},
-  '66':{n:'Pyrénées-Orientales',b:'rn',g:'RN Perpignan',s:'55%'},'67':{n:'Bas-Rhin',b:'centre',g:'Centre Strasbourg',s:'50%'},
-  '68':{n:'Haut-Rhin',b:'droite',g:'Droite',s:'51%'},'69':{n:'Rhône',b:'gauche',g:'Gauche Lyon-Doucet',s:'51%'},
-  '70':{n:'Haute-Saône',b:'droite',g:'Droite',s:'52%'},'71':{n:'Saône-et-Loire',b:'gauche',g:'Gauche',s:'52%'},
-  '72':{n:'Sarthe',b:'droite',g:'Droite',s:'51%'},'73':{n:'Savoie',b:'droite',g:'Droite',s:'54%'},
-  '74':{n:'Haute-Savoie',b:'droite',g:'Droite',s:'55%'},'75':{n:'Paris',b:'gauche',g:'Gauche Grégoire',s:'54%'},
-  '76':{n:'Seine-Maritime',b:'gauche',g:'Gauche',s:'50%'},'77':{n:'Seine-et-Marne',b:'centre',g:'Centre',s:'50%'},
-  '78':{n:'Yvelines',b:'droite',g:'Droite',s:'52%'},'79':{n:'Deux-Sèvres',b:'gauche',g:'Gauche',s:'52%'},
-  '80':{n:'Somme',b:'rn',g:'RN',s:'51%'},'81':{n:'Tarn',b:'gauche',g:'Gauche',s:'50%'},
-  '82':{n:'Tarn-et-Garonne',b:'gauche',g:'Gauche',s:'51%'},'83':{n:'Var',b:'rn',g:'RN Lavalette',s:'56%'},
-  '84':{n:'Vaucluse',b:'rn',g:'RN',s:'54%'},'85':{n:'Vendée',b:'droite',g:'Droite',s:'61%'},
-  '86':{n:'Vienne',b:'gauche',g:'Gauche',s:'51%'},'87':{n:'Haute-Vienne',b:'gauche',g:'Gauche Limoges',s:'55%'},
-  '88':{n:'Vosges',b:'droite',g:'Droite',s:'52%'},'89':{n:'Yonne',b:'droite',g:'Droite',s:'51%'},
-  '90':{n:'Territoire de Belfort',b:'gauche',g:'Gauche',s:'51%'},'91':{n:'Essonne',b:'gauche',g:'Gauche',s:'52%'},
-  '92':{n:'Hauts-de-Seine',b:'centre',g:'Centre',s:'51%'},'93':{n:'Seine-Saint-Denis',b:'gauche',g:'Gauche/LFI',s:'58%'},
-  '94':{n:'Val-de-Marne',b:'gauche',g:'Gauche',s:'54%'},  '95':{n:'Val-d\'Oise',b:'rn',g:'RN',s:'50%'},
-  '971':{n:'Guadeloupe',b:'gauche',g:'Gauche',s:'55%'},
-  '972':{n:'Martinique',b:'divers',g:'Divers gauche',s:'58%'},
-  '973':{n:'Guyane',b:'gauche',g:'Gauche',s:'53%'},
-  '974':{n:'La Réunion',b:'gauche',g:'Gauche',s:'51%'},
-  '976':{n:'Mayotte',b:'divers',g:'Divers',s:'52%'},
-};
+// ── PROJECTIONS DE SIÈGES ────────────────────────────────────────────
+let projChartsDone = false;
 
-let carteLoaded = false;
-
-function setCarteFiltre(bord, el) {
-  document.querySelectorAll('[id^="cfb-"]').forEach(b => {
+function showProjection(type, el) {
+  document.querySelectorAll('[id^="proj-"]').forEach(d => {
+    if(d.id.startsWith('proj-btn')) return;
+    d.style.display = 'none';
+  });
+  document.getElementById('proj-' + type).style.display = 'block';
+  document.querySelectorAll('[id^="proj-btn-"]').forEach(b => {
     b.classList.remove('on');
-    b.style.background='';
+    b.style.background = '';
+    b.style.color = '';
   });
   el.classList.add('on');
-  if(bord === 'all') el.style.background='var(--blue)';
-  else el.style.background = CARTE_COULEURS[bord];
-  el.style.color = '#fff';
-  document.querySelectorAll('#france-map path').forEach(function(p) {
-    const code = p.getAttribute('data-code');
-    const res = CARTE_DATA[code];
-    if(!res) return;
-    p.style.opacity = bord === 'all' || res.b === bord ? '1' : '0.15';
+}
+
+function renderProjections() {
+  if(projChartsDone) return;
+  projChartsDone = true;
+  if(typeof Chart === 'undefined') return;
+
+  // Chart 1er tour présidentielle
+  new Chart(document.getElementById('canvas-pres-1'), {
+    type: 'bar',
+    data: {
+      labels: ['Le Pen (RN)', 'Philippe (Horizons)', 'Candidat NFP', 'Centre', 'Droite', 'Autres'],
+      datasets: [{
+        data: [33, 22, 19, 14, 8, 4],
+        backgroundColor: ['#003189','#0066CC','#CC0000','#60A5FA','#1E3A6E','#888'],
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, max: 40, ticks: { callback: v => v + '%' } },
+        x: { ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+
+  // Chart législatives
+  new Chart(document.getElementById('canvas-leg'), {
+    type: 'bar',
+    data: {
+      labels: ['NFP/Gauche', 'RN/Alliés', 'Centre', 'Droite LR-UDR', 'Divers'],
+      datasets: [
+        { label: 'Projection 2027', data: [195, 172, 112, 78, 20], backgroundColor: ['#CC0000','#003189','#0066CC','#1E3A6E','#888'], borderRadius: 6 },
+        { label: 'Résultats 2022', data: [153, 111, 165, 64, 84], backgroundColor: ['#CC000055','#00318955','#0066CC55','#1E3A6E55','#88888855'], borderRadius: 6 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } },
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+
+  // Chart sénatoriales
+  new Chart(document.getElementById('canvas-sen'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Droite/LR', 'Centre', 'Gauche', 'RN', 'Divers'],
+      datasets: [{ data: [148, 82, 74, 38, 6], backgroundColor: ['#1E3A6E','#0066CC','#CC0000','#003189','#888'], borderWidth: 2, borderColor: '#fff' }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'right', labels: { font: { size: 12 } } } }
+    }
   });
 }
 
-function loadCarte() {
-  if(carteLoaded) return;
-  carteLoaded = true;
-  const svg = document.getElementById('france-map');
-  if(!svg) return;
-
-  // Load D3 dynamically
-  const d3Script = document.createElement('script');
-  d3Script.src = 'https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js';
-  d3Script.onload = function() {
-    const w = 800, h = 560;
-    const d3svg = d3.select('#france-map').attr('viewBox', '0 0 ' + w + ' ' + h);
-    const proj = d3.geoConicConformal().center([2.5, 46.5]).scale(2600).translate([w/2 - 60, h/2]);
-    const path = d3.geoPath().projection(proj);
-    const tooltip = document.getElementById('map-tooltip');
-
-    d3.json('/geojson').then(function(geo) {
-      d3svg.selectAll('path')
-        .data(geo.features)
-        .join('path')
-        .attr('d', path)
-        .attr('data-code', function(d) { return d.properties.code; })
-        .attr('fill', function(d) {
-          const res = CARTE_DATA[d.properties.code];
-          return res ? CARTE_COULEURS[res.b] : '#ccc';
-        })
-        .attr('stroke', '#fff')
-        .attr('stroke-width', 0.5)
-        .style('cursor', 'pointer')
-        .style('transition', 'opacity .15s')
-        .on('mousemove', function(event, d) {
-          const res = CARTE_DATA[d.properties.code];
-          if(!res) return;
-          const rect = svg.getBoundingClientRect();
-          tooltip.style.display = 'block';
-          tooltip.style.left = (event.clientX - rect.left + 12) + 'px';
-          tooltip.style.top = (event.clientY - rect.top - 10) + 'px';
-          tooltip.innerHTML = '<strong style="font-size:.82rem">' + res.n + '</strong><br>' +
-            '<span style="color:' + CARTE_COULEURS[res.b] + ';font-size:.75rem">' + res.g + '</span><br>' +
-            '<span style="font-size:.7rem;opacity:.7">' + res.s + ' des suffrages</span>';
-        })
-        .on('mouseleave', function() { tooltip.style.display = 'none'; });
-
-      const counts = {gauche:0,centre:0,droite:0,rn:0,divers:0};
-      Object.values(CARTE_DATA).forEach(function(r) { if(counts[r.b] !== undefined) counts[r.b]++; });
-      document.getElementById('cs-gauche').textContent = counts.gauche;
-      document.getElementById('cs-centre').textContent = counts.centre;
-      document.getElementById('cs-droite').textContent = counts.droite;
-      document.getElementById('cs-rn').textContent = counts.rn;
-      document.getElementById('cs-divers').textContent = counts.divers;
-    }).catch(function(err) {
-      console.error('GeoJSON error:', err);
-      // Fallback: show text message
-      svg.innerHTML = '<text x="400" y="260" text-anchor="middle" fill="#888" font-size="16">Carte non disponible</text><text x="400" y="290" text-anchor="middle" fill="#aaa" font-size="12">Vérifiez votre connexion</text>';
-    });
-  };
-  document.head.appendChild(d3Script);
-}
-
+// ── CARTE FRANCE ─────────────────────────────────────────────────────
 loadAll();
 window._refreshTimer = setInterval(loadAll, 600000);
 

@@ -36,27 +36,6 @@ app.get('/sw.js', (req, res) => {
 });
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
-// ── Proxy GeoJSON ────────────────────────────────────────────────────
-app.get('/geojson', async (req, res) => {
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 8000);
-  try {
-    const r = await fetch('https://unpkg.com/france-geojson@1.0.0/departements.geojson', {
-      signal: ctrl.signal,
-      headers: { 'User-Agent': 'Mozilla/5.0' }
-    });
-    clearTimeout(timer);
-    const data = await r.text();
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Cache-Control', 'public, max-age=86400');
-    res.send(data);
-  } catch(e) {
-    clearTimeout(timer);
-    res.status(500).json({ error: e.message });
-  }
-});
-
 // ── Proxy RSS ─────────────────────────────────────────────────────────
 app.get('/rss', async (req, res) => {
   const url = req.query.url;
