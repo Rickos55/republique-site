@@ -401,6 +401,7 @@ app.get('/admin', async (req, res) => {
     '<div class="stat blue"><div class="stat-label">Abonnés Gratuits</div><div class="stat-value">' + (mcStats.total - stripeStats.subscribers) + '</div><div class="stat-sub">Newsletter quotidienne</div></div>' +
     '<div class="stat gold"><div class="stat-label">Revenus Stripe</div><div class="stat-value">' + stripeStats.mrr + '€</div><div class="stat-sub">MRR mensuel</div></div>' +
     '</div>' +
+    '<div class="card"><h2>🗳️ Mode Soirée Électorale</h2><p style="font-size:.83rem;color:#8B949E;margin-bottom:1rem">Active l\'actualisation toutes les 2 min et la bannière rouge sur le site.</p><button class="btn" id="election-btn" onclick="toggleElection()" style="padding:.7rem 1.4rem;font-size:.9rem;background:#CC0000;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700">🔴 Activer la soirée électorale</button><div id="election-resp" class="resp"></div></div>' +
     '<div class="card"><h2>📧 Newsletter</h2>' +
     '<div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:.8rem">' +
     '<button class="btn btn-green" onclick="previewNL(\'gratuit\')">👁️ Aperçu gratuite</button>' +
@@ -438,6 +439,7 @@ app.get('/admin', async (req, res) => {
     '}catch(e){resp.className="resp err";resp.textContent="❌ Erreur : "+e.message;}' +
     '}' +
     'function closePreview(){document.getElementById("preview-zone").style.display="none";}' +
+    'async function toggleElection(){const btn=document.getElementById("election-btn");const resp=document.getElementById("election-resp");try{const r=await fetch("/election-mode/toggle",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token:"' + ADMIN_PASS + '"})});const d=await r.json();resp.className="resp ok";resp.textContent="✅ "+d.message;resp.style.display="block";if(d.active){btn.textContent="🟢 Désactiver la soirée électorale";btn.style.background="#238636";}else{btn.textContent="🔴 Activer la soirée électorale";btn.style.background="#CC0000";}}catch(e){resp.className="resp err";resp.textContent="❌ "+e.message;resp.style.display="block";}}' +
     'async function confirmSend(){' +
     'const btn=document.getElementById("send-btn");const resp=document.getElementById("nl-resp");' +
     'btn.disabled=true;btn.textContent="Envoi...";' +
@@ -506,6 +508,21 @@ app.get('/wiki-info', async (req, res) => {
     clearTimeout(timer);
     res.status(500).json({ error: e.message });
   }
+});
+
+// ── MODE SOIRÉE ÉLECTORALE ───────────────────────────────────────────
+let electionModeActive = false;
+
+app.get('/election-mode', (req, res) => {
+  res.json({ active: electionModeActive });
+});
+
+app.post('/election-mode/toggle', (req, res) => {
+  const token = req.body?.token;
+  if (token !== ADMIN_PASS) return res.status(401).json({ error: 'Non autorisé' });
+  electionModeActive = !electionModeActive;
+  console.log('🗳️ Mode soirée électorale : ' + (electionModeActive ? 'ACTIVÉ' : 'DÉSACTIVÉ'));
+  res.json({ active: electionModeActive, message: electionModeActive ? 'Mode soirée électorale activé !' : 'Mode soirée électorale désactivé.' });
 });
 
 // ── Planification newsletter à 7h ─────────────────────────────────────

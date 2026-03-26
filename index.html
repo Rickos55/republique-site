@@ -571,8 +571,8 @@ footer em{color:var(--red);font-style:normal}
       <div class="sidebar-box">
         <div class="sidebar-box-title">📅 Prochaines élections</div>
         <div style="font-size:.79rem;color:var(--text);line-height:1.7">
-          <div style="padding:.3rem 0;border-bottom:1px solid var(--border)">🗳️ <strong>Municipales 2e tour</strong><br><span style="color:var(--gray);font-size:.72rem">22 mars 2026</span></div>
-          <div style="padding:.3rem 0;border-bottom:1px solid var(--border)">✅ <strong>Municipales — 2e tour</strong><br><span style="color:#059669;font-size:.72rem">22 mars 2026 — résultats ce soir</span></div>
+          <div style="padding:.3rem 0;border-bottom:1px solid var(--border)">🗳️ <strong>Municipales 2026</strong><br><span style="color:var(--gray);font-size:.72rem">22 mars 2026</span></div>
+          <div style="padding:.3rem 0;border-bottom:1px solid var(--border);opacity:.7">✅ <strong>Municipales 2026</strong><br><span style="color:#059669;font-size:.72rem">Terminées — résultats définitifs</span></div>
           <div style="padding:.3rem 0;border-bottom:1px solid var(--border)">🏛️ <strong>Sénatoriales</strong><br><span style="color:var(--gray);font-size:.72rem">Septembre 2026</span></div>
           <div style="padding:.3rem 0;border-bottom:1px solid var(--border)">🇫🇷 <strong>Présidentielle</strong><br><span style="color:var(--gray);font-size:.72rem">Avril-Mai 2027</span></div>
           <div style="padding:.3rem 0">📜 <strong>Législatives</strong><br><span style="color:var(--gray);font-size:.72rem">Juin 2027</span></div>
@@ -681,7 +681,7 @@ footer em{color:var(--red);font-style:normal}
   <div class="stitle">Calendrier électoral 2026–2029</div>
   <div class="calist">
     <div class="caev" style="opacity:.7"><div class="cadt"><div class="caday" style="background:#059669">✅</div><div class="camon">Mar</div></div><div><div class="cat">Municipales — 1er tour <span style="color:#059669;font-size:.7rem">TERMINÉ</span></div><div class="cad">15 mars 2026 — Participation : 48,9%</div></div><span class="cabadge b-g">Municipales</span></div>
-    <div class="caev" style="border:2px solid #CC0000;border-radius:10px"><div class="cadt"><div class="caday" style="background:#CC0000;color:#fff">22</div><div class="camon" style="color:#CC0000;font-weight:700">Mar</div></div><div><div class="cat" style="color:#CC0000">🔴 Municipales — 2e tour <span style="font-size:.7rem">CE SOIR</span></div><div class="cad">Marseille, Lyon, Nice, Paris... résultats à partir de 20h</div></div><span class="cabadge b-r">EN COURS</span></div>
+    <div class="caev" style="opacity:.7"><div class="cadt"><div class="caday" style="background:#059669">✅</div><div class="camon">Mar</div></div><div><div class="cat">Municipales — 2e tour <span style="color:#059669;font-size:.7rem">TERMINÉ</span></div><div class="cad">22 mars 2026 — Résultats définitifs disponibles</div></div><span class="cabadge b-g">Terminé</span></div>
     <div class="caev"><div class="cadt"><div class="caday">Avr</div><div class="camon">2026</div></div><div><div class="cat">Budget rectificatif 2026</div><div class="cad">Présentation du collectif budgétaire au Parlement</div></div><span class="cabadge b-b">Budget</span></div>
     <div class="caev"><div class="cadt"><div class="caday">Jun</div><div class="camon">2026</div></div><div><div class="cat">Présidence française du G7</div><div class="cad">Sommet des pays du G7 sous présidence française</div></div><span class="cabadge b-b">International</span></div>
     <div class="caev"><div class="cadt"><div class="caday">Sep</div><div class="camon">2026</div></div><div><div class="cat">Élections Sénatoriales</div><div class="cad">Renouvellement de la série 2 — 170 sièges</div></div><span class="cabadge b-p">Sénatoriales</span></div>
@@ -1477,11 +1477,11 @@ const ELECTIONS=[
    kw:['sénatoriales','sénat 2026','élections sénatoriales'],
    bars:[{name:'Droite + Centre',color:'#1E3A6E',pct:46},{name:'Gauche',color:'#CC0000',pct:27},
      {name:'RN',color:'#003189',pct:18},{name:'Autres',color:'#888',pct:9}]},
-  {label:'Municipales 2026',badge:'Municipales',badgeBg:'#ECFDF5',badgeColor:'#059669',
-   src:'Résultats 1er tour — 15 mars 2026',
-   kw:['municipales','élections municipales','premier tour','second tour','maires 2026'],
-   bars:[{name:'Droite et Centre',color:'#1E3A6E',pct:37},{name:'Gauche',color:'#CC0000',pct:29},
-     {name:'RN',color:'#003189',pct:24},{name:'Divers',color:'#888',pct:10}]},
+  {label:'Municipales 2026 ✅',badge:'Terminé',badgeBg:'#F0F9FF',badgeColor:'#0369A1',
+   src:'Résultats définitifs — 22 mars 2026',
+   kw:['municipales','élections municipales','second tour','maires 2026','résultats municipales'],
+   bars:[{name:'Gauche/NFP',color:'#CC0000',pct:38},{name:'Droite et Centre',color:'#1E3A6E',pct:35},
+     {name:'RN',color:'#003189',pct:21},{name:'Divers',color:'#888',pct:6}]},
 ];
 
 const chartInstances={};
@@ -1600,14 +1600,14 @@ let regionFilter = 'all';
 
 function filterByKeyword(val) {
   kwFilter = val.toLowerCase().trim();
-  renderArticles();
+  renderNews();
 }
 
 function filtRegion(region, el) {
   regionFilter = region;
   document.querySelectorAll('[id^="reg-"]').forEach(e => e.classList.remove('on'));
   el.classList.add('on');
-  renderArticles();
+  renderNews();
 }
 
 // Mapping sources → régions
@@ -2076,11 +2076,14 @@ function hidePubsForPremium(){
 loadAll();
 window._refreshTimer = setInterval(loadAll, 600000);
 function setRefreshRate(ms){clearInterval(window._refreshTimer);window._refreshTimer=setInterval(loadAll,ms);}
-function checkElectionMode(){
-  const h=new Date().getHours();
-  const b=document.getElementById('election-banner');
-  if(h>=18&&h<=23){setRefreshRate(120000);if(b)b.style.display='flex';}
-  else{setRefreshRate(600000);if(b)b.style.display='none';}
+async function checkElectionMode(){
+  try{
+    const r=await fetch('/election-mode');
+    const d=await r.json();
+    const b=document.getElementById('election-banner');
+    if(d.active){setRefreshRate(120000);if(b)b.style.display='flex';}
+    else{setRefreshRate(600000);if(b)b.style.display='none';}
+  }catch{}
 }
 setInterval(checkElectionMode,60000);
 checkElectionMode();
