@@ -2393,7 +2393,7 @@ function loadCarte() {
     const path = d3.geoPath().projection(proj);
     const tooltip = document.getElementById('map-tooltip');
 
-    d3.json('https://unpkg.com/france-geojson@1.0.0/departements.geojson').then(function(geo) {
+    d3.json('/geojson').then(function(geo) {
       d3svg.selectAll('path')
         .data(geo.features)
         .join('path')
