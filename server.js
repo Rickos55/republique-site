@@ -28,6 +28,12 @@ console.log(STRIPE_KEY ? '💳 Stripe OK'    : '[!] Pas de clé Stripe');
 
 app.use(express.json({ limit: '2mb' }));
 app.use(express.static(__dirname));
+app.get('/manifest.json', (req, res) => res.sendFile(path.join(__dirname, 'manifest.json')));
+app.get('/sw.js', (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript');
+  res.setHeader('Service-Worker-Allowed', '/');
+  res.sendFile(path.join(__dirname, 'sw.js'));
+});
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
 // ── Proxy RSS ─────────────────────────────────────────────────────────
@@ -318,6 +324,7 @@ async function sendDailyNewsletter() {
     const ok = await sendToMailchimp('gratuit', htmlGratuit, subject);
     if (ok) {
       console.log('✅ Newsletter gratuite envoyée !');
+      analytics.newsletterSent++;
       // Newsletter premium
       const dataPremium = await generateNewsletter('premium', articles);
       const htmlPremium = buildEmailHTML('premium', dataPremium);
@@ -395,12 +402,17 @@ app.get('/admin', async (req, res) => {
     '.toggle.on::after{left:19px}</style></head><body>' +
     '<div class="header"><div>🇫🇷</div><h1>République — Admin</h1><span class="badge">PRIVÉ</span></div>' +
     '<div class="main">' +
-    '<div class="grid">' +
-    '<div class="stat green"><div class="stat-label">Abonnés total</div><div class="stat-value">' + mcStats.total + '</div><div class="stat-sub">Mailchimp</div></div>' +
-    '<div class="stat gold"><div class="stat-label">Abonnés Premium</div><div class="stat-value">' + stripeStats.subscribers + '</div><div class="stat-sub">' + stripeStats.mrr + '€/mois</div></div>' +
-    '<div class="stat blue"><div class="stat-label">Abonnés Gratuits</div><div class="stat-value">' + (mcStats.total - stripeStats.subscribers) + '</div><div class="stat-sub">Newsletter quotidienne</div></div>' +
-    '<div class="stat gold"><div class="stat-label">Revenus Stripe</div><div class="stat-value">' + stripeStats.mrr + '€</div><div class="stat-sub">MRR mensuel</div></div>' +
+    '<div class="grid" id="stats-grid">' +
+    '<div class="stat green"><div class="stat-label">Abonnés total</div><div class="stat-value" id="a-total">' + mcStats.total + '</div><div class="stat-sub">Mailchimp</div></div>' +
+    '<div class="stat gold"><div class="stat-label">Abonnés Premium</div><div class="stat-value" id="a-premium">' + stripeStats.subscribers + '</div><div class="stat-sub">' + stripeStats.mrr + '€/mois</div></div>' +
+    '<div class="stat blue"><div class="stat-label">Abonnés Gratuits</div><div class="stat-value" id="a-gratuit">' + (mcStats.total - stripeStats.subscribers) + '</div><div class="stat-sub">Newsletter quotidienne</div></div>' +
+    '<div class="stat gold"><div class="stat-label">Revenus MRR</div><div class="stat-value" id="a-mrr">' + stripeStats.mrr + '€</div><div class="stat-sub">Stripe abonnements</div></div>' +
+    '<div class="stat blue"><div class="stat-label">Visites aujourd\'hui</div><div class="stat-value" id="a-visits">—</div><div class="stat-sub">Depuis minuit</div></div>' +
+    '<div class="stat green"><div class="stat-label">Visites totales</div><div class="stat-value" id="a-total-visits">—</div><div class="stat-sub">Depuis démarrage</div></div>' +
+    '<div class="stat blue"><div class="stat-label">Newsletters envoyées</div><div class="stat-value" id="a-nl">—</div><div class="stat-sub">Ce cycle</div></div>' +
+    '<div class="stat green"><div class="stat-label">Uptime serveur</div><div class="stat-value" id="a-uptime">—</div><div class="stat-sub">Render</div></div>' +
     '</div>' +
+    '<div class="card"><h2>📈 Visites des 7 derniers jours</h2><div style="position:relative;height:160px"><canvas id="visits-chart"></canvas></div></div>' +
     '<div class="card"><h2>🗳️ Mode Soirée Électorale</h2><p style="font-size:.83rem;color:#8B949E;margin-bottom:1rem">Active l\'actualisation toutes les 2 min et la bannière rouge sur le site.</p><button class="btn" id="election-btn" onclick="toggleElection()" style="padding:.7rem 1.4rem;font-size:.9rem;background:#CC0000;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700">🔴 Activer la soirée électorale</button><div id="election-resp" class="resp"></div></div>' +
     '<div class="card"><h2>📧 Newsletter</h2>' +
     '<div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:.8rem">' +
@@ -440,6 +452,7 @@ app.get('/admin', async (req, res) => {
     '}' +
     'function closePreview(){document.getElementById("preview-zone").style.display="none";}' +
     'async function toggleElection(){const btn=document.getElementById("election-btn");const resp=document.getElementById("election-resp");try{const r=await fetch("/election-mode/toggle",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token:"' + ADMIN_PASS + '"})});const d=await r.json();resp.className="resp ok";resp.textContent="✅ "+d.message;resp.style.display="block";if(d.active){btn.textContent="🟢 Désactiver la soirée électorale";btn.style.background="#238636";}else{btn.textContent="🔴 Activer la soirée électorale";btn.style.background="#CC0000";}}catch(e){resp.className="resp err";resp.textContent="❌ "+e.message;resp.style.display="block";}}' +
+    'async function loadAnalytics(){try{const r=await fetch("/analytics?token='+ADMIN_PASS+'");const d=await r.json();const ids={"a-visits":"visitsToday","a-total-visits":"visitsTotal","a-nl":"newsletterSent","a-uptime":"uptime"};Object.entries(ids).forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.textContent=d[key]||"—";});if(window.Chart&&document.getElementById("visits-chart")){const days=Object.keys(d.dailyVisits||{}).slice(-7);const vals=days.map(k=>d.dailyVisits[k]);const labels=days.map(k=>{const dt=new Date(k);return(dt.getMonth()+1)+"/"+(dt.getDate());});new Chart(document.getElementById("visits-chart"),{type:"bar",data:{labels,datasets:[{data:vals,backgroundColor:"#1F6FEB",borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{color:"#8B949E"}},x:{ticks:{color:"#8B949E"}}}}});}}catch(e){}}const chartScript=document.createElement("script");chartScript.src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js";chartScript.onload=loadAnalytics;document.head.appendChild(chartScript);' +
     'async function confirmSend(){' +
     'const btn=document.getElementById("send-btn");const resp=document.getElementById("nl-resp");' +
     'btn.disabled=true;btn.textContent="Envoi...";' +
@@ -508,6 +521,111 @@ app.get('/wiki-info', async (req, res) => {
     clearTimeout(timer);
     res.status(500).json({ error: e.message });
   }
+});
+
+// ── SITEMAP DYNAMIQUE ────────────────────────────────────────────────
+app.get('/sitemap.xml', async (req, res) => {
+  const baseUrl = SITE_URL;
+  const now = new Date().toISOString().split('T')[0];
+  const pages = [
+    {u:'/',p:'1.0',c:'hourly'},{u:'/#politiciens',p:'0.8',c:'daily'},
+    {u:'/#comparaison',p:'0.8',c:'hourly'},{u:'/#sondages',p:'0.7',c:'daily'},
+    {u:'/#calendrier',p:'0.7',c:'weekly'},{u:'/#carte',p:'0.7',c:'weekly'},
+    {u:'/#debats',p:'0.6',c:'weekly'},{u:'/#apropos',p:'0.5',c:'monthly'},
+  ];
+  const urls = pages.map(function(p) {
+    return '<url><loc>'+baseUrl+p.u+'</loc><lastmod>'+now+'</lastmod><changefreq>'+p.c+'</changefreq><priority>'+p.p+'</priority></url>';
+  }).join('\n  ');
+  res.setHeader('Content-Type','application/xml');
+  res.send('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+urls+'</urlset>');
+});
+
+// ── SITEMAP DYNAMIQUE ────────────────────────────────────────────────
+app.get('/sitemap.xml', (req, res) => {
+  const today = new Date().toISOString().split('T')[0];
+  const urls = [
+    {loc:SITE_URL,pri:'1.0',freq:'hourly'},
+    {loc:SITE_URL+'/#politiciens',pri:'0.8',freq:'daily'},
+    {loc:SITE_URL+'/#sondages',pri:'0.8',freq:'daily'},
+    {loc:SITE_URL+'/#comparaison',pri:'0.7',freq:'hourly'},
+    {loc:SITE_URL+'/#calendrier',pri:'0.7',freq:'weekly'},
+    {loc:SITE_URL+'/#carte',pri:'0.6',freq:'monthly'},
+  ];
+  const xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' +
+    urls.map(u=>'<url><loc>'+u.loc+'</loc><lastmod>'+today+'</lastmod><changefreq>'+u.freq+'</changefreq><priority>'+u.pri+'</priority></url>').join('') +
+    '</urlset>';
+  res.setHeader('Content-Type','application/xml');
+  res.send(xml);
+});
+
+// ── ANALYTICS INTERNE ────────────────────────────────────────────────
+const analytics = {
+  visits: 0,
+  pageViews: {},
+  searches: [],
+  newsletterSent: 0,
+  startTime: new Date(),
+  dailyVisits: {},
+  sourcesClicked: {},
+};
+
+// Middleware comptage visites
+app.use(function(req, res, next) {
+  if (!req.path.startsWith('/rss') && !req.path.startsWith('/img') && !req.path.startsWith('/election') && !req.path.startsWith('/newsletter') && !req.path.startsWith('/stripe') && !req.path.startsWith('/ai') && !req.path.startsWith('/admin') && !req.path.startsWith('/wiki')) {
+    analytics.visits++;
+    const today = new Date().toISOString().split('T')[0];
+    analytics.dailyVisits[today] = (analytics.dailyVisits[today] || 0) + 1;
+    const page = req.path || '/';
+    analytics.pageViews[page] = (analytics.pageViews[page] || 0) + 1;
+  }
+  next();
+});
+
+// Route analytics pour l'admin
+app.get('/analytics', async (req, res) => {
+  const token = req.query.token;
+  if (token !== ADMIN_PASS) return res.status(401).json({ error: 'Non autorisé' });
+
+  const uptime = Math.floor((Date.now() - analytics.startTime) / 1000 / 60);
+  const today = new Date().toISOString().split('T')[0];
+
+  // Stats Mailchimp
+  let mcStats = { total: 0 };
+  try {
+    if (MC_API_KEY) {
+      const r = await fetch('https://' + MC_SERVER + '.api.mailchimp.com/3.0/lists/' + MC_LIST_ID, {
+        headers: { 'Authorization': 'Basic ' + Buffer.from('anystring:' + MC_API_KEY).toString('base64') }
+      });
+      const d = await r.json();
+      mcStats.total = d.stats?.member_count || 0;
+    }
+  } catch(e) {}
+
+  // Stats Stripe
+  let stripeStats = { subscribers: 0, mrr: 0 };
+  try {
+    if (STRIPE_KEY) {
+      const r = await fetch('https://api.stripe.com/v1/subscriptions?status=active&limit=100', {
+        headers: { 'Authorization': 'Bearer ' + STRIPE_KEY }
+      });
+      const d = await r.json();
+      stripeStats.subscribers = d.data?.length || 0;
+      stripeStats.mrr = +(stripeStats.subscribers * 2.99).toFixed(2);
+    }
+  } catch(e) {}
+
+  res.json({
+    uptime: uptime + ' min',
+    visitsTotal: analytics.visits,
+    visitsToday: analytics.dailyVisits[today] || 0,
+    dailyVisits: analytics.dailyVisits,
+    topPages: Object.entries(analytics.pageViews).sort((a,b) => b[1]-a[1]).slice(0,5),
+    newsletterSent: analytics.newsletterSent,
+    mailchimp: mcStats,
+    stripe: stripeStats,
+    electionMode: electionModeActive,
+    serverStart: analytics.startTime.toLocaleString('fr-FR'),
+  });
 });
 
 // ── MODE SOIRÉE ÉLECTORALE ───────────────────────────────────────────

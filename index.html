@@ -3,6 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0D2B6E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="République">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0D2B6E">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="République">
 
 <!-- SEO -->
 <title>République — Actualité Politique Française en Direct</title>
@@ -427,7 +439,19 @@ footer em{color:var(--red);font-style:normal}
 
 <!-- TICKER ACTUALITÉS EN DIRECT -->
 <!-- BANNIÈRE SOIRÉE ÉLECTORALE -->
-<div id="election-banner" style="display:none;background:#CC0000;color:#fff;padding:.5rem 1.2rem;align-items:center;justify-content:center;gap:.7rem;font-size:.82rem;font-weight:700">
+<!-- PWA INSTALL BANNER -->
+<div id="pwa-banner" style="display:none;background:#0D2B6E;color:#fff;padding:.6rem 1.2rem;align-items:center;justify-content:space-between;gap:.7rem;font-size:.82rem">
+  <div style="display:flex;align-items:center;gap:.6rem">
+    <span style="font-size:1.2rem">📱</span>
+    <span>Installez <strong>République</strong> sur votre téléphone</span>
+  </div>
+  <div style="display:flex;gap:.5rem">
+    <button onclick="installPWA()" style="background:gold;color:#1A1A1A;border:none;padding:.3rem .8rem;border-radius:50px;font-weight:700;font-size:.75rem;cursor:pointer">Installer</button>
+    <button onclick="document.getElementById('pwa-banner').style.display='none'" style="background:transparent;color:rgba(255,255,255,.6);border:none;font-size:1rem;cursor:pointer">✕</button>
+  </div>
+</div>
+
+<div id="election-banner"  style="display:none;background:#CC0000;color:#fff;padding:.5rem 1.2rem;align-items:center;justify-content:center;gap:.7rem;font-size:.82rem;font-weight:700">
   <span style="animation:pulse 1s infinite">🔴</span>
   SOIRÉE ÉLECTORALE — Actualisation automatique toutes les 2 minutes
   <span style="font-size:.7rem;opacity:.8">18h-23h</span>
@@ -455,6 +479,7 @@ footer em{color:var(--red);font-style:normal}
     <div class="tab"     onclick="showTab('comp',this)">Comparaison</div>
     <div class="tab"     onclick="showTab('sond',this)">Sondages</div>
     <div class="tab"     onclick="showTab('cal',this)">Calendrier</div>
+    <div class="tab"     onclick="showTab('carte',this)">🗺️ Carte</div>
     <div class="tab"     onclick="showTab('debats',this)">Débats</div>
     <div class="tab"     onclick="showTab('apropos',this)">À propos</div>
     <div class="tab"     onclick="showTab('outils',this)">🤖 Outils IA</div>
@@ -701,6 +726,56 @@ footer em{color:var(--red);font-style:normal}
   <div class="debats-grid" id="debatsGrid"></div>
 </div>
 
+<!-- CARTE FRANCE -->
+<div id="s-carte" class="sec">
+  <div class="stitle">Carte électorale — Municipales 2026</div>
+  <p style="font-size:.81rem;color:var(--gray);margin-bottom:1rem">Résultats définitifs du 2e tour · 22 mars 2026 · Survolez un département pour les détails</p>
+
+  <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.8rem">
+    <button class="chip c-all on" id="cfb-all" onclick="setCarteFiltre('all',this)">Tous</button>
+    <button class="chip" id="cfb-gauche" onclick="setCarteFiltre('gauche',this)" style="background:#CC000022;color:#CC0000;border-color:#CC000044">◀ Gauche/NFP</button>
+    <button class="chip" id="cfb-centre" onclick="setCarteFiltre('centre',this)" style="background:#0066CC22;color:#0066CC;border-color:#0066CC44">● Centre</button>
+    <button class="chip" id="cfb-droite" onclick="setCarteFiltre('droite',this)" style="background:#1E3A6E22;color:#1E3A6E;border-color:#1E3A6E44">▶ Droite/LR</button>
+    <button class="chip" id="cfb-rn" onclick="setCarteFiltre('rn',this)" style="background:#00318922;color:#003189;border-color:#00318944">▶▶ RN</button>
+  </div>
+
+  <div style="position:relative">
+    <svg id="france-map" style="width:100%;cursor:pointer;max-height:550px"></svg>
+    <div id="map-tooltip" style="position:absolute;background:#1A1A2E;color:#fff;padding:.5rem .8rem;border-radius:8px;font-size:.75rem;pointer-events:none;display:none;z-index:99;min-width:150px"></div>
+  </div>
+
+  <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:.8rem">
+    <div style="display:flex;align-items:center;gap:.3rem;font-size:.72rem;color:var(--gray)"><div style="width:12px;height:12px;border-radius:3px;background:#CC0000"></div>Gauche/NFP</div>
+    <div style="display:flex;align-items:center;gap:.3rem;font-size:.72rem;color:var(--gray)"><div style="width:12px;height:12px;border-radius:3px;background:#0066CC"></div>Centre</div>
+    <div style="display:flex;align-items:center;gap:.3rem;font-size:.72rem;color:var(--gray)"><div style="width:12px;height:12px;border-radius:3px;background:#1E3A6E"></div>Droite/LR</div>
+    <div style="display:flex;align-items:center;gap:.3rem;font-size:.72rem;color:var(--gray)"><div style="width:12px;height:12px;border-radius:3px;background:#003189"></div>RN</div>
+    <div style="display:flex;align-items:center;gap:.3rem;font-size:.72rem;color:var(--gray)"><div style="width:12px;height:12px;border-radius:3px;background:#888"></div>Divers</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:.5rem;margin-top:1rem">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.7rem;text-align:center">
+      <div style="font-size:1.6rem;font-weight:700;color:#CC0000" id="cs-gauche">—</div>
+      <div style="font-size:.68rem;color:var(--gray)">Gauche/NFP</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.7rem;text-align:center">
+      <div style="font-size:1.6rem;font-weight:700;color:#0066CC" id="cs-centre">—</div>
+      <div style="font-size:.68rem;color:var(--gray)">Centre</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.7rem;text-align:center">
+      <div style="font-size:1.6rem;font-weight:700;color:#1E3A6E" id="cs-droite">—</div>
+      <div style="font-size:.68rem;color:var(--gray)">Droite/LR</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.7rem;text-align:center">
+      <div style="font-size:1.6rem;font-weight:700;color:#003189" id="cs-rn">—</div>
+      <div style="font-size:.68rem;color:var(--gray)">RN</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.7rem;text-align:center">
+      <div style="font-size:1.6rem;font-weight:700;color:#888" id="cs-divers">—</div>
+      <div style="font-size:.68rem;color:var(--gray)">Divers</div>
+    </div>
+  </div>
+</div>
+
 <!-- À PROPOS -->
 <div id="s-apropos" class="sec">
   <div class="stitle">À propos de République</div>
@@ -800,6 +875,21 @@ footer em{color:var(--red);font-style:normal}
             <div class="resume-label">Résumé politique du jour</div>
             <div id="resumeText"></div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FACT-CHECKER IA -->
+    <div class="tool-card">
+      <div class="tool-card-top" style="background:#059669"></div>
+      <div class="tool-card-body">
+        <div class="tool-card-icon">✅</div>
+        <div class="tool-card-title">Fact-checker IA</div>
+        <div class="tool-card-desc">Collez une citation ou affirmation politique. Claude vérifie sa véracité avec les articles en direct.</div>
+        <div class="tool-card-content">
+          <textarea id="factInput" placeholder="Ex: Emmanuel Macron a dit que le chômage est à 5%..." style="width:100%;height:80px;resize:vertical;padding:.6rem;border:1.5px solid var(--border);border-radius:10px;background:var(--card);color:var(--text);font-family:inherit;font-size:.82rem;margin-bottom:.6rem"></textarea>
+          <button class="qr-btn" id="factBtn" onclick="doFactCheck()" style="width:100%;background:#059669">✅ Vérifier cette affirmation</button>
+          <div id="factResult" style="display:none;margin-top:.8rem;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.9rem"></div>
         </div>
       </div>
     </div>
@@ -1035,6 +1125,72 @@ let allArticles=[], activeBord='all', newsPage=1;
 let searchRes=[], searchPage=1, searchSort='pertinence';
 let chartsReady=false;
 
+// Décode les entités HTML (&amp; &#233; etc.)
+function decodeHTML(str){
+  if(!str) return '';
+  const txt = document.createElement('textarea');
+  txt.innerHTML = str;
+  return txt.value;
+}
+
+
+function closeReading() {
+  document.getElementById('reading-overlay').style.display = 'none';
+  document.body.style.overflow = '';
+  document.getElementById('reading-summary-box').style.display = 'none';
+  document.getElementById('reading-fc-box').style.display = 'none';
+}
+
+let _currentArticle = {};
+
+function openReading(title, desc, link, source) {
+  _currentArticle = {title, desc, link, source};
+  document.getElementById('reading-title').textContent = title;
+  document.getElementById('reading-desc').textContent = desc || 'Cliquez sur le lien pour lire l\'article complet.';
+  document.getElementById('reading-link').href = link;
+  document.getElementById('reading-source').textContent = source;
+  document.getElementById('reading-summary-box').style.display = 'none';
+  document.getElementById('reading-fc-box').style.display = 'none';
+  document.getElementById('reading-overlay').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+async function doReadingSummary() {
+  const btn = document.getElementById('reading-sum-btn');
+  const box = document.getElementById('reading-summary-box');
+  const txt = document.getElementById('reading-summary-text');
+  btn.disabled = true; btn.textContent = '⏳ Résumé en cours...';
+  box.style.display = 'block';
+  txt.textContent = 'Génération du résumé...';
+  try {
+    const r = await fetch('/ai-compare', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({messages:[{role:'user',content:'Résume cet article politique en 3-4 phrases claires, neutres et informatives. Titre: ' + _currentArticle.title + '. Description: ' + (_currentArticle.desc||'Pas de description') + '. Source: ' + _currentArticle.source}]})
+    });
+    const d = await r.json();
+    txt.textContent = d.content?.[0]?.text || 'Résumé non disponible.';
+  } catch { txt.textContent = 'Erreur lors de la génération.'; }
+  btn.disabled = false; btn.textContent = '🤖 Résumé IA';
+}
+
+async function doFactCheck() {
+  const btn = document.getElementById('reading-fc-btn');
+  const box = document.getElementById('reading-fc-box');
+  const txt = document.getElementById('reading-fc-text');
+  btn.disabled = true; btn.textContent = '⏳ Vérification...';
+  box.style.display = 'block';
+  txt.textContent = 'Analyse en cours...';
+  try {
+    const r = await fetch('/ai-compare', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({messages:[{role:'user',content:'Tu es un fact-checker politique neutre. Analyse ce titre d\'article et dis : 1. S\'il contient des affirmations vérifiables 2. Si le titre semble neutre ou orienté 3. Ce qu\'il faudrait vérifier pour confirmer. Titre: "' + _currentArticle.title + '". Source: ' + _currentArticle.source + '. Réponds en 3-4 phrases simples, sans markdown.'}]})
+    });
+    const d = await r.json();
+    txt.textContent = d.content?.[0]?.text || 'Fact-check non disponible.';
+  } catch { txt.textContent = 'Erreur lors de la vérification.'; }
+  btn.disabled = false; btn.textContent = '🔍 Fact-check';
+}
+
 async function fetchFeed(f){
   try{
     const r=await fetch(`/rss?url=${encodeURIComponent(f.url)}`);
@@ -1043,8 +1199,8 @@ async function fetchFeed(f){
     const xml=new DOMParser().parseFromString(txt,'application/xml');
     if(xml.querySelector('parsererror'))return[];
     return[...xml.querySelectorAll('item')].slice(0,10).map(it=>({
-      title:(it.querySelector('title')?.textContent||'').trim(),
-      desc: (it.querySelector('description')?.textContent||'').replace(/<[^>]+>/g,'').trim().slice(0,200),
+      title:decodeHTML((it.querySelector('title')?.textContent||'').trim()),
+      desc: decodeHTML((it.querySelector('description')?.textContent||'').replace(/<[^>]+>/g,'').trim().slice(0,220)),
       link: (it.querySelector('link')?.textContent||'').trim(),
       date: new Date(it.querySelector('pubDate')?.textContent||0),
       name:f.name, color:f.color, bord:f.bord
@@ -1224,6 +1380,7 @@ function cardHTML(a, hot=false){
         ${a.desc?`<div class="list-card-desc">${esc(a.desc)}</div>`:''}
         <div class="list-card-foot">
           <a class="list-card-link" style="color:${a.color}" href="${u}" target="_blank" onclick="event.stopPropagation()">Lire →</a>
+          <button onclick="event.stopPropagation();openReading(${JSON.stringify(a.title)},${JSON.stringify(a.desc||'')},${JSON.stringify(u)},${JSON.stringify(a.name)})" style="background:transparent;border:none;color:var(--gray);font-size:.72rem;cursor:pointer;padding:.15rem .4rem;font-family:inherit;vertical-align:middle" title="Mode lecture">📖</button>
           ${shareHTML}
         </div>
       </div></div>`;
@@ -1652,6 +1809,7 @@ function showTab(id,el){
   if(id==='sond'&&!chartsReady)renderPolls();
   if(id==='debats')renderDebats();
   if(id==='outils'){renderPopScore();renderWordCloud();renderEvolChart();}
+  if(id==='carte'){loadCarte();}
 }
 
 // ── DÉBATS POLITIQUES PAR THÈME ──────────────────────────────────────
@@ -2005,6 +2163,38 @@ async function doResume(){
 }
 
 // ── DÉTECTEUR DE BIAIS ────────────────────────────────────────────────
+async function doFactCheck(){
+  const claim = document.getElementById('factInput').value.trim();
+  const btn = document.getElementById('factBtn');
+  const result = document.getElementById('factResult');
+  if(!claim || claim.length < 10) return;
+  btn.disabled=true; btn.textContent='Vérification en cours...';
+  result.style.display='none';
+  const tops = allArticles.slice(0,40).map((a,i)=>(i+1)+'. '+a.title+' ('+a.name+')').join('\n');
+  try {
+    const resp = await fetch('/ai-compare',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:[{role:'user',content:'Affirmation : "'+claim+'"\n\nArticles récents :\n'+tops+'\n\nVérifie cette affirmation. Réponds EXACTEMENT ainsi :\nVERDICT: [VRAI / FAUX / PARTIELLEMENT VRAI / NON VÉRIFIABLE]\nEXPLICATION: [2-3 phrases factuelles]\nSOURCE: [source si trouvée sinon "Non trouvée dans les articles récents"]'}]})
+    });
+    const d = await resp.json();
+    const txt = d.content?.[0]?.text || '';
+    const getV = (k) => { const m = txt.match(new RegExp(k+':\\s*(.+)')); return m ? m[1].trim() : ''; };
+    const verdict = getV('VERDICT') || 'NON VÉRIFIABLE';
+    const expl = getV('EXPLICATION') || txt;
+    const src = getV('SOURCE') || '';
+    const col = verdict.includes('VRAI') && !verdict.includes('PARTIELLEMENT') && !verdict.includes('FAUX') ? '#059669' :
+                verdict.includes('FAUX') ? '#DC2626' : '#D97706';
+    result.style.display='block';
+    result.innerHTML='<div style="font-weight:700;font-size:.9rem;color:'+col+';margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem">'+
+      (col==='#059669'?'✅':col==='#DC2626'?'❌':'⚠️')+' '+esc(verdict)+'</div>'+
+      '<div style="font-size:.82rem;color:var(--text);line-height:1.6;margin-bottom:.4rem">'+esc(expl)+'</div>'+
+      (src?'<div style="font-size:.73rem;color:var(--gray);font-style:italic">📎 '+esc(src)+'</div>':'');
+  } catch(e) {
+    result.style.display='block';
+    result.innerHTML='<div style="color:var(--gray);font-size:.82rem">Erreur de connexion.</div>';
+  }
+  btn.disabled=false; btn.textContent='✅ Vérifier cette affirmation';
+}
+
 async function doBiais(){
   const txt = document.getElementById('biaisInput').value.trim();
   if(!txt) return;
@@ -2083,9 +2273,228 @@ function hidePubsForPremium(){
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────
+// ── CARTE FRANCE ─────────────────────────────────────────────────────
+const CARTE_COULEURS = {gauche:'#CC0000',centre:'#0066CC',droite:'#1E3A6E',rn:'#003189',divers:'#888'};
+const CARTE_DATA = {
+  '01':{n:'Ain',b:'droite',g:'Droite/LR',s:'51%'},'02':{n:'Aisne',b:'rn',g:'RN',s:'48%'},
+  '03':{n:'Allier',b:'gauche',g:'Gauche',s:'52%'},'04':{n:'Alpes-de-Haute-Provence',b:'rn',g:'RN',s:'49%'},
+  '05':{n:'Hautes-Alpes',b:'droite',g:'Droite',s:'50%'},'06':{n:'Alpes-Maritimes',b:'rn',g:'RN (Ciotti)',s:'53%'},
+  '07':{n:'Ardèche',b:'droite',g:'Droite',s:'54%'},'08':{n:'Ardennes',b:'rn',g:'RN',s:'51%'},
+  '09':{n:'Ariège',b:'gauche',g:'Gauche',s:'55%'},'10':{n:'Aube',b:'droite',g:'Droite',s:'50%'},
+  '11':{n:'Aude',b:'gauche',g:'Gauche',s:'51%'},'12':{n:'Aveyron',b:'droite',g:'Droite',s:'58%'},
+  '13':{n:'Bouches-du-Rhône',b:'gauche',g:'Gauche (Payan)',s:'52%'},'14':{n:'Calvados',b:'centre',g:'Centre',s:'50%'},
+  '15':{n:'Cantal',b:'droite',g:'Droite',s:'62%'},'16':{n:'Charente',b:'gauche',g:'Gauche',s:'51%'},
+  '17':{n:'Charente-Maritime',b:'droite',g:'Droite',s:'50%'},'18':{n:'Cher',b:'gauche',g:'Gauche',s:'52%'},
+  '19':{n:'Corrèze',b:'droite',g:'Droite',s:'55%'},'2A':{n:'Corse-du-Sud',b:'divers',g:'Nationalistes',s:'58%'},
+  '2B':{n:'Haute-Corse',b:'divers',g:'Nationalistes',s:'61%'},'21':{n:'Côte-d'Or',b:'droite',g:'Droite',s:'52%'},
+  '22':{n:'Côtes-d'Armor',b:'gauche',g:'Gauche',s:'56%'},'23':{n:'Creuse',b:'gauche',g:'Gauche',s:'53%'},
+  '24':{n:'Dordogne',b:'gauche',g:'Gauche',s:'51%'},'25':{n:'Doubs',b:'droite',g:'Droite',s:'51%'},
+  '26':{n:'Drôme',b:'droite',g:'Droite',s:'50%'},'27':{n:'Eure',b:'rn',g:'RN',s:'49%'},
+  '28':{n:'Eure-et-Loir',b:'centre',g:'Centre',s:'50%'},'29':{n:'Finistère',b:'gauche',g:'Gauche',s:'58%'},
+  '30':{n:'Gard',b:'rn',g:'RN',s:'52%'},'31':{n:'Haute-Garonne',b:'gauche',g:'Gauche (Toulouse)',s:'55%'},
+  '32':{n:'Gers',b:'gauche',g:'Gauche',s:'53%'},'33':{n:'Gironde',b:'gauche',g:'Gauche (Bordeaux)',s:'53%'},
+  '34':{n:'Hérault',b:'gauche',g:'Gauche (Montpellier)',s:'51%'},'35':{n:'Ille-et-Vilaine',b:'gauche',g:'Gauche',s:'57%'},
+  '36':{n:'Indre',b:'droite',g:'Droite',s:'51%'},'37':{n:'Indre-et-Loire',b:'centre',g:'Centre',s:'51%'},
+  '38':{n:'Isère',b:'gauche',g:'Gauche',s:'51%'},'39':{n:'Jura',b:'droite',g:'Droite',s:'53%'},
+  '40':{n:'Landes',b:'gauche',g:'Gauche',s:'54%'},'41':{n:'Loir-et-Cher',b:'droite',g:'Droite',s:'52%'},
+  '42':{n:'Loire',b:'droite',g:'Droite',s:'51%'},'43':{n:'Haute-Loire',b:'droite',g:'Droite',s:'57%'},
+  '44':{n:'Loire-Atlantique',b:'gauche',g:'Gauche (Nantes)',s:'54%'},'45':{n:'Loiret',b:'centre',g:'Centre',s:'50%'},
+  '46':{n:'Lot',b:'droite',g:'Droite',s:'56%'},'47':{n:'Lot-et-Garonne',b:'rn',g:'RN',s:'50%'},
+  '48':{n:'Lozère',b:'droite',g:'Droite',s:'60%'},'49':{n:'Maine-et-Loire',b:'droite',g:'Droite',s:'53%'},
+  '50':{n:'Manche',b:'droite',g:'Droite (Philippe)',s:'54%'},'51':{n:'Marne',b:'centre',g:'Centre',s:'51%'},
+  '52':{n:'Haute-Marne',b:'droite',g:'Droite',s:'53%'},'53':{n:'Mayenne',b:'droite',g:'Droite',s:'58%'},
+  '54':{n:'Meurthe-et-Moselle',b:'gauche',g:'Gauche (Nancy)',s:'52%'},'55':{n:'Meuse',b:'rn',g:'RN',s:'50%'},
+  '56':{n:'Morbihan',b:'droite',g:'Droite',s:'52%'},'57':{n:'Moselle',b:'rn',g:'RN',s:'51%'},
+  '58':{n:'Nièvre',b:'gauche',g:'Gauche',s:'53%'},'59':{n:'Nord',b:'gauche',g:'Gauche (Lille)',s:'50%'},
+  '60':{n:'Oise',b:'rn',g:'RN',s:'50%'},'61':{n:'Orne',b:'droite',g:'Droite',s:'52%'},
+  '62':{n:'Pas-de-Calais',b:'rn',g:'RN',s:'53%'},'63':{n:'Puy-de-Dôme',b:'gauche',g:'Gauche (Clermont)',s:'51%'},
+  '64':{n:'Pyrénées-Atlantiques',b:'gauche',g:'Gauche',s:'52%'},'65':{n:'Hautes-Pyrénées',b:'gauche',g:'Gauche',s:'54%'},
+  '66':{n:'Pyrénées-Orientales',b:'rn',g:'RN (Perpignan)',s:'55%'},'67':{n:'Bas-Rhin',b:'centre',g:'Centre (Strasbourg)',s:'50%'},
+  '68':{n:'Haut-Rhin',b:'droite',g:'Droite',s:'51%'},'69':{n:'Rhône',b:'gauche',g:'Gauche (Lyon-Doucet)',s:'51%'},
+  '70':{n:'Haute-Saône',b:'droite',g:'Droite',s:'52%'},'71':{n:'Saône-et-Loire',b:'gauche',g:'Gauche',s:'52%'},
+  '72':{n:'Sarthe',b:'droite',g:'Droite',s:'51%'},'73':{n:'Savoie',b:'droite',g:'Droite',s:'54%'},
+  '74':{n:'Haute-Savoie',b:'droite',g:'Droite',s:'55%'},'75':{n:'Paris',b:'gauche',g:'Gauche (Grégoire)',s:'54%'},
+  '76':{n:'Seine-Maritime',b:'gauche',g:'Gauche',s:'50%'},'77':{n:'Seine-et-Marne',b:'centre',g:'Centre',s:'50%'},
+  '78':{n:'Yvelines',b:'droite',g:'Droite',s:'52%'},'79':{n:'Deux-Sèvres',b:'gauche',g:'Gauche',s:'52%'},
+  '80':{n:'Somme',b:'rn',g:'RN',s:'51%'},'81':{n:'Tarn',b:'gauche',g:'Gauche',s:'50%'},
+  '82':{n:'Tarn-et-Garonne',b:'gauche',g:'Gauche',s:'51%'},'83':{n:'Var',b:'rn',g:'RN (Lavalette)',s:'56%'},
+  '84':{n:'Vaucluse',b:'rn',g:'RN',s:'54%'},'85':{n:'Vendée',b:'droite',g:'Droite',s:'61%'},
+  '86':{n:'Vienne',b:'gauche',g:'Gauche',s:'51%'},'87':{n:'Haute-Vienne',b:'gauche',g:'Gauche (Limoges)',s:'55%'},
+  '88':{n:'Vosges',b:'droite',g:'Droite',s:'52%'},'89':{n:'Yonne',b:'droite',g:'Droite',s:'51%'},
+  '90':{n:'Territoire de Belfort',b:'gauche',g:'Gauche',s:'51%'},'91':{n:'Essonne',b:'gauche',g:'Gauche',s:'52%'},
+  '92':{n:'Hauts-de-Seine',b:'centre',g:'Centre',s:'51%'},'93':{n:'Seine-Saint-Denis',b:'gauche',g:'Gauche/LFI',s:'58%'},
+  '94':{n:'Val-de-Marne',b:'gauche',g:'Gauche',s:'54%'},  '95':{n:'Val-d\'Oise',b:'rn',g:'RN',s:'50%'},
+  '971':{n:'Guadeloupe',b:'gauche',g:'Gauche',s:'55%'},
+  '972':{n:'Martinique',b:'divers',g:'Divers gauche',s:'58%'},
+  '973':{n:'Guyane',b:'gauche',g:'Gauche',s:'53%'},
+  '974':{n:'La Réunion',b:'gauche',g:'Gauche',s:'51%'},
+  '976':{n:'Mayotte',b:'divers',g:'Divers',s:'52%'},
+};
+
+let carteLoaded = false;
+
+function setCarteFiltre(bord, el) {
+  document.querySelectorAll('[id^="cfb-"]').forEach(b => {
+    b.classList.remove('on');
+    b.style.background='';
+  });
+  el.classList.add('on');
+  if(bord === 'all') el.style.background='var(--blue)';
+  else el.style.background = CARTE_COULEURS[bord];
+  el.style.color = '#fff';
+  document.querySelectorAll('#france-map path').forEach(function(p) {
+    const code = p.getAttribute('data-code');
+    const res = CARTE_DATA[code];
+    if(!res) return;
+    p.style.opacity = bord === 'all' || res.b === bord ? '1' : '0.15';
+  });
+}
+
+function loadCarte() {
+  if(carteLoaded) return;
+  carteLoaded = true;
+  const svg = document.getElementById('france-map');
+  if(!svg) return;
+
+  // Load D3 dynamically
+  const d3Script = document.createElement('script');
+  d3Script.src = 'https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js';
+  d3Script.onload = function() {
+    const w = 800, h = 560;
+    const d3svg = d3.select('#france-map').attr('viewBox', '0 0 ' + w + ' ' + h);
+    const proj = d3.geoConicConformal().center([2.5, 46.5]).scale(2600).translate([w/2 - 60, h/2]);
+    const path = d3.geoPath().projection(proj);
+    const tooltip = document.getElementById('map-tooltip');
+
+    d3.json('https://cdn.jsdelivr.net/npm/france-geojson@1.0.0/departements-avec-outre-mer.geojson').then(function(geo) {
+      d3svg.selectAll('path')
+        .data(geo.features)
+        .join('path')
+        .attr('d', path)
+        .attr('data-code', function(d) { return d.properties.code; })
+        .attr('fill', function(d) {
+          const res = CARTE_DATA[d.properties.code];
+          return res ? CARTE_COULEURS[res.b] : '#ccc';
+        })
+        .attr('stroke', '#fff')
+        .attr('stroke-width', 0.5)
+        .style('cursor', 'pointer')
+        .style('transition', 'opacity .15s')
+        .on('mousemove', function(event, d) {
+          const res = CARTE_DATA[d.properties.code];
+          if(!res) return;
+          const rect = svg.getBoundingClientRect();
+          tooltip.style.display = 'block';
+          tooltip.style.left = (event.clientX - rect.left + 12) + 'px';
+          tooltip.style.top = (event.clientY - rect.top - 10) + 'px';
+          tooltip.innerHTML = '<strong style="font-size:.82rem">' + res.n + '</strong><br>' +
+            '<span style="color:' + CARTE_COULEURS[res.b] + ';font-size:.75rem">' + res.g + '</span><br>' +
+            '<span style="font-size:.7rem;opacity:.7">' + res.s + ' des suffrages</span>';
+        })
+        .on('mouseleave', function() { tooltip.style.display = 'none'; });
+
+      const counts = {gauche:0,centre:0,droite:0,rn:0,divers:0};
+      Object.values(CARTE_DATA).forEach(function(r) { if(counts[r.b] !== undefined) counts[r.b]++; });
+      document.getElementById('cs-gauche').textContent = counts.gauche;
+      document.getElementById('cs-centre').textContent = counts.centre;
+      document.getElementById('cs-droite').textContent = counts.droite;
+      document.getElementById('cs-rn').textContent = counts.rn;
+      document.getElementById('cs-divers').textContent = counts.divers;
+    }).catch(function() {
+      svg.innerHTML = '<text x="400" y="280" text-anchor="middle" fill="#888" font-size="14">Chargement en cours...</text>';
+    });
+  };
+  document.head.appendChild(d3Script);
+}
+
 loadAll();
 window._refreshTimer = setInterval(loadAll, 600000);
+
+// Vérifier les alertes bouton notif
+(function(){
+  const btn = document.getElementById('notif-btn');
+  if(btn && localStorage.getItem('notif-enabled')) {
+    btn.textContent = '🔔 Alertes ON';
+    btn.style.background = '#238636';
+  }
+})();
 function setRefreshRate(ms){clearInterval(window._refreshTimer);window._refreshTimer=setInterval(loadAll,ms);}
+// ── PWA INSTALL ──────────────────────────────────────────────────────
+let _deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  _deferredPrompt = e;
+  const banner = document.getElementById('pwa-banner');
+  if (banner && !localStorage.getItem('pwa-dismissed')) {
+    banner.style.display = 'flex';
+  }
+});
+function installPWA() {
+  if (_deferredPrompt) {
+    _deferredPrompt.prompt();
+    _deferredPrompt.userChoice.then(function(r) {
+      if (r.outcome === 'accepted') {
+        document.getElementById('pwa-banner').style.display = 'none';
+        localStorage.setItem('pwa-dismissed', '1');
+      }
+      _deferredPrompt = null;
+    });
+  }
+}
+window.addEventListener('appinstalled', function() {
+  document.getElementById('pwa-banner').style.display = 'none';
+});
+
+// ── SERVICE WORKER ────────────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(function() {});
+}
+
+// ── NOTIFICATIONS PUSH ────────────────────────────────────────────────
+async function requestNotifications() {
+  const btn = document.getElementById('notif-btn');
+  if (!('Notification' in window)) {
+    alert('Votre navigateur ne supporte pas les notifications.');
+    return;
+  }
+  if (Notification.permission === 'granted') {
+    localStorage.setItem('notif-enabled', '1');
+    if(btn) { btn.textContent = '🔔 Alertes ON'; btn.style.background = '#238636'; }
+    return;
+  }
+  const perm = await Notification.requestPermission();
+  if (perm === 'granted') {
+    localStorage.setItem('notif-enabled', '1');
+    if(btn) { btn.textContent = '🔔 Alertes ON'; btn.style.background = '#238636'; }
+    new Notification('République — Alertes activées', {
+      body: 'Vous recevrez des alertes pour les breaking news politiques.',
+      icon: '/icon-192.png'
+    });
+  }
+}
+
+function checkBreakingNews(articles) {
+  if (!localStorage.getItem('notif-enabled')) return;
+  if (Notification.permission !== 'granted') return;
+  const lastNotif = localStorage.getItem('last-notif-title') || '';
+  const breaking = articles.find(function(a) {
+    return (a.title.toLowerCase().includes('direct') ||
+            a.title.toLowerCase().includes('breaking') ||
+            a.title.toLowerCase().includes('urgent') ||
+            a.title.toLowerCase().includes('démission') ||
+            a.title.toLowerCase().includes('dissolution')) &&
+           a.title !== lastNotif;
+  });
+  if (breaking) {
+    localStorage.setItem('last-notif-title', breaking.title);
+    new Notification('🔴 ' + breaking.name, {
+      body: breaking.title,
+      icon: '/icon-192.png',
+      tag: 'breaking-news'
+    });
+  }
+}
+
 async function checkElectionMode(){
   try{
     const r=await fetch('/election-mode');
@@ -2097,6 +2506,84 @@ async function checkElectionMode(){
 }
 setInterval(checkElectionMode,60000);
 checkElectionMode();
+
+// ── PWA SERVICE WORKER ─────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').then(function(reg) {
+    console.log('SW registered');
+    // Vérifier si mise à jour disponible
+    reg.addEventListener('updatefound', function() {
+      const newWorker = reg.installing;
+      newWorker.addEventListener('statechange', function() {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          showInstallBanner('Mise à jour disponible — rechargez la page');
+        }
+      });
+    });
+  }).catch(function(err) { console.log('SW error:', err); });
+}
+
+// ── BOUTON INSTALLATION PWA ────────────────────────────────────────
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  deferredPrompt = e;
+  showInstallBanner('Installer République sur votre écran d'accueil');
+});
+
+function showInstallBanner(msg) {
+  const existing = document.getElementById('install-banner');
+  if (existing) return;
+  const banner = document.createElement('div');
+  banner.id = 'install-banner';
+  banner.style.cssText = 'position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);background:#0D2B6E;color:#fff;padding:.7rem 1.2rem;border-radius:50px;font-size:.8rem;font-weight:600;z-index:9999;display:flex;align-items:center;gap:.7rem;box-shadow:0 4px 20px rgba(0,0,0,.3);cursor:pointer;white-space:nowrap';
+  banner.innerHTML = '📱 ' + msg + ' <button onclick="installPWA()" style="background:gold;color:#1A1A1A;border:none;padding:.3rem .8rem;border-radius:50px;font-size:.75rem;font-weight:700;cursor:pointer">Installer</button><button onclick="this.parentNode.remove()" style="background:transparent;border:none;color:rgba(255,255,255,.6);cursor:pointer;font-size:1rem">✕</button>';
+  document.body.appendChild(banner);
+  setTimeout(() => banner.remove(), 15000);
+}
+
+async function installPWA() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const choice = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById('install-banner')?.remove();
+}
+
+// ── NOTIFICATIONS PUSH ─────────────────────────────────────────────
+async function requestPushPermission() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'granted') {
+    document.getElementById('notif-btn') && (document.getElementById('notif-btn').textContent = '🔔 Alertes ON');
+    return;
+  }
+  const perm = await Notification.requestPermission();
+  if (perm === 'granted') {
+    document.getElementById('notif-btn') && (document.getElementById('notif-btn').textContent = '🔔 Alertes ON');
+    subscribeToBreakingNews();
+  }
+}
+
+function subscribeToBreakingNews() {
+  // Vérification périodique des breaking news via les articles RSS
+  setInterval(function() {
+    if (allArticles.length < 2) return;
+    const latest = allArticles[0];
+    const lastSeen = localStorage.getItem('lastNotifTitle');
+    if (latest.title !== lastSeen && Notification.permission === 'granted') {
+      const now = new Date();
+      const articleAge = (now - new Date(latest.date)) / 1000 / 60;
+      if (articleAge < 5) { // Article de moins de 5 min
+        new Notification('🇫🇷 République — Actu en direct', {
+          body: latest.title,
+          icon: '/icon-192.png',
+          tag: 'breaking'
+        });
+        localStorage.setItem('lastNotifTitle', latest.title);
+      }
+    }
+  }, 120000); // Vérifier toutes les 2 min
+}
 </script>
 <!-- AdSense init -->
 <script>
@@ -2104,5 +2591,32 @@ checkElectionMode();
 (adsbygoogle=window.adsbygoogle||[]).push({});
 (adsbygoogle=window.adsbygoogle||[]).push({});
 </script>
+<!-- MODE LECTURE -->
+<div id="reading-overlay" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:9998;overflow-y:auto;padding:2rem 1rem">
+  <div style="max-width:700px;margin:0 auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+      <span style="font-size:.8rem;color:var(--gray)" id="reading-source"></span>
+      <button onclick="closeReading()" style="background:var(--card);border:1px solid var(--border);border-radius:50px;padding:.4rem 1rem;cursor:pointer;font-size:.82rem;color:var(--text);font-family:inherit">✕ Fermer</button>
+    </div>
+    <h1 id="reading-title" style="font-size:1.5rem;font-weight:800;line-height:1.3;color:var(--text);margin-bottom:1rem"></h1>
+    <div id="reading-desc" style="font-size:1rem;color:var(--gray);line-height:1.8;margin-bottom:1.5rem"></div>
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.2rem">
+      <a id="reading-link" href="#" target="_blank" style="display:inline-block;background:var(--blue);color:#fff;padding:.6rem 1.3rem;border-radius:50px;text-decoration:none;font-weight:700;font-size:.82rem">Lire l'article complet →</a>
+      <button id="reading-sum-btn" onclick="doReadingSummary()" style="background:var(--card);border:1.5px solid var(--border);color:var(--text);padding:.6rem 1.1rem;border-radius:50px;font-size:.82rem;cursor:pointer;font-family:inherit">🤖 Résumé IA</button>
+      <button id="reading-fc-btn" onclick="doFactCheck()" style="background:var(--card);border:1.5px solid #F59E0B;color:#F59E0B;padding:.6rem 1.1rem;border-radius:50px;font-size:.82rem;cursor:pointer;font-family:inherit">🔍 Fact-check</button>
+    </div>
+    <!-- Résumé IA -->
+    <div id="reading-summary-box" style="display:none;background:var(--card);border-left:3px solid var(--blue);padding:1rem 1.2rem;border-radius:0 8px 8px 0;margin-bottom:1rem">
+      <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;color:var(--blue);margin-bottom:.5rem">🤖 Résumé IA</div>
+      <div id="reading-summary-text" style="font-size:.88rem;color:var(--text);line-height:1.7"></div>
+    </div>
+    <!-- Fact-check -->
+    <div id="reading-fc-box" style="display:none;background:#FFFBEB;border:1px solid #FCD34D;border-radius:8px;padding:1rem 1.2rem;margin-bottom:1rem">
+      <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;color:#D97706;margin-bottom:.5rem">🔍 Fact-check IA</div>
+      <div id="reading-fc-text" style="font-size:.88rem;color:#1A1A1A;line-height:1.7"></div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
