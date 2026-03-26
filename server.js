@@ -270,7 +270,7 @@ function buildEmailHTML(type, data) {
 async function sendToMailchimp(type, htmlContent, subject) {
   if (!MC_API_KEY || !MC_LIST_ID) { console.error('Mailchimp non configuré'); return false; }
   const recipients = type === 'premium'
-    ? { list_id: MC_LIST_ID, segment_opts: { match: 'all', conditions: [{ condition_type: 'StaticSegment', field: 'static_segment', op: 'static_is', value: 'premium' }] } }
+    ? { list_id: MC_LIST_ID, segment_opts: { match: 'all', conditions: [{ condition_type: 'Tags', field: 'tags', op: 'contains', value: 'premium' }] } }
     : { list_id: MC_LIST_ID };
 
   const campaignResp = await fetch('https://' + MC_SERVER + '.api.mailchimp.com/3.0/campaigns', {

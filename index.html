@@ -426,6 +426,13 @@ footer em{color:var(--red);font-style:normal}
 <body>
 
 <!-- TICKER ACTUALITÉS EN DIRECT -->
+<!-- BANNIÈRE SOIRÉE ÉLECTORALE -->
+<div id="election-banner" style="display:none;background:#CC0000;color:#fff;padding:.5rem 1.2rem;align-items:center;justify-content:center;gap:.7rem;font-size:.82rem;font-weight:700">
+  <span style="animation:pulse 1s infinite">🔴</span>
+  SOIRÉE ÉLECTORALE — Actualisation automatique toutes les 2 minutes
+  <span style="font-size:.7rem;opacity:.8">18h-23h</span>
+</div>
+
 <div class="ticker-wrap" id="tickerWrap" style="display:none">
   <div class="ticker-label">🔴 Direct</div>
   <div class="ticker-inner">
@@ -514,6 +521,15 @@ footer em{color:var(--red);font-style:normal}
 
 <!-- ACTUALITÉS -->
 <div id="s-actu" class="sec on">
+  <!-- Recherche mot-clé sans API -->
+  <div style="display:flex;gap:.5rem;margin-bottom:.7rem;flex-wrap:wrap">
+    <input id="kwSearch" type="text" placeholder="🔍 Recherche rapide par mot-clé..."
+      oninput="filterByKeyword(this.value)"
+      style="flex:1;min-width:200px;padding:.48rem 1rem;border-radius:50px;border:1.5px solid var(--border);background:var(--card);color:var(--text);font-size:.82rem;font-family:inherit;outline:none">
+    <button onclick="document.getElementById('kwSearch').value='';filterByKeyword('')"
+      style="padding:.48rem 1rem;border-radius:50px;border:1.5px solid var(--border);background:var(--card);color:var(--gray);font-size:.78rem;cursor:pointer;font-family:inherit">✕</button>
+  </div>
+
   <div class="fbar">
     <span class="flbl">Bord :</span>
     <div class="chip c-all on" onclick="filt('all',this)">Tous</div>
@@ -522,6 +538,16 @@ footer em{color:var(--red);font-style:normal}
     <div class="chip c-droite"  onclick="filt('droite',this)">▶ Droite</div>
     <div class="chip c-eco"     onclick="filt('eco',this)">$ Économie</div>
     <div class="chip c-public"  onclick="filt('public',this)">📺 Public</div>
+  </div>
+
+  <!-- Filtre par région -->
+  <div class="fbar" style="margin-top:.4rem">
+    <span class="flbl">Région :</span>
+    <div class="chip c-all on" id="reg-all" onclick="filtRegion('all',this)">🇫🇷 Toutes</div>
+    <div class="chip" id="reg-national" onclick="filtRegion('national',this)" style="background:#0066CC22;color:#0066CC;border-color:#0066CC44">📡 National</div>
+    <div class="chip" id="reg-idf" onclick="filtRegion('idf',this)" style="background:#66339922;color:#663399;border-color:#66339944">🏙️ Île-de-France</div>
+    <div class="chip" id="reg-paca" onclick="filtRegion('paca',this)" style="background:#FF660022;color:#FF6600;border-color:#FF660044">☀️ PACA</div>
+    <div class="chip" id="reg-om" onclick="filtRegion('outremer',this)" style="background:#00990022;color:#009900;border-color:#00990044">🌴 Outre-mer</div>
   </div>
   <!-- Toggle vue grille / liste -->
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
@@ -546,8 +572,9 @@ footer em{color:var(--red);font-style:normal}
         <div class="sidebar-box-title">📅 Prochaines élections</div>
         <div style="font-size:.79rem;color:var(--text);line-height:1.7">
           <div style="padding:.3rem 0;border-bottom:1px solid var(--border)">🗳️ <strong>Municipales 2e tour</strong><br><span style="color:var(--gray);font-size:.72rem">22 mars 2026</span></div>
+          <div style="padding:.3rem 0;border-bottom:1px solid var(--border)">✅ <strong>Municipales — 2e tour</strong><br><span style="color:#059669;font-size:.72rem">22 mars 2026 — résultats ce soir</span></div>
           <div style="padding:.3rem 0;border-bottom:1px solid var(--border)">🏛️ <strong>Sénatoriales</strong><br><span style="color:var(--gray);font-size:.72rem">Septembre 2026</span></div>
-          <div style="padding:.3rem 0;border-bottom:1px solid var(--border)">🇫🇷 <strong>Présidentielle</strong><br><span style="color:var(--gray);font-size:.72rem">Avril 2027</span></div>
+          <div style="padding:.3rem 0;border-bottom:1px solid var(--border)">🇫🇷 <strong>Présidentielle</strong><br><span style="color:var(--gray);font-size:.72rem">Avril-Mai 2027</span></div>
           <div style="padding:.3rem 0">📜 <strong>Législatives</strong><br><span style="color:var(--gray);font-size:.72rem">Juin 2027</span></div>
         </div>
       </div>
@@ -653,10 +680,14 @@ footer em{color:var(--red);font-style:normal}
 <div id="s-cal" class="sec">
   <div class="stitle">Calendrier électoral 2026–2029</div>
   <div class="calist">
-    <div class="caev"><div class="cadt"><div class="caday">22</div><div class="camon">Mar</div></div><div><div class="cat">Municipales — 2e tour</div><div class="cad">Second tour dans les communes sans majorité</div></div><span class="cabadge b-g">Municipales</span></div>
-    <div class="caev"><div class="cadt"><div class="caday">Sep</div><div class="camon">2026</div></div><div><div class="cat">Élections Sénatoriales</div><div class="cad">Renouvellement de la moitié du Sénat</div></div><span class="cabadge b-p">Sénatoriales</span></div>
-    <div class="caev"><div class="cadt"><div class="caday">Avr</div><div class="camon">2027</div></div><div><div class="cat">Élection Présidentielle</div><div class="cad">1er et 2e tour — Président de la République</div></div><span class="cabadge b-r">Présidentielle</span></div>
-    <div class="caev"><div class="cadt"><div class="caday">Jun</div><div class="camon">2027</div></div><div><div class="cat">Élections Législatives</div><div class="cad">Renouvellement des 577 députés</div></div><span class="cabadge b-r">Législatives</span></div>
+    <div class="caev" style="opacity:.7"><div class="cadt"><div class="caday" style="background:#059669">✅</div><div class="camon">Mar</div></div><div><div class="cat">Municipales — 1er tour <span style="color:#059669;font-size:.7rem">TERMINÉ</span></div><div class="cad">15 mars 2026 — Participation : 48,9%</div></div><span class="cabadge b-g">Municipales</span></div>
+    <div class="caev" style="border:2px solid #CC0000;border-radius:10px"><div class="cadt"><div class="caday" style="background:#CC0000;color:#fff">22</div><div class="camon" style="color:#CC0000;font-weight:700">Mar</div></div><div><div class="cat" style="color:#CC0000">🔴 Municipales — 2e tour <span style="font-size:.7rem">CE SOIR</span></div><div class="cad">Marseille, Lyon, Nice, Paris... résultats à partir de 20h</div></div><span class="cabadge b-r">EN COURS</span></div>
+    <div class="caev"><div class="cadt"><div class="caday">Avr</div><div class="camon">2026</div></div><div><div class="cat">Budget rectificatif 2026</div><div class="cad">Présentation du collectif budgétaire au Parlement</div></div><span class="cabadge b-b">Budget</span></div>
+    <div class="caev"><div class="cadt"><div class="caday">Jun</div><div class="camon">2026</div></div><div><div class="cat">Présidence française du G7</div><div class="cad">Sommet des pays du G7 sous présidence française</div></div><span class="cabadge b-b">International</span></div>
+    <div class="caev"><div class="cadt"><div class="caday">Sep</div><div class="camon">2026</div></div><div><div class="cat">Élections Sénatoriales</div><div class="cad">Renouvellement de la série 2 — 170 sièges</div></div><span class="cabadge b-p">Sénatoriales</span></div>
+    <div class="caev"><div class="cadt"><div class="caday">Oct</div><div class="camon">2026</div></div><div><div class="cat">Budget 2027 au Parlement</div><div class="cad">Présentation du PLF 2027 — budget électoral</div></div><span class="cabadge b-b">Budget</span></div>
+    <div class="caev"><div class="cadt"><div class="caday">Avr</div><div class="camon">2027</div></div><div><div class="cat">Élection Présidentielle</div><div class="cad">1er tour avril · 2e tour mai 2027</div></div><span class="cabadge b-r">Présidentielle</span></div>
+    <div class="caev"><div class="cadt"><div class="caday">Jun</div><div class="camon">2027</div></div><div><div class="cat">Élections Législatives</div><div class="cad">Renouvellement des 577 députés de l'Assemblée nationale</div></div><span class="cabadge b-r">Législatives</span></div>
     <div class="caev"><div class="cadt"><div class="caday">Jun</div><div class="camon">2029</div></div><div><div class="cat">Élections Européennes</div><div class="cad">Renouvellement du Parlement européen</div></div><span class="cabadge b-b">Européennes</span></div>
   </div>
   <div class="stitle" style="margin-top:1.8rem">Actualités électorales en direct</div>
@@ -1132,7 +1163,16 @@ function clearSearch(){
 
 // ── ACTUALITÉS ────────────────────────────────────────────────────────
 function renderNews(){
-  const list=activeBord==='all'?allArticles:allArticles.filter(a=>a.bord===activeBord);
+  const list=allArticles.filter(a=>{
+    if(activeBord!=='all' && a.bord!==activeBord) return false;
+    if(typeof regionFilter!=='undefined' && regionFilter!=='all' && getArticleRegion(a)!==regionFilter) return false;
+    if(typeof kwFilter!=='undefined' && kwFilter && !(
+      a.title.toLowerCase().includes(kwFilter) ||
+      (a.desc||'').toLowerCase().includes(kwFilter) ||
+      (a.name||'').toLowerCase().includes(kwFilter)
+    )) return false;
+    return true;
+  });
   const total=list.length;
   const now=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
   document.getElementById('ncount').innerHTML=
@@ -1554,6 +1594,45 @@ function age(d){
   return d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'});
 }
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+// Recherche mot-clé sans API
+let kwFilter = '';
+let regionFilter = 'all';
+
+function filterByKeyword(val) {
+  kwFilter = val.toLowerCase().trim();
+  renderArticles();
+}
+
+function filtRegion(region, el) {
+  regionFilter = region;
+  document.querySelectorAll('[id^="reg-"]').forEach(e => e.classList.remove('on'));
+  el.classList.add('on');
+  renderArticles();
+}
+
+// Mapping sources → régions
+const SOURCE_REGION = {
+  'Le Parisien': 'idf', 'Le Monde': 'national', 'Le Figaro': 'national',
+  'Libération': 'national', 'France Info': 'national', 'BFM TV': 'national',
+  'France 24': 'national', 'Public Sénat': 'national', 'RFI': 'national',
+  'LOpinion': 'national', 'Le Point': 'national', 'Marianne': 'national',
+  'Les Échos': 'national', 'BFM Business': 'national', 'Challenges': 'national',
+  'Mediapart': 'national', 'Reporterre': 'national', 'Blast': 'national',
+  'Le Nouvel Obs': 'national', 'L Express': 'national', 'Politis': 'national',
+  'CNews': 'national', 'Causeur': 'national', 'Valeurs Actuelles': 'national',
+  'LHumanite': 'national', 'La Croix': 'national', 'Slate France': 'national',
+  'Nice Matin': 'paca', 'La Provence': 'paca',
+  'Sud Ouest': 'paca', 'La Dépêche': 'paca',
+  'Ouest France': 'bretagne',
+  'Guyane 1ere': 'outremer', 'Martinique 1ere': 'outremer',
+  'Guadeloupe 1ere': 'outremer', 'Reunion 1ere': 'outremer',
+  'Outre-mer 1ere': 'outremer', 'France-Antilles': 'outremer',
+};
+
+function getArticleRegion(a) {
+  return SOURCE_REGION[a.name] || 'national';
+}
+
 function filt(b,el){activeBord=b;newsPage=1;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');renderNews();}
 function showTab(id,el){
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
@@ -1886,13 +1965,26 @@ async function doResume(){
   document.getElementById('resumeBox').classList.remove('on');
   const tops = allArticles.slice(0,30).map((a,i)=>`${i+1}. ${a.title} (${a.name})`).join('\n');
   try{
-    const resp = await fetch('/ai',{method:'POST',headers:{'Content-Type':'application/json'},
+    const resp = await fetch('/ai-compare',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({max_tokens:600,
-        system:'Tu es un journaliste politique français neutre. Génère un résumé des 5 grandes actualités du jour en format simple. Pour chaque actualité : une ligne de titre courte puis une phrase d explication. Pas de markdown, pas de #, pas de *. Texte simple.',
+        system:'Tu es un journaliste politique français neutre. Génère un résumé des 5 grandes actualités du jour. Pour chaque actualité écris : "1. TITRE DE LACTU : Une phrase d\'explication claire et factuelle." Utilise uniquement des chiffres (1. 2. 3. 4. 5.) pour numéroter. Pas de markdown, pas de *, pas de #, pas de tirets. Texte simple et bien rédigé.',
         messages:[{role:'user',content:`Voici les 30 derniers articles :\n${tops}\n\nRésume les 5 grandes actualités politiques du jour.`}]})});
     const d = await resp.json();
     const txt = d.content?.[0]?.text||'';
-    document.getElementById('resumeText').innerHTML = esc(txt).replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>');
+    // Formater le résumé proprement : chaque ligne numérotée = un bloc
+    const lines = txt.split('\n').filter(l => l.trim());
+    const formatted = lines.map(line => {
+      const m = line.match(/^(\d+)\.\s*(.+)/);
+      if (m) {
+        const parts = m[2].split(':');
+        if (parts.length > 1) {
+          return '<div style="padding:.7rem 0;border-bottom:1px solid var(--border);display:flex;gap:.7rem;align-items:flex-start"><span style="background:#0D2B6E;color:#fff;font-weight:700;font-size:.75rem;padding:.15rem .5rem;border-radius:50px;flex-shrink:0;margin-top:.1rem">' + m[1] + '</span><div><div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:.2rem">' + esc(parts[0].trim()) + '</div><div style="font-size:.8rem;color:var(--gray);line-height:1.5">' + esc(parts.slice(1).join(':').trim()) + '</div></div></div>';
+        }
+        return '<div style="padding:.6rem 0;border-bottom:1px solid var(--border);font-size:.83rem;line-height:1.6"><strong>' + m[1] + '.</strong> ' + esc(m[2]) + '</div>';
+      }
+      return line ? '<div style="font-size:.82rem;color:var(--gray);padding:.3rem 0">' + esc(line) + '</div>' : '';
+    }).join('');
+    document.getElementById('resumeText').innerHTML = formatted || esc(txt);
     document.getElementById('resumeBox').classList.add('on');
   }catch{
     document.getElementById('resumeText').textContent='Erreur de connexion.';
@@ -1982,7 +2074,16 @@ function hidePubsForPremium(){
 
 // ── INIT ──────────────────────────────────────────────────────────────
 loadAll();
-setInterval(loadAll,600000);
+window._refreshTimer = setInterval(loadAll, 600000);
+function setRefreshRate(ms){clearInterval(window._refreshTimer);window._refreshTimer=setInterval(loadAll,ms);}
+function checkElectionMode(){
+  const h=new Date().getHours();
+  const b=document.getElementById('election-banner');
+  if(h>=18&&h<=23){setRefreshRate(120000);if(b)b.style.display='flex';}
+  else{setRefreshRate(600000);if(b)b.style.display='none';}
+}
+setInterval(checkElectionMode,60000);
+checkElectionMode();
 </script>
 <!-- AdSense init -->
 <script>
