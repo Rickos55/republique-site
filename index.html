@@ -1275,7 +1275,18 @@ async function fetchFeed(f){
     return[...xml.querySelectorAll('item')].slice(0,10).map(it=>({
       title:decodeHTML((it.querySelector('title')?.textContent||'').trim()),
       desc: decodeHTML((it.querySelector('description')?.textContent||'').replace(/<[^>]+>/g,'').trim().slice(0,220)),
-      link: (it.querySelector('link')?.textContent||'').trim(),
+      link: (function(){
+        // Try standard RSS link text content first
+        const linkEl = it.querySelector('link');
+        if(linkEl && linkEl.textContent.trim().startsWith('http')) return linkEl.textContent.trim();
+        // Try Atom link href attribute
+        const atomLink = it.querySelector('link[href]');
+        if(atomLink) return atomLink.getAttribute('href');
+        // Try guid as fallback
+        const guid = it.querySelector('guid');
+        if(guid && guid.textContent.trim().startsWith('http')) return guid.textContent.trim();
+        return '';
+      })(),
       date: new Date(it.querySelector('pubDate')?.textContent||0),
       name:f.name, color:f.color, bord:f.bord
     })).filter(a=>a.title.length>6);
@@ -1442,7 +1453,7 @@ function cardHTML(a, hot=false){
     <a class="share-btn share-cp" href="#" onclick="copyLink(event,'${u}');return false">🔗</a>
   </div>`;
   if(currentView==='list'){
-    return`<div class="list-card" onclick="window.open('${u}','_blank')">
+    return`<div class="list-card" onclick="u&&u.startsWith('http')&&window.open(u,'_blank')">
       <div class="list-card-stripe" style="background:${a.color}"></div>
       <div class="list-card-body">
         <div class="list-card-head">
@@ -1453,13 +1464,13 @@ function cardHTML(a, hot=false){
         <div class="list-card-title">${t}</div>
         ${a.desc?`<div class="list-card-desc">${esc(a.desc)}</div>`:''}
         <div class="list-card-foot">
-          <a class="list-card-link" style="color:${a.color}" href="${u}" target="_blank" onclick="event.stopPropagation()">Lire →</a>
+          ${u && u.startsWith('http') ? `<a class="list-card-link" style="color:${a.color}" href="${u}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">Lire →</a>` : ''}
           <button onclick="event.stopPropagation();openReading(${JSON.stringify(a.title)},${JSON.stringify(a.desc||'')},${JSON.stringify(u)},${JSON.stringify(a.name)})" style="background:transparent;border:none;color:var(--gray);font-size:.72rem;cursor:pointer;padding:.15rem .4rem;font-family:inherit;vertical-align:middle" title="Mode lecture">📖</button>
           ${shareHTML}
         </div>
       </div></div>`;
   }
-  return`<div class="card" onclick="window.open('${u}','_blank')" style="${hot?'border-color:var(--blue);box-shadow:0 0 0 2px #0D2B6E22':''}">
+  return`<div class="card" onclick="u&&u.startsWith('http')&&window.open(u,'_blank')" style="${hot?'border-color:var(--blue);box-shadow:0 0 0 2px #0D2B6E22':''}">
     <div class="card-top" style="background:${a.color}"></div>
     <div class="card-body">
       <div class="card-head">
