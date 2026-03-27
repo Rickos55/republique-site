@@ -1278,7 +1278,7 @@ async function doFactCheck() {
 async function fetchFeed(f){
   try{
     const ctrl=new AbortController();
-    const timer=setTimeout(()=>ctrl.abort(),8000);
+    const timer=setTimeout(()=>ctrl.abort(),15000);
     const r=await fetch(`/rss?url=${encodeURIComponent(f.url)}`,{signal:ctrl.signal});
     clearTimeout(timer);
     if(!r.ok)return[];
@@ -1307,10 +1307,24 @@ async function fetchFeed(f){
 }
 
 async function loadAll(){
-  const batches=await Promise.all(FEEDS.map(fetchFeed));
+  // Charger les feeds en parallèle et afficher dès que possible
   const seen=new Set();
   const prev = allArticles.length;
-  allArticles=batches.flat()
+  let tmp = [];
+  const promises = FEEDS.map(f => fetchFeed(f).then(arts => {
+    tmp = tmp.concat(arts);
+    // Afficher les premiers articles dès qu'on en a 20+
+    if(tmp.length >= 20 && allArticles.length === 0) {
+      allArticles = tmp
+        .filter(a=>{const k=a.title.slice(0,35).toLowerCase();if(seen.has(k))return false;seen.add(k);return true;})
+        .sort((a,b)=>b.date-a.date);
+      renderNews();
+    }
+  }));
+  await Promise.all(promises);
+  const batches_flat = tmp;
+  seen.clear();
+  allArticles=batches_flat
     .filter(a=>{const k=a.title.slice(0,35).toLowerCase();if(seen.has(k))return false;seen.add(k);return true;})
     .sort((a,b)=>b.date-a.date);
   // Notification si nouveaux articles
@@ -1453,16 +1467,11 @@ function renderNews(){
   const page=list.slice(start,start+PER_PAGE);
   const g=document.getElementById('ngrid');
   if(!page.length){
-    const retry = window._retryCount || 0;
-    g.innerHTML = retry < 3
-      ? '<div class="center-box"><div class="spinner"></div><p>Chargement des articles…</p></div>'
-      : `<div class="center-box" style="padding:2rem;text-align:center">
-          <div style="font-size:2rem;margin-bottom:.5rem">📡</div>
-          <p style="color:var(--gray);margin-bottom:1rem">Aucun article chargé.</p>
-          <button onclick="window._retryCount=0;loadAll()" style="padding:.6rem 1.4rem;border-radius:50px;border:1.5px solid var(--blue);background:var(--blue);color:#fff;cursor:pointer;font-size:.85rem;font-family:inherit;font-weight:600">
-            🔄 Recharger les articles
-          </button>
-        </div>`;
+    if(allArticles.length === 0) {
+      g.innerHTML='<div class="center-box"><div class="spinner"></div><p>Chargement des articles…</p></div>';
+    } else {
+      g.innerHTML='<div class="center-box"><p>Aucun article pour ce filtre.</p></div>';
+    }
     return;
   }
   g.className='grid';
@@ -1914,6 +1923,9 @@ const SOURCE_REGION = {
   'Polynesie 1ere': 'outremer', 'Outre-mer 1ere': 'outremer',
   'France Guyane': 'outremer', 'Radio Peyi': 'outremer',
   'LInfo Reunion': 'outremer', 'Martinique Actu': 'outremer',
+  '20 Minutes': 'national', 'L Incorrect': 'national', 'Le Media': 'national',
+  'Acrimed': 'national', 'Le Monde FR': 'national', 'TV5 Monde': 'national',
+  'Le Courrier Int': 'national', 'AFP Politique': 'national',
 };
 
 function getArticleRegion(a) {
