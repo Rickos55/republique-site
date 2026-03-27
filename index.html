@@ -1308,6 +1308,10 @@ async function loadAll(){
   newsPage=1; chartsReady=false;
   renderNews(); renderPoliticians(); renderPolls(); renderCalendar();
   updateSidebar(); updateTicker();
+  // Si 0 articles, réessayer automatiquement après 5 secondes (serveur Render qui redémarre)
+  if(allArticles.length === 0) {
+    setTimeout(loadAll, 5000);
+  }
 }
 
 // ── PAGINATION ────────────────────────────────────────────────────────
@@ -1429,7 +1433,16 @@ function renderNews(){
   const start=(newsPage-1)*PER_PAGE;
   const page=list.slice(start,start+PER_PAGE);
   const g=document.getElementById('ngrid');
-  if(!page.length){g.innerHTML=`<div class="center-box"><p>Aucun article chargé.</p></div>`;return;}
+  if(!page.length){
+    g.innerHTML=`<div class="center-box" style="padding:2rem;text-align:center">
+      <div style="font-size:2rem;margin-bottom:.5rem">📡</div>
+      <p style="color:var(--gray);margin-bottom:1rem">Chargement des articles en cours...</p>
+      <button onclick="loadAll()" style="padding:.6rem 1.4rem;border-radius:50px;border:1.5px solid var(--blue);background:var(--blue);color:#fff;cursor:pointer;font-size:.85rem;font-family:inherit;font-weight:600">
+        🔄 Recharger les articles
+      </button>
+    </div>`;
+    return;
+  }
   g.className='grid';
   g.innerHTML=page.map(a=>cardHTML(a,false)).join('');
   renderPag('newsPag',newsPage,total,'goNP');
