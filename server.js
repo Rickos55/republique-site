@@ -181,7 +181,7 @@ async function fetchNewsletterArticles() {
     'https://www.liberation.fr/arc/outboundfeeds/rss-all/',
     'https://www.bfmtv.com/rss/news-24-7/',
     'https://www.lesechos.fr/rss/rss_politique.xml',
-    'https://la1ere.francetvinfo.fr/guyane/rss',
+    'https://la1ere.franceinfo.fr/guyane/rss',
     'https://www.ouest-france.fr/rss-en-continu.xml',
   ];
   const articles = [];
