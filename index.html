@@ -1307,9 +1307,6 @@ async function fetchFeed(f){
 }
 
 async function loadAll(){
-  // Afficher le spinner pendant le chargement
-  const g=document.getElementById('ngrid');
-  if(g && g.children.length===0) g.innerHTML='<div class="center-box"><div class="spinner"></div><p>Chargement des articles…</p></div>';
   const batches=await Promise.all(FEEDS.map(fetchFeed));
   const seen=new Set();
   const prev = allArticles.length;
@@ -1456,13 +1453,16 @@ function renderNews(){
   const page=list.slice(start,start+PER_PAGE);
   const g=document.getElementById('ngrid');
   if(!page.length){
-    g.innerHTML=`<div class="center-box" style="padding:2rem;text-align:center">
-      <div style="font-size:2rem;margin-bottom:.5rem">📡</div>
-      <p style="color:var(--gray);margin-bottom:1rem">Chargement des articles en cours...</p>
-      <button onclick="loadAll()" style="padding:.6rem 1.4rem;border-radius:50px;border:1.5px solid var(--blue);background:var(--blue);color:#fff;cursor:pointer;font-size:.85rem;font-family:inherit;font-weight:600">
-        🔄 Recharger les articles
-      </button>
-    </div>`;
+    const retry = window._retryCount || 0;
+    g.innerHTML = retry < 3
+      ? '<div class="center-box"><div class="spinner"></div><p>Chargement des articles…</p></div>'
+      : `<div class="center-box" style="padding:2rem;text-align:center">
+          <div style="font-size:2rem;margin-bottom:.5rem">📡</div>
+          <p style="color:var(--gray);margin-bottom:1rem">Aucun article chargé.</p>
+          <button onclick="window._retryCount=0;loadAll()" style="padding:.6rem 1.4rem;border-radius:50px;border:1.5px solid var(--blue);background:var(--blue);color:#fff;cursor:pointer;font-size:.85rem;font-family:inherit;font-weight:600">
+            🔄 Recharger les articles
+          </button>
+        </div>`;
     return;
   }
   g.className='grid';
