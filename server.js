@@ -36,22 +36,66 @@ app.get('/sw.js', (req, res) => {
 });
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
-// ── Proxy RSS ─────────────────────────────────────────────────────────
-app.get('/rss', async (req, res) => {
-  const url = req.query.url;
-  if (!url) return res.status(400).json({ error: 'URL manquante' });
+// ── Proxy RSS (anti-bot bypass) ───────────────────────────────────────
+const RSS_USER_AGENTS = [
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0',
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_3_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3.1 Safari/605.1.15',
+  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+];
+
+async function fetchRSS(url, attempt = 0) {
+  const ua = RSS_USER_AGENTS[attempt % RSS_USER_AGENTS.length];
+  const parsedUrl = new URL(url);
   const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 8000);
+  const timer = setTimeout(() => ctrl.abort(), 10000);
   try {
     const r = await fetch(url, {
       signal: ctrl.signal,
-      headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/rss+xml, application/xml, text/xml, */*' }
+      headers: {
+        'User-Agent': ua,
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'none',
+        'Sec-Fetch-User': '?1',
+        'Upgrade-Insecure-Requests': '1',
+        'Referer': parsedUrl.origin + '/',
+        'Connection': 'keep-alive',
+      },
+      redirect: 'follow',
     });
     clearTimeout(timer);
-    res.setHeader('Content-Type', 'application/xml; charset=utf-8');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.send(await r.text());
-  } catch (e) { clearTimeout(timer); res.status(500).json({ error: e.message }); }
+    const txt = await r.text();
+    // Si réponse HTML (bloqué), retenter avec autre UA si possible
+    if (attempt < 3 && (txt.includes('Access Denied') || txt.includes('Just a moment') || txt.includes('cf-browser-verification') || txt.includes('Cloudflare'))) {
+      await new Promise(resolve => setTimeout(resolve, 500 + attempt * 300));
+      return fetchRSS(url, attempt + 1);
+    }
+    return { ok: true, text: txt, status: r.status };
+  } catch(e) {
+    clearTimeout(timer);
+    if (attempt < 2) {
+      await new Promise(resolve => setTimeout(resolve, 600));
+      return fetchRSS(url, attempt + 1);
+    }
+    return { ok: false, error: e.message };
+  }
+}
+
+app.get('/rss', async (req, res) => {
+  const url = req.query.url;
+  if (!url) return res.status(400).json({ error: 'URL manquante' });
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  const result = await fetchRSS(url);
+  if (!result.ok) return res.status(500).json({ error: result.error });
+  res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+  res.send(result.text);
 });
 
 // ── Proxy images Wikipedia ────────────────────────────────────────────
