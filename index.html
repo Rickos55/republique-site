@@ -72,7 +72,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);tra
 .ticker-wrap{background:#C1121F;overflow:hidden;height:32px;display:flex;align-items:center}
 .ticker-label{background:#0D2B6E;color:#fff;font-size:.68rem;font-weight:700;padding:0 .9rem;height:100%;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;text-transform:uppercase;letter-spacing:.5px}
 .ticker-inner{flex:1;overflow:hidden;height:100%;display:flex;align-items:center}
-.ticker-track{display:flex;gap:2.5rem;animation:ticker 50s linear infinite;white-space:nowrap;align-items:center}
+.ticker-track{display:flex;gap:2.5rem;animation:ticker 120s linear infinite;white-space:nowrap;align-items:center}
 .ticker-wrap:hover .ticker-track{animation-play-state:paused}
 .ticker-item{color:#fff;font-size:.73rem;cursor:pointer;text-decoration:none;flex-shrink:0}
 .ticker-item:hover{text-decoration:underline}
@@ -1278,26 +1278,24 @@ async function doFactCheck() {
 }
 
 async function fetchFeed(f){
+  const t0 = Date.now();
   try{
     const ctrl=new AbortController();
     const timer=setTimeout(()=>ctrl.abort(),15000);
     const r=await fetch(`/rss?url=${encodeURIComponent(f.url)}`,{signal:ctrl.signal});
     clearTimeout(timer);
-    if(!r.ok)return[];
+    if(!r.ok){ fetch('/analytics/rss',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.name,ok:false,ms:Date.now()-t0})}).catch(()=>{}); return[]; }
     const txt=await r.text();
     const xml=new DOMParser().parseFromString(txt,'application/xml');
-    if(xml.querySelector('parsererror'))return[];
-    return[...xml.querySelectorAll('item')].slice(0,10).map(it=>({
+    if(xml.querySelector('parsererror')){ fetch('/analytics/rss',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.name,ok:false,ms:Date.now()-t0})}).catch(()=>{}); return[]; }
+    const articles=[...xml.querySelectorAll('item')].slice(0,10).map(it=>({
       title:decodeHTML((it.querySelector('title')?.textContent||'').trim()),
       desc: decodeHTML((it.querySelector('description')?.textContent||'').replace(/<[^>]+>/g,'').trim().slice(0,220)),
       link: (function(){
-        // Try standard RSS link text content first
         const linkEl = it.querySelector('link');
         if(linkEl && linkEl.textContent.trim().startsWith('http')) return linkEl.textContent.trim();
-        // Try Atom link href attribute
         const atomLink = it.querySelector('link[href]');
         if(atomLink) return atomLink.getAttribute('href');
-        // Try guid as fallback
         const guid = it.querySelector('guid');
         if(guid && guid.textContent.trim().startsWith('http')) return guid.textContent.trim();
         return '';
@@ -1305,7 +1303,9 @@ async function fetchFeed(f){
       date: new Date(it.querySelector('pubDate')?.textContent||0),
       name:f.name, color:f.color, bord:f.bord
     })).filter(a=>a.title.length>6);
-  }catch{return[];}
+    fetch('/analytics/rss',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.name,ok:true,ms:Date.now()-t0})}).catch(()=>{});
+    return articles;
+  }catch{ fetch('/analytics/rss',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.name,ok:false,ms:Date.now()-t0})}).catch(()=>{}); return[]; }
 }
 
 async function loadAll(){
@@ -1373,6 +1373,8 @@ function renderPag(id, cur, total, fn){
 async function doSearch(){
   const q=document.getElementById('searchIn').value.trim();
   if(!q)return;
+  // Analytics : enregistrer la recherche
+  fetch('/analytics/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({q})}).catch(()=>{});
   const panel=document.getElementById('searchPanel');
   panel.classList.add('on');
   document.getElementById('searchTitle').textContent=`Recherche : « ${q} »`;
@@ -1492,6 +1494,7 @@ function goNP(p){newsPage=p;renderNews();document.getElementById('s-actu').scrol
 function cardHTML(a, hot=false){
   const bc=BORD_COLOR[a.bord]||'#888', bl=BORD_LABEL[a.bord]||a.bord;
   const u=esc(a.link), t=esc(a.title);
+  const trackClick=`fetch('/analytics/source',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'${esc(a.name)}'})}).catch(()=>{});`;
   const shareHTML=`<div class="card-share">
     <a class="share-btn share-tw" href="#" onclick="shareTw(event,'${u}','${t}');return false">𝕏</a>
     <a class="share-btn share-fb" href="#" onclick="shareFb(event,'${u}');return false">f</a>
@@ -1499,7 +1502,7 @@ function cardHTML(a, hot=false){
     <a class="share-btn share-cp" href="#" onclick="copyLink(event,'${u}');return false">🔗</a>
   </div>`;
   if(currentView==='list'){
-    return`<div class="list-card" onclick="u&&u.startsWith('http')&&window.open(u,'_blank')">
+    return`<div class="list-card" onclick="${trackClick}u&&u.startsWith('http')&&window.open(u,'_blank')">
       <div class="list-card-stripe" style="background:${a.color}"></div>
       <div class="list-card-body">
         <div class="list-card-head">
@@ -1516,7 +1519,7 @@ function cardHTML(a, hot=false){
         </div>
       </div></div>`;
   }
-  return`<div class="card" onclick="u&&u.startsWith('http')&&window.open(u,'_blank')" style="${hot?'border-color:var(--blue);box-shadow:0 0 0 2px #0D2B6E22':''}">
+  return`<div class="card" onclick="${trackClick}u&&u.startsWith('http')&&window.open(u,'_blank')" style="${hot?'border-color:var(--blue);box-shadow:0 0 0 2px #0D2B6E22':''}">
     <div class="card-top" style="background:${a.color}"></div>
     <div class="card-body">
       <div class="card-head">
@@ -1903,6 +1906,7 @@ function filtRegion(region, el) {
   document.querySelectorAll('[id^="reg-"]').forEach(e => e.classList.remove('on'));
   el.classList.add('on');
   renderNews();
+  fetch('/analytics/filter',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'region',value:region})}).catch(()=>{});
 }
 
 // Mapping sources → régions
@@ -1935,7 +1939,7 @@ function getArticleRegion(a) {
   return SOURCE_REGION[a.name] || 'national';
 }
 
-function filt(b,el){activeBord=b;newsPage=1;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');renderNews();}
+function filt(b,el){activeBord=b;newsPage=1;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');renderNews();fetch('/analytics/filter',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'bord',value:b})}).catch(()=>{});}
 function showTab(id,el){
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
@@ -2124,6 +2128,10 @@ function updateTicker(){
     `<a class="ticker-item" href="${esc(a.link)}" target="_blank">${esc(a.title)}</a><span class="ticker-sep">◆</span>`
   ).join('');
   track.innerHTML = items + items;
+  // Durée dynamique : ~6s par titre pour rester lisible
+  const totalChars = allArticles.slice(0,20).reduce((s,a)=>s+a.title.length,0);
+  const duration = Math.max(120, Math.round(totalChars * 0.18)) + 's';
+  track.style.animationDuration = duration;
   if(wrap) wrap.style.display = 'flex';
 }
 

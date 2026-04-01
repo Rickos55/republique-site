@@ -116,6 +116,7 @@ app.get('/img', async (req, res) => {
 // ── IA Recherche — Claude Sonnet ──────────────────────────────────────
 app.post('/ai', async (req, res) => {
   if (!API_KEY) return res.status(503).json({ error: 'Clé API non configurée.' });
+  analytics.aiRequests++;
   try {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -129,6 +130,7 @@ app.post('/ai', async (req, res) => {
 // ── IA Comparaison — Claude Haiku ─────────────────────────────────────
 app.post('/ai-compare', async (req, res) => {
   if (!API_KEY) return res.status(503).json({ error: 'Clé API non configurée.' });
+  analytics.aiCompareRequests++;
   try {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -484,8 +486,22 @@ app.get('/admin', async (req, res) => {
     '<div class="stat green"><div class="stat-label">Visites totales</div><div class="stat-value" id="a-total-visits">—</div><div class="stat-sub">Depuis démarrage</div></div>' +
     '<div class="stat blue"><div class="stat-label">Newsletters envoyées</div><div class="stat-value" id="a-nl">—</div><div class="stat-sub">Ce cycle</div></div>' +
     '<div class="stat green"><div class="stat-label">Uptime serveur</div><div class="stat-value" id="a-uptime">—</div><div class="stat-sub">Render</div></div>' +
+    '<div class="stat blue"><div class="stat-label">📱 Mobile</div><div class="stat-value" id="a-mobile">—</div><div class="stat-sub" id="a-mobile-pct">des visites</div></div>' +
+    '<div class="stat green"><div class="stat-label">🖥️ Desktop</div><div class="stat-value" id="a-desktop">—</div><div class="stat-sub" id="a-desktop-pct">des visites</div></div>' +
+    '<div class="stat gold"><div class="stat-label">🤖 Recherches IA</div><div class="stat-value" id="a-ai">—</div><div class="stat-sub">Requêtes Claude</div></div>' +
+    '<div class="stat blue"><div class="stat-label">⚖️ Comparaisons IA</div><div class="stat-value" id="a-ai-compare">—</div><div class="stat-sub">Requêtes comparaison</div></div>' +
     '</div>' +
-    '<div class="card"><h2>📈 Visites des 7 derniers jours</h2><div style="position:relative;height:160px"><canvas id="visits-chart"></canvas></div></div>' +
+    '<div class="card"><h2>📈 Visites des 24 dernières heures</h2><div style="position:relative;height:150px"><canvas id="visits-24h-chart"></canvas></div></div>' +
+    '<div class="card"><h2>📅 Visites des 7 derniers jours</h2><div style="position:relative;height:150px"><canvas id="visits-chart"></canvas></div></div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem">' +
+    '<div class="card" style="margin-bottom:0"><h2>🔍 Top recherches</h2><div id="top-searches"><div style="color:#8B949E;font-size:.8rem">Aucune donnée</div></div></div>' +
+    '<div class="card" style="margin-bottom:0"><h2>📰 Sources les plus consultées</h2><div id="top-sources"><div style="color:#8B949E;font-size:.8rem">Aucune donnée</div></div></div>' +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem">' +
+    '<div class="card" style="margin-bottom:0"><h2>🗂️ Filtres Bord utilisés</h2><div id="bords-used"><div style="color:#8B949E;font-size:.8rem">Aucune donnée</div></div></div>' +
+    '<div class="card" style="margin-bottom:0"><h2>🌍 Filtres Région utilisés</h2><div id="regions-used"><div style="color:#8B949E;font-size:.8rem">Aucune donnée</div></div></div>' +
+    '</div>' +
+    '<div class="card"><h2>⚡ Performance sources RSS</h2><div id="rss-perf"><div style="color:#8B949E;font-size:.8rem">Aucune donnée</div></div></div>' +
     '<div class="card"><h2>🗳️ Mode Soirée Électorale</h2><p style="font-size:.83rem;color:#8B949E;margin-bottom:1rem">Active l\'actualisation toutes les 2 min et la bannière rouge sur le site.</p><button class="btn" id="election-btn" onclick="toggleElection()" style="padding:.7rem 1.4rem;font-size:.9rem;background:#CC0000;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700">🔴 Activer la soirée électorale</button><div id="election-resp" class="resp"></div></div>' +
     '<div class="card"><h2>📧 Newsletter</h2>' +
     '<div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:.8rem">' +
@@ -525,7 +541,69 @@ app.get('/admin', async (req, res) => {
     '}' +
     'function closePreview(){document.getElementById("preview-zone").style.display="none";}' +
     'async function toggleElection(){const btn=document.getElementById("election-btn");const resp=document.getElementById("election-resp");try{const r=await fetch("/election-mode/toggle",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token:"' + ADMIN_PASS + '"})});const d=await r.json();resp.className="resp ok";resp.textContent="✅ "+d.message;resp.style.display="block";if(d.active){btn.textContent="🟢 Désactiver la soirée électorale";btn.style.background="#238636";}else{btn.textContent="🔴 Activer la soirée électorale";btn.style.background="#CC0000";}}catch(e){resp.className="resp err";resp.textContent="❌ "+e.message;resp.style.display="block";}}' +
-    'async function loadAnalytics(){try{const r=await fetch("/analytics?token='+ADMIN_PASS+'");const d=await r.json();const ids={"a-visits":"visitsToday","a-total-visits":"visitsTotal","a-nl":"newsletterSent","a-uptime":"uptime"};Object.entries(ids).forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.textContent=d[key]||"—";});if(window.Chart&&document.getElementById("visits-chart")){const days=Object.keys(d.dailyVisits||{}).slice(-7);const vals=days.map(k=>d.dailyVisits[k]);const labels=days.map(k=>{const dt=new Date(k);return(dt.getMonth()+1)+"/"+(dt.getDate());});new Chart(document.getElementById("visits-chart"),{type:"bar",data:{labels,datasets:[{data:vals,backgroundColor:"#1F6FEB",borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{color:"#8B949E"}},x:{ticks:{color:"#8B949E"}}}}});}}catch(e){}}const chartScript=document.createElement("script");chartScript.src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js";chartScript.onload=loadAnalytics;document.head.appendChild(chartScript);' +
+    'async function loadAnalytics(){' +
+    'try{' +
+    'const r=await fetch("/analytics?token='+ADMIN_PASS+'");' +
+    'const d=await r.json();' +
+    // Basic stats
+    'const ids={"a-visits":"visitsToday","a-total-visits":"visitsTotal","a-nl":"newsletterSent","a-uptime":"uptime","a-ai":"aiRequests","a-ai-compare":"aiCompareRequests"};' +
+    'Object.entries(ids).forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.textContent=d[key]??"-";});' +
+    // Mobile/Desktop
+    'if(d.devices){' +
+    '  const tot=(d.devices.mobile||0)+(d.devices.desktop||0)||1;' +
+    '  const mpct=Math.round(d.devices.mobile/tot*100);' +
+    '  const dpct=100-mpct;' +
+    '  const em=document.getElementById("a-mobile");if(em)em.textContent=d.devices.mobile||0;' +
+    '  const emp=document.getElementById("a-mobile-pct");if(emp)emp.textContent=mpct+"%% des visites";' +
+    '  const ed=document.getElementById("a-desktop");if(ed)ed.textContent=d.devices.desktop||0;' +
+    '  const edp=document.getElementById("a-desktop-pct");if(edp)edp.textContent=dpct+"%% des visites";' +
+    '}' +
+    'if(window.Chart){' +
+    // Chart 7 jours
+    '  const days=Object.keys(d.dailyVisits||{}).slice(-7);' +
+    '  const dvals=days.map(k=>d.dailyVisits[k]);' +
+    '  const dlabels=days.map(k=>{const dt=new Date(k);return(dt.getMonth()+1)+"/"+(dt.getDate());});' +
+    '  if(document.getElementById("visits-chart"))new Chart(document.getElementById("visits-chart"),{type:"bar",data:{labels:dlabels,datasets:[{data:dvals,backgroundColor:"#1F6FEB",borderRadius:4,label:"Visites"}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{color:"#8B949E"}},x:{ticks:{color:"#8B949E"}}}}});' +
+    // Chart 24h
+    '  const h24=d.last24h||{};' +
+    '  const hkeys=Object.keys(h24);' +
+    '  const hvals=hkeys.map(k=>h24[k]);' +
+    '  const hlabels=hkeys.map(k=>k.slice(11)+"h");' +
+    '  if(document.getElementById("visits-24h-chart"))new Chart(document.getElementById("visits-24h-chart"),{type:"line",data:{labels:hlabels,datasets:[{data:hvals,borderColor:"#3FB950",backgroundColor:"rgba(63,185,80,0.1)",fill:true,tension:.3,pointRadius:2,label:"Visites/h"}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{color:"#8B949E"}},x:{ticks:{color:"#8B949E",maxRotation:45}}}}});' +
+    '}' +
+    // Top recherches
+    'const srEl=document.getElementById("top-searches");' +
+    'if(srEl&&d.topSearches&&d.topSearches.length){' +
+    '  srEl.innerHTML=d.topSearches.map(s=>"<div style=\'display:flex;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid #21262D;font-size:.8rem\'><span style=\'color:#E6EDF3\'>" +s.q+"</span><span style=\'color:#58A6FF;font-weight:700\'>" +s.n+"</span></div>").join("");' +
+    '}' +
+    // Top sources
+    'const scEl=document.getElementById("top-sources");' +
+    'if(scEl&&d.topSources&&d.topSources.length){' +
+    '  scEl.innerHTML=d.topSources.map(s=>"<div style=\'display:flex;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid #21262D;font-size:.8rem\'><span style=\'color:#E6EDF3\'>" +s.name+"</span><span style=\'color:#3FB950;font-weight:700\'>" +s.n+"</span></div>").join("");' +
+    '}' +
+    // Bords utilisés
+    'const buEl=document.getElementById("bords-used");' +
+    'if(buEl&&d.bordsUsed){' +
+    '  const bords=Object.entries(d.bordsUsed).sort((a,b)=>b[1]-a[1]);' +
+    '  buEl.innerHTML=bords.length?bords.map(([b,n])=>"<div style=\'display:flex;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid #21262D;font-size:.8rem\'><span style=\'color:#E6EDF3\'>" +b+"</span><span style=\'color:#F0883E;font-weight:700\'>" +n+"</span></div>").join(""):"<div style=\'color:#8B949E;font-size:.8rem\'>Aucune donnée</div>";' +
+    '}' +
+    // Régions utilisées
+    'const ruEl=document.getElementById("regions-used");' +
+    'if(ruEl&&d.regionsUsed){' +
+    '  const regs=Object.entries(d.regionsUsed).sort((a,b)=>b[1]-a[1]);' +
+    '  ruEl.innerHTML=regs.length?regs.map(([r,n])=>"<div style=\'display:flex;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid #21262D;font-size:.8rem\'><span style=\'color:#E6EDF3\'>" +r+"</span><span style=\'color:#D2A8FF;font-weight:700\'>" +n+"</span></div>").join(""):"<div style=\'color:#8B949E;font-size:.8rem\'>Aucune donnée</div>";' +
+    '}' +
+    // RSS perf
+    'const rpEl=document.getElementById("rss-perf");' +
+    'if(rpEl&&d.rssPerf&&d.rssPerf.length){' +
+    '  rpEl.innerHTML="<table style=\'width:100%;font-size:.78rem;border-collapse:collapse\'><tr style=\'color:#8B949E\'><th style=\'text-align:left;padding:.3rem .5rem\'>Source</th><th style=\'text-align:center;padding:.3rem\'>✅ OK</th><th style=\'text-align:center;padding:.3rem\'>❌ Échec</th><th style=\'text-align:center;padding:.3rem\'>⏱ Moy.</th></tr>"+d.rssPerf.map(r=>{const rate=r.ok+r.fail>0?Math.round(r.ok/(r.ok+r.fail)*100):0;const color=rate>=80?"#3FB950":rate>=50?"#F0883E":"#F85149";return"<tr style=\'border-top:1px solid #21262D\'><td style=\'padding:.3rem .5rem;color:#E6EDF3\'>" +r.name+"</td><td style=\'text-align:center;color:#3FB950\'>" +r.ok+"</td><td style=\'text-align:center;color:#F85149\'>" +r.fail+"</td><td style=\'text-align:center;color:"+color+"\'>" +(r.avgMs?r.avgMs+"ms":"—")+"</td></tr>";}).join("")+"</table>";' +
+    '}' +
+    '}catch(e){console.error("Analytics error",e);}' +
+    '}' +
+    'const chartScript=document.createElement("script");' +
+    'chartScript.src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js";' +
+    'chartScript.onload=loadAnalytics;' +
+    'document.head.appendChild(chartScript);' +
     'async function confirmSend(){' +
     'const btn=document.getElementById("send-btn");const resp=document.getElementById("nl-resp");' +
     'btn.disabled=true;btn.textContent="Envoi...";' +
@@ -635,23 +713,73 @@ app.get('/sitemap.xml', (req, res) => {
 const analytics = {
   visits: 0,
   pageViews: {},
-  searches: [],
+  searches: [],          // [{q, ts}]
   newsletterSent: 0,
   startTime: new Date(),
-  dailyVisits: {},
-  sourcesClicked: {},
+  dailyVisits: {},       // {'2026-04-01': 42}
+  hourlyVisits: {},      // {'2026-04-01T14': 12}
+  sourcesClicked: {},    // {'Le Monde': 34}
+  bordsUsed: {},         // {'gauche': 12, 'droite': 8}
+  regionsUsed: {},       // {'outremer': 5}
+  devices: { mobile: 0, desktop: 0 },
+  rssStats: {},          // {'Le Monde': {ok:10, fail:2, ms:320}}
+  aiRequests: 0,
+  aiCompareRequests: 0,
 };
 
-// Middleware comptage visites
+// Middleware comptage visites + device detection
 app.use(function(req, res, next) {
-  if (!req.path.startsWith('/rss') && !req.path.startsWith('/img') && !req.path.startsWith('/election') && !req.path.startsWith('/newsletter') && !req.path.startsWith('/stripe') && !req.path.startsWith('/ai') && !req.path.startsWith('/admin') && !req.path.startsWith('/wiki')) {
+  const skip = ['/rss','/img','/election','/newsletter','/stripe','/ai','/admin','/wiki','/analytics','/sitemap','/robots','/manifest','/sw.js','/icon'];
+  if (!skip.some(s => req.path.startsWith(s))) {
     analytics.visits++;
     const today = new Date().toISOString().split('T')[0];
+    const hour  = new Date().toISOString().slice(0,13); // '2026-04-01T14'
     analytics.dailyVisits[today] = (analytics.dailyVisits[today] || 0) + 1;
+    analytics.hourlyVisits[hour] = (analytics.hourlyVisits[hour] || 0) + 1;
     const page = req.path || '/';
     analytics.pageViews[page] = (analytics.pageViews[page] || 0) + 1;
+    // Device detection
+    const ua = req.headers['user-agent'] || '';
+    if (/mobile|android|iphone|ipad|tablet/i.test(ua)) analytics.devices.mobile++;
+    else analytics.devices.desktop++;
   }
   next();
+});
+
+// Route : enregistrer recherche
+app.post('/analytics/search', (req, res) => {
+  const { q } = req.body;
+  if (q && q.length > 1) {
+    analytics.searches.unshift({ q: q.trim().toLowerCase(), ts: Date.now() });
+    if (analytics.searches.length > 200) analytics.searches.pop();
+  }
+  res.json({ ok: true });
+});
+
+// Route : enregistrer clic source
+app.post('/analytics/source', (req, res) => {
+  const { name } = req.body;
+  if (name) analytics.sourcesClicked[name] = (analytics.sourcesClicked[name] || 0) + 1;
+  res.json({ ok: true });
+});
+
+// Route : enregistrer filtre bord/région
+app.post('/analytics/filter', (req, res) => {
+  const { type, value } = req.body;
+  if (type === 'bord') analytics.bordsUsed[value] = (analytics.bordsUsed[value] || 0) + 1;
+  if (type === 'region') analytics.regionsUsed[value] = (analytics.regionsUsed[value] || 0) + 1;
+  res.json({ ok: true });
+});
+
+// Route : enregistrer perf RSS
+app.post('/analytics/rss', (req, res) => {
+  const { name, ok, ms } = req.body;
+  if (!name) return res.json({ ok: true });
+  if (!analytics.rssStats[name]) analytics.rssStats[name] = { ok: 0, fail: 0, ms: [] };
+  if (ok) { analytics.rssStats[name].ok++; analytics.rssStats[name].ms.push(ms); }
+  else analytics.rssStats[name].fail++;
+  if (analytics.rssStats[name].ms.length > 20) analytics.rssStats[name].ms.shift();
+  res.json({ ok: true });
 });
 
 // Route analytics pour l'admin
@@ -659,8 +787,34 @@ app.get('/analytics', async (req, res) => {
   const token = req.query.token;
   if (token !== ADMIN_PASS) return res.status(401).json({ error: 'Non autorisé' });
 
-  const uptime = Math.floor((Date.now() - analytics.startTime) / 1000 / 60);
+  const uptimeSec = Math.floor((Date.now() - analytics.startTime) / 1000);
+  const uptimeStr = uptimeSec < 3600
+    ? Math.floor(uptimeSec/60) + ' min'
+    : Math.floor(uptimeSec/3600) + 'h ' + Math.floor((uptimeSec%3600)/60) + 'min';
   const today = new Date().toISOString().split('T')[0];
+
+  // Top recherches
+  const searchCount = {};
+  analytics.searches.forEach(s => { searchCount[s.q] = (searchCount[s.q]||0)+1; });
+  const topSearches = Object.entries(searchCount).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([q,n])=>({q,n}));
+
+  // Top sources cliquées
+  const topSources = Object.entries(analytics.sourcesClicked).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([name,n])=>({name,n}));
+
+  // Perf RSS
+  const rssPerf = Object.entries(analytics.rssStats).map(([name,s])=>({
+    name, ok: s.ok, fail: s.fail,
+    avgMs: s.ms.length ? Math.round(s.ms.reduce((a,b)=>a+b,0)/s.ms.length) : 0
+  })).sort((a,b)=>b.ok-a.ok).slice(0,15);
+
+  // Visites 24 dernières heures
+  const now = new Date();
+  const last24h = {};
+  for (let i = 23; i >= 0; i--) {
+    const d = new Date(now - i*3600000);
+    const key = d.toISOString().slice(0,13);
+    last24h[key] = analytics.hourlyVisits[key] || 0;
+  }
 
   // Stats Mailchimp
   let mcStats = { total: 0 };
@@ -688,12 +842,20 @@ app.get('/analytics', async (req, res) => {
   } catch(e) {}
 
   res.json({
-    uptime: uptime + ' min',
+    uptime: uptimeStr,
     visitsTotal: analytics.visits,
     visitsToday: analytics.dailyVisits[today] || 0,
     dailyVisits: analytics.dailyVisits,
-    topPages: Object.entries(analytics.pageViews).sort((a,b) => b[1]-a[1]).slice(0,5),
+    last24h,
+    devices: analytics.devices,
+    topSearches,
+    topSources,
+    bordsUsed: analytics.bordsUsed,
+    regionsUsed: analytics.regionsUsed,
+    rssPerf,
     newsletterSent: analytics.newsletterSent,
+    aiRequests: analytics.aiRequests,
+    aiCompareRequests: analytics.aiCompareRequests,
     mailchimp: mcStats,
     stripe: stripeStats,
     electionMode: electionModeActive,
